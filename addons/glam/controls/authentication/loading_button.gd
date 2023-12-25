@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Button
 
 enum Status {
@@ -9,8 +7,8 @@ enum Status {
 	ERROR,
 }
 
-export(bool) var loading := false setget set_loading
-export(Status) var status := Status.NONE setget set_status
+@export var loading := false: set = set_loading
+@export var status := Status.NONE: set = set_status
 
 var _icons := []
 var _current_icon := 0
@@ -18,7 +16,7 @@ var _timer := Timer.new()
 
 
 func _ready():
-	_timer.connect("timeout", self, "_on_Timer_timeout")
+	_timer.connect("timeout", self._on_Timer_timeout)
 	_timer.wait_time = 0.1
 	add_child(_timer)
 

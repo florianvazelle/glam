@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../source.gd"
 
 const Source := preload("../source.gd")
@@ -12,7 +10,6 @@ const _API_URL := "https://ambientCG.com/api/v2/full_json"
 var _next_page_url = null
 var _num_results := ""
 var _num_loaded := 0
-var _file := File.new()
 
 
 func _ready():
@@ -85,7 +82,7 @@ func fetch() -> void:
 	var method_str = ""
 	for filter in _filters:
 		if filter.name == "Method":
-			method_str += PoolStringArray(filter.value).join(",").replace(" ", "")
+			method_str += ",".join(PackedStringArray(filter.value)).replace(" ", "")
 	var query_string: String = (
 		"?"
 		+ HTTPClient.new().query_string_from_dict(
@@ -100,7 +97,7 @@ func fetch() -> void:
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(_API_URL + query_string, result), "completed")
+	await _fetch(_API_URL + query_string, result).completed
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -113,7 +110,7 @@ func can_fetch_more() -> bool:
 func fetch_more() -> void:
 	emit_signal("fetch_started")
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(_next_page_url, result), "completed")
+	await _fetch(_next_page_url, result).completed
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -124,7 +121,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
 	_num_results = "?"
 	_num_loaded = 0
 
-	var json = yield(_fetch_json(url), "completed")
+	var json = await _fetch_json(url).completed
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
 	if json.error != OK:
@@ -148,7 +145,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
 
 
 func _update_status_line():
-	if _num_results.empty():
+	if _num_results.is_empty():
 		self.status_line = "Results: ? | Loaded: ?/? | API Requests Remaining: ∞"
 	else:
 		self.status_line = (
@@ -171,9 +168,9 @@ func _download(asset: GLAMAsset) -> void:
 		return
 
 	var url = SpatialMaterialAsset.get_download_url(asset)
-	assert(url and not url.empty(), "Could not determine download url")
+	assert(url and not url.is_empty(), "Could not determine download url")
 	var dest = "%s/%s_%s.zip" % [get_asset_directory(asset), get_slug(asset), asset.download_format]
-	var err = yield(_download_file(url, dest), "completed")
+	var err = await _download_file(url, dest).completed
 
 	if err != OK:
 		return
@@ -185,15 +182,15 @@ func _download(asset: GLAMAsset) -> void:
 	# get all sorts of errors including segfaults.
 	var glam = get_tree().get_meta("glam")
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
 	var result = Unzipper.unzip(dest)
-	Directory.new().remove(dest)
+	DirAccess.remove_absolute(dest)
 	var importable_files := []
 	for file in result.files:
 		if regex.search(file):
 			importable_files.append(file)
-	yield(import_files(importable_files), "completed")
+	await import_files(importable_files).completed
 	glam.locked = false
 
 	if result.error != OK:
@@ -226,7 +223,7 @@ func _download(asset: GLAMAsset) -> void:
 				"PREVIEW", _:
 					continue
 
-		err = ResourceSaver.save(get_asset_path(asset), material)
+		err = ResourceSaver.save(material, get_asset_path(asset))
 		if err != OK:
 			push_error(err)
 		create_metadata_license_file(get_asset_path(asset))
@@ -238,7 +235,7 @@ func _download(asset: GLAMAsset) -> void:
 
 class SpatialMaterialAsset:
 	tool
-	extends Reference
+	extends RefCounted
 
 	const GDash := preload("../../util/gdash.gd")
 
@@ -267,7 +264,7 @@ class SpatialMaterialAsset:
 		for download in downloads:
 			format_options.append(download.attribute)
 		asset.download_formats = format_options
-		asset.download_formats.sort_custom(SpatialMaterialAsset, "_sort_numeric")
+		asset.download_formats.sort_custom(SpatialMaterialAsset._sort_numeric)
 		asset.download_format = format_options[0]
 
 		# Get copyright year from release date if available.

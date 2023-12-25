@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends VBoxContainer
 
 signal screen_entered
@@ -14,7 +12,7 @@ enum Status {
 	ERROR,
 }
 
-export(Status) var status: int = Status.NO_RESULTS setget set_status
+@export var status := Status.NO_RESULTS: set = set_status
 
 var _was_on_screen := is_on_screen()
 
@@ -28,8 +26,8 @@ func is_on_screen() -> bool:
 func set_status(value) -> void:
 	status = value
 
-	var spinner := find_node("Spinner")
-	var label := find_node("Label")
+	var spinner := find_child("Spinner")
+	var label := find_child("Label")
 
 	if spinner and label:
 		match status:

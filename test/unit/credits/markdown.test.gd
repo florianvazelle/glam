@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "res://addons/gut/test.gd"
 
 const Author := preload("res://addons/glam/assets/asset_author.gd")
@@ -85,8 +83,8 @@ func test__get_authors_multiple():
 
 
 func test_generate_credits():
-	var file := File.new()
-	assert_eq(OK, file.open("res://test/unit/credits/fixtures/CREDITS.md", File.READ))
+	var file := FileAccess.new()
+	assert_eq(OK, file.open("res://test/unit/credits/fixtures/CREDITS.md", FileAccess.READ))
 	var credits = file.get_as_text()
 	file.close()
 	assert_eq(Markdown.generate_credits("res://test/unit/credits/fixtures/assets"), credits)

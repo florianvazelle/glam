@@ -2,14 +2,18 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/padanaya_blokov.mp3-d21de6daf08d9f956a1e1767317ff2ff.mp3str"
+uid="uid://u6jf3s7bjc5b"
+path="res://.godot/imported/padanaya_blokov.mp3-d21de6daf08d9f956a1e1767317ff2ff.mp3str"
 
 [deps]
 
 source_file="res://test/integration/streaming/fixtures/mp3/padanaya_blokov.mp3"
-dest_files=[ "res://.import/padanaya_blokov.mp3-d21de6daf08d9f956a1e1767317ff2ff.mp3str" ]
+dest_files=["res://.godot/imported/padanaya_blokov.mp3-d21de6daf08d9f956a1e1767317ff2ff.mp3str"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

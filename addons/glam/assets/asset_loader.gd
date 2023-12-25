@@ -1,12 +1,12 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMAssetLoader
 extends ResourceFormatLoader
 
+const AssetFile := preload("./asset_file.gd")
 
-func get_recognized_extensions() -> PoolStringArray:
-	return PoolStringArray(["glam"])
+
+func get_recognized_extensions() -> PackedStringArray:
+	return PackedStringArray(["glam"])
 
 
 func get_resource_type(path: String) -> String:
@@ -19,18 +19,17 @@ func handles_type(typename: String) -> bool:
 
 func load(path: String, original_path: String):
 	var tmp := path + ".tres"
-	var dir := Directory.new()
 
-	dir.copy(path, tmp)
+	DirAccess.copy_absolute(path, tmp)
 	var resource := ResourceLoader.load(tmp)
-	dir.remove(tmp)
+	DirAccess.remove_absolute(tmp)
 
 	if not resource is GLAMAsset:
 		return null
 
-	if resource.files.empty():
-		if dir.file_exists(path.get_basename()):
-			resource.files.append(GLAMAsset.AssetFile.new(path.get_basename()))
+	if resource.files.is_empty():
+		if FileAccess.file_exists(path.get_basename()):
+			resource.files.append(AssetFile.new(path.get_basename()))
 
 			if resource is GLAMAudioStreamAsset:
 				var audio_stream: AudioStream = load(path.get_basename())

@@ -1,10 +1,9 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../source.gd"
 
 const AuthenticationScene := preload("./authentication.tscn")
 const Strings := preload("../../util/strings.gd")
+const AudioStreamAsset := preload("../../assets/audio_stream_asset.gd")
 
 const API_URL := "https://freesound.org/apiv2"
 const CLIENT_ID := "0vy6LQde1arAmWBgHgYD"
@@ -68,21 +67,21 @@ func get_url() -> String:
 func get_authenticated() -> bool:
 	var http_request := HTTPRequest.new()
 	add_child(http_request)
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 
 	var config := ConfigFile.new()
 	config.load(config_file)
 
 	var refresh_token = config.get_value("auth", "refresh_token", "")
-	var expires_at = config.get_value("auth", "expires_at", OS.get_unix_time())
+	var expires_at = config.get_value("auth", "expires_at", Time.get_unix_time_from_system())
 	access_token = config.get_value("auth", "access_token", "")
 
-	var expired = expires_at <= OS.get_unix_time()
+	var expired = expires_at <= Time.get_unix_time_from_system()
 
-	if not access_token.empty() and not expired:
+	if not access_token.is_empty() and not expired:
 		emit_signal("query_changed")
 		return true
-	elif expired and not refresh_token.empty():
+	elif expired and not refresh_token.is_empty():
 		var http_client := HTTPClient.new()
 		var query = http_client.query_string_from_dict(
 			{
@@ -99,12 +98,12 @@ func get_authenticated() -> bool:
 			HTTPClient.METHOD_POST,
 			query
 		)
-		var res = yield(http_request, "request_completed")
+		var res = await http_request.request_completed
 		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
 		if res[0] == OK and res[1] == 200 and parsed.error == OK:
 			access_token = parsed.result.access_token
 			refresh_token = parsed.result.refresh_token
-			expires_at = int(int(OS.get_unix_time()) + int(parsed.result.expires_in))
+			expires_at = int(int(Time.get_unix_time_from_system()) + int(parsed.result.expires_in))
 			config.set_value("auth", "access_token", access_token)
 			config.set_value("auth", "refresh_token", refresh_token)
 			config.set_value("auth", "expires_at", expires_at)
@@ -122,13 +121,13 @@ func get_auth_user() -> String:
 	var http_request := HTTPRequest.new()
 	http_request.use_threads = true
 	add_child(http_request)
-	if yield(get_authenticated(), "completed") and auth_user.empty():
+	if await get_authenticated().completed and auth_user.is_empty():
 		http_request.request("%s/me" % API_URL, ["Authorization: Bearer %s" % access_token])
-		var res = yield(http_request, "request_completed")
+		var res = await http_request.request_completed
 		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
 		if res[0] == OK and res[1] == 200 and parsed.error == OK:
 			auth_user = parsed.result.username
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	return auth_user
 
 
@@ -152,31 +151,31 @@ func fetch() -> void:
 		sort = _sort_options.value,
 	}
 	var filter_str = _get_filter_str(_filters)
-	if not filter_str.empty():
+	if not filter_str.is_empty():
 		query.filter = filter_str
 	var query_string: String = "/search/text/?" + HTTPClient.new().query_string_from_dict(query)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(API_URL + query_string, result), "completed")
+	await _fetch(API_URL + query_string, result).completed
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
 
 
 func can_fetch_more() -> bool:
-	return not _next.empty()
+	return not _next.is_empty()
 
 
 func fetch_more() -> void:
 	emit_signal("fetch_started")
 	var result := FetchResult.new(get_query_hash())
-	yield(_fetch(_next, result), "completed")
+	await _fetch(_next, result).completed
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
 
 
 func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
-	var json = yield(_fetch_json(url, ["Authorization: Bearer %s" % access_token]), "completed")
+	var json = await _fetch_json(url, ["Authorization: Bearer %s" % access_token]).completed
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
 	if json.error != OK:
@@ -211,8 +210,8 @@ func _download(asset: GLAMAsset) -> void:
 	var extension = url.get_extension() if url.get_extension() else asset.get_meta("type")
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
-	var err = yield(
-		_download_file(url, dest, PoolStringArray(asset.get_meta("api_headers"))), "completed"
+	var err = await 
+		_download_file(url, dest, PackedStringArray(asset.get_meta("api_headers"))), "completed"
 	)
 
 	if err != OK:
@@ -220,9 +219,9 @@ func _download(asset: GLAMAsset) -> void:
 
 	var glam = get_tree().get_meta("glam")
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
-	yield(import_files([dest]), "completed")
+	await import_files([dest]).completed
 	glam.locked = false
 
 	asset.create_license_file(dest)
@@ -231,7 +230,7 @@ func _download(asset: GLAMAsset) -> void:
 
 
 func _update_status_line():
-	if _num_results.empty():
+	if _num_results.is_empty():
 		self.status_line = "Results: ? | Loaded ?/?"
 	else:
 		self.status_line = (
@@ -247,10 +246,10 @@ static func _get_filter_str(filters := []) -> String:
 		match filter.name:
 			"License":
 				filter_str += "license:("
-				var licenses := PoolStringArray()
+				var licenses := PackedStringArray()
 				for license in filter.value:
 					licenses.append('"%s"' % license)
-				filter_str += "%s)%%20" % licenses.join(" OR ")
+				filter_str += "%s)%%20" % " OR ".join(licenses)
 
 	return filter_str
 
@@ -261,7 +260,7 @@ func get_slug(asset: GLAMAsset) -> String:
 
 class AudioStreamAsset:
 	tool
-	extends Reference
+	extends RefCounted
 
 	const Asset := preload("../../assets/asset.gd")
 	const GDash := preload("../../util/gdash.gd")
@@ -280,7 +279,7 @@ class AudioStreamAsset:
 
 		asset.preview_image_url_lq = GDash.get_val(data, "images.waveform_m")
 		asset.preview_image_url_hq = GDash.get_val(data, "images.waveform_l")
-		asset.preview_image_flags = Texture.FLAGS_DEFAULT & ~Texture.FLAG_FILTER
+		# asset.preview_image_flags = Texture.FLAGS_DEFAULT & ~Texture.FLAG_FILTER
 
 		asset.duration = data.duration
 		asset.preview_audio_url = GDash.get_val(data, "previews.preview-lq-mp3")

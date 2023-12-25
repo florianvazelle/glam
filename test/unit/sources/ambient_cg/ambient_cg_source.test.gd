@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "../base_source_test.gd"
 
 const AmbientCG := preload("res://addons/glam/sources/ambient_cg/ambient_cg_source.gd")

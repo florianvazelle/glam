@@ -1,16 +1,14 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends TextureRect
 
 signal icon_changed(new_icon)
 
-export var spinning := false setget set_spinning
+@export var spinning := false: set = set_spinning
 
 var _icons := []
 var _current_icon := 0
 
-onready var _timer := $Timer
+@onready var _timer := $Timer
 
 
 func _ready():
@@ -31,9 +29,9 @@ func set_spinning(value: bool) -> void:
 		_timer.start() if spinning else _timer.stop()
 
 
-func _set(property: String, value) -> bool:
+func _set(property: StringName, value: Variant) -> bool:
 	match property:
-		"visible":
+		&"visible":
 			assert(value is bool)
 			visible = value
 			self.spinning = visible
@@ -43,7 +41,7 @@ func _set(property: String, value) -> bool:
 
 
 func _on_Timer_timeout():
-	if _icons.empty():
+	if _icons.is_empty():
 		_load_icons()
 
 	_current_icon = (_current_icon + 1) % _icons.size()

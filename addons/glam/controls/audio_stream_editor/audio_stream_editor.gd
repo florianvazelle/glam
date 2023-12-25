@@ -1,21 +1,19 @@
 # SPDX-FileCopyrightText: 2007-2021 Juan Linietsky, Ariel Manzur
 # SPDX-FileCopyrightText: 2014-2021 Godot Engine contributors
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 #
 # Based on the AudioStream editor plugin from the Godot engine.
 # See: https://github.com/godotengine/godot/blob/3.4/editor/plugins/audio_stream_editor_plugin.h
 # and: https://github.com/godotengine/godot/blob/3.4/editor/plugins/audio_stream_editor_plugin.cpp
-tool
+@tool
 extends Control
 
 const AudioStreamAsset := preload("../../assets/audio_stream_asset.gd")
 const PlayIcon := preload("../../icons/icon_play.svg")
 const PauseIcon := preload("../../icons/icon_pause.svg")
 
-export(AudioStream) var stream setget set_stream
-export(float) var duration setget set_duration
-export(Resource) var asset setget set_asset
+@export var stream: AudioStream: set = set_stream
+@export var duration: float: set = set_duration
+@export var asset: Resource: set = set_asset
 
 var thumbnail: Button
 
@@ -23,16 +21,16 @@ var _current := 0.0
 var _dragging := false
 var _pausing := false
 
-onready var _player := find_node("HTTPAudioStreamPlayer")
-onready var _preview := find_node("Preview")
-onready var _indicator := find_node("Indicator")
-onready var _current_label := find_node("CurrentLabel")
-onready var _play_button := find_node("PlayButton")
-onready var _stop_button := find_node("StopButton")
-onready var _spinner := find_node("Spinner")
+@onready var _player := find_child("HTTPAudioStreamPlayer")
+@onready var _preview := find_child("Preview")
+@onready var _indicator := find_child("Indicator")
+@onready var _current_label := find_child("CurrentLabel")
+@onready var _play_button := find_child("PlayButton")
+@onready var _stop_button := find_child("StopButton")
+@onready var _spinner := find_child("Spinner")
 
-onready var _glam = get_tree().get_meta("glam")
-onready var _accent_color := get_color("accent_color", "Editor")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _accent_color := EditorInterface.get_editor_theme().get_color("accent_color", "Editor")
 
 
 func set_asset(value: AudioStreamAsset) -> void:
@@ -138,7 +136,7 @@ func _on_input_indicator(event: InputEventMouseButton):
 	if not thumbnail.pressed:
 		return
 
-	if event.button_index == BUTTON_LEFT and event.pressed:
+	if event.button_index == MOUSE_BUTTON_LEFT and event.button_pressed:
 		_current = clamp((event.position.x / _preview.get_rect().size.x) * duration, 0, duration)
 		_player.seek(_current)
 		_indicator.update()

@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "../base_source_test.gd"
 
 const LicenseDB := preload("res://addons/glam/licenses/license_db.gd")

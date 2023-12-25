@@ -1,10 +1,9 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMAsset
 extends Resource
 
 const Author := preload("./asset_author.gd")
+const AssetFile := preload("./asset_file.gd")
 const License := preload("./asset_license.gd")
 const Strings := preload("../util/strings.gd")
 
@@ -23,27 +22,27 @@ enum Type {
 	MODEL,
 }
 
-export(Type) var type := Type.OTHER
+@export var type := Type.OTHER
 
-export(String, MULTILINE) var description: String
-export(String, MULTILINE) var Tags := "" setget set_Tags, get_Tags
+@export_multiline var description: String
+@export_multiline var Tags := "": set = set_Tags, get = get_Tags
 
-export var source_id: String
+@export var source_id: String
 var resource
 # Unique identifer amongst assets from the same source. Preferably human friendly.
-export var id: String
-export var title: String
-export var official_title := true
-var download_format := "" setget set_download_format
+@export var id: String
+@export var title: String
+@export var official_title := true
+var download_format := "": set = set_download_format
 var download_formats := []
 var download_urls := {}
-export var source_url := ""
-export(Array) var authors := [] setget set_authors
-export(Array) var licenses := [] setget set_licenses
-export(Array) var derived_from := [] setget set_derived_from
-var downloading := false setget set_downloading
+@export var source_url := ""
+@export var authors := []: set = set_authors
+@export var licenses := []: set = set_licenses
+@export var derived_from := []: set = set_derived_from
+var downloading := false: set = set_downloading
 
-export(Array) var files := []
+@export var files: Array[AssetFile] = []
 
 var filepath: String
 
@@ -51,26 +50,26 @@ var filepath: String
 var options := {}
 
 # Low quality preview image url for displaying the asset in thumbnails.
-export var preview_image_url_lq: String
+@export var preview_image_url_lq: String
 # High quality preview image url for displaying the asset in the preview panel.
 # Falls back to preview_image_url_lq if not set.
-export var preview_image_url_hq: String setget , get_preview_image_url_hq
-var preview_image_flags: int = Texture.FLAGS_DEFAULT
+@export var preview_image_url_hq: String: get = get_preview_image_url_hq
+var preview_image_flags: int = 0 # TODO: remove
 # Lower case tags.
-var tags := [] setget set_tags, get_tags
+var tags := []: set = set_tags, get = get_tags
 
-export var preview_image_lq: Texture = null
-export var preview_image_hq: Texture = null
+@export var preview_image_lq: Texture = null
+@export var preview_image_hq: Texture = null
 
 var preview_image_url: String
-var preview_image: ImageTexture setget set_preview_image
+var preview_image: ImageTexture: set = set_preview_image
 
-var downloaded := false setget set_downloaded
-var expected_files: PoolStringArray = []
+var downloaded := false: set = set_downloaded
+var expected_files: PackedStringArray = []
 
 # Additional notes to be displayed in credits. Could include things such as who
 # commisioned the work or what modifications were made to the original.
-export(String, MULTILINE) var notes := ""
+@export_multiline var notes := ""
 
 
 # Workaround for: https://github.com/godotengine/godot/issues/29179
@@ -137,7 +136,7 @@ func set_derived_from(value := []) -> void:
 
 	for i in derived_from.size():
 		if derived_from[i] == null:
-			derived_from[i] = Object()
+			derived_from[i] = Object.new()
 
 
 func set_preview_image(value: ImageTexture) -> void:
@@ -150,13 +149,13 @@ func set_Tags(value: String) -> void:
 
 
 func get_Tags() -> String:
-	return PoolStringArray(get_tags()).join(", ")
+	return ", ".join(PackedStringArray(get_tags()))
 
 
 func set_tags(value) -> void:
 	if value is Dictionary:
 		value = value.values()
-	assert(value is Array or value is PoolStringArray, "Expected Array or PoolStringArray.")
+	assert(value is Array or value is PackedStringArray, "Expected Array or PackedStringArray.")
 	var normalized := []
 	for tag in value as Array:
 		if tag is String:
@@ -190,8 +189,7 @@ func get_file_name() -> String:
 
 
 func create_license_file(path: String):
-	var file := File.new()
-	file.open("%s.license" % path, File.WRITE)
+	var file := FileAccess.open("%s.license" % path, FileAccess.WRITE)
 
 	for author in authors:
 		if author is Author:

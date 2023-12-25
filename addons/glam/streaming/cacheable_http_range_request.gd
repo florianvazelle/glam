@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "./http_range_request.gd"
 
 const Request := preload("../util/request.gd")
@@ -17,9 +15,9 @@ func _ready():
 
 
 func open(url: String, headers := []) -> int:
-	var err := .open(url, headers)
+	var err := super.open(url, headers)
 	if _request_cache and err == OK:
-		_request = Request.new(url, PoolStringArray(headers))
+		_request = Request.new(url, PackedStringArray(headers))
 		var cache: BufferCache = _request_cache.get_resource(_request)
 		if cache:
 			_cache = cache
@@ -27,7 +25,7 @@ func open(url: String, headers := []) -> int:
 				_size = _cache.get_meta("size")
 			if _cache.has_meta("media_type"):
 				_media_type = _cache.get_meta("media_type")
-			if _size > 0 and not _media_type.empty():
+			if _size > 0 and not _media_type.is_empty():
 				call_deferred("emit_signal", "open_completed", OK, _size, _media_type)
 	return err
 

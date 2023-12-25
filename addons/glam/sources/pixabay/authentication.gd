@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../../controls/authentication/authentication.gd"
 
 
@@ -17,7 +15,7 @@ func get_values() -> Dictionary:
 
 
 func get_can_submit() -> bool:
-	return values["API Key"].strip_edges().empty()
+	return values["API Key"].strip_edges().is_empty()
 
 
 func _on_submit(values):
@@ -28,7 +26,7 @@ func _on_submit(values):
 		set_submitting(false, "HTTPRequest error: %d" % err)
 
 
-func _on_HTTPRequest_request_completed(result, response_code, headers, body: PoolByteArray):
+func _on_HTTPRequest_request_completed(result, response_code, headers, body: PackedByteArray):
 	if result == OK and response_code == 200:
 		var config := ConfigFile.new()
 		config.set_value("auth", "api_key", values["API Key"].strip_edges())

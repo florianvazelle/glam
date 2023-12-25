@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Button
 
 const Asset := preload("../../assets/asset.gd")
@@ -13,28 +11,28 @@ const DEFAULT_HEIGHT = 156
 signal download_requested(asset)
 signal selected
 
-var asset: Asset setget set_asset
-var selected = false setget set_selected
+var asset: Asset: set = set_asset
+var is_selected = false: set = set_selected
 
-onready var _preview_image: PreviewImage = find_node("PreviewImage")
-onready var _type_icon = find_node("Icon")
-onready var _status_icon = find_node("Status")
-onready var _download_button = find_node("DownloadButton")
-onready var _display_name = find_node("DisplayName")
-onready var _focused_stylebox := get_stylebox("panel")
-onready var _unfocused_stylebox := StyleBoxEmpty.new()
-onready var _http_request: HTTPRequest = find_node("CacheableHTTPRequest")
-onready var _spinner := _preview_image.find_node("Spinner")
-onready var _download_spinner := find_node("DownloadSpinner")
-onready var _glam = get_tree().get_meta("glam")
-onready var _format_option_button := find_node("FormatOptionButton")
-onready var _audio_preview := find_node("AudioStreamEditor")
+@onready var _preview_image: PreviewImage = find_child("PreviewImage")
+@onready var _type_icon = find_child("Icon")
+@onready var _status_icon = find_child("Status")
+@onready var _download_button = find_child("DownloadButton")
+@onready var _display_name = find_child("DisplayName")
+@onready var _focused_stylebox := EditorInterface.get_editor_theme().get_stylebox("panel", "Editor")
+@onready var _unfocused_stylebox := StyleBoxEmpty.new()
+@onready var _http_request: HTTPRequest = find_child("CacheableHTTPRequest")
+@onready var _spinner := _preview_image.find_child("Spinner")
+@onready var _download_spinner := find_child("DownloadSpinner")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _format_option_button := find_child("FormatOptionButton")
+@onready var _audio_preview := find_child("AudioStreamEditor")
 
 var _dragging := false
 var _drag_data = null
 
 #func _ready():
-#	connect("item_rect_changed", self, "_on_size_changed")
+#	connect("item_rect_changed", self._on_size_changed)
 
 
 func set_asset(value: Asset) -> void:
@@ -60,21 +58,21 @@ func set_asset(value: Asset) -> void:
 		else:
 			_spinner.visible = true
 			_preview_image.load_image(asset.preview_image_url_lq, asset.preview_image_flags)
-			yield(_preview_image, "image_loaded")
+			await _preview_image.image_loaded
 			_spinner.visible = false
 
-	asset.connect("download_started", self, "_update_downloaded_status")
-	asset.connect("download_completed", self, "_update_downloaded_status")
-	asset.connect("download_status_changed", self, "_update_downloaded_status")
-	asset.connect("download_format_changed", self, "_on_download_format_changed")
+	asset.connect("download_started", self._update_downloaded_status)
+	asset.connect("download_completed", self._update_downloaded_status)
+	asset.connect("download_status_changed", self._update_downloaded_status)
+	asset.connect("download_format_changed", self._on_download_format_changed)
 
 
 func set_selected(value):
-	if selected:
-		add_stylebox_override("panel", _focused_stylebox)
+	if is_selected:
+		add_theme_stylebox_override("panel", _focused_stylebox)
 		emit_signal("selected")
 	else:
-		add_stylebox_override("panel", _unfocused_stylebox)
+		add_theme_stylebox_override("panel", _unfocused_stylebox)
 
 
 func _update_downloaded_status(is_downloaded: bool = asset.downloaded) -> void:
@@ -116,13 +114,13 @@ func get_drag_data(_position):
 func _notification(what):
 	match what:
 		NOTIFICATION_RESIZED:
-			var x = rect_size.x
-			var y = rect_size.x * 1.3
-			var min_y = rect_size.x * 1.3
-			if rect_size != Vector2(x, y):
-				rect_size = Vector2(x, y)
-			if rect_min_size.y != min_y:
-				rect_min_size.y = min_y
+			var x = size.x
+			var y = size.x * 1.3
+			var min_y = size.x * 1.3
+			if size != Vector2(x, y):
+				size = Vector2(x, y)
+			if custom_minimum_size.y != min_y:
+				custom_minimum_size.y = min_y
 
 
 func _on_DownloadButton_pressed():

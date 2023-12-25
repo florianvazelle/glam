@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../../controls/authentication/authentication.gd"
 
 
@@ -20,7 +18,7 @@ func get_values() -> Dictionary:
 
 
 func get_can_submit() -> bool:
-	return values["Authorization Code"].strip_edges().empty()
+	return values["Authorization Code"].strip_edges().is_empty()
 
 
 func _on_submit(values):
@@ -41,7 +39,7 @@ func _on_submit(values):
 		set_submitting(false, "HTTPRequest error: %d" % err)
 
 
-func _on_HTTPRequest_request_completed(result, response_code, headers, body: PoolByteArray):
+func _on_HTTPRequest_request_completed(result, response_code, headers, body: PackedByteArray):
 	if result == OK and response_code == 200:
 		var config := ConfigFile.new()
 		var parsed: JSONParseResult = JSON.parse(body.get_string_from_utf8())
@@ -49,7 +47,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body: Poo
 			config.set_value("auth", "access_token", parsed.result.access_token)
 			config.set_value("auth", "refresh_token", parsed.result.refresh_token)
 			config.set_value(
-				"auth", "expires_at", int(int(OS.get_unix_time()) + int(parsed.result.expires_in))
+				"auth", "expires_at", int(int(Time.get_unix_time_from_system()) + int(parsed.result.expires_in))
 			)
 			if config.save(source.config_file) == OK:
 				set_submitting(false)

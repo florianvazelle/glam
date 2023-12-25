@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2022 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "res://addons/gut/test.gd"
 
 const GDash := preload("res://addons/glam/util/gdash.gd")

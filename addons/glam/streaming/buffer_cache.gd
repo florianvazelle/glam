@@ -1,20 +1,18 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Resource
 
-var data := PoolByteArray()
-var ranges := PoolVector2Array()
+var data := PackedByteArray()
+var ranges := PackedVector2Array()
 
 var _buffer := StreamPeerBuffer.new()
 
 
-func _init(p_data := PoolByteArray(), p_ranges := PoolVector2Array()):
+func _init(p_data := PackedByteArray(), p_ranges := PackedVector2Array()):
 	data = p_data
 	ranges = p_ranges
 
-	if not data.empty():
-		assert(not ranges.empty(), "Data provided without ranges.")
+	if not data.is_empty():
+		assert(not ranges.is_empty(), "Data provided without ranges.")
 
 	_buffer.data_array = data
 
@@ -29,7 +27,7 @@ func get_position() -> int:
 	return _buffer.get_position()
 
 
-func put_data(p_data: PoolByteArray, rangev := Vector2(-1, -1)):
+func put_data(p_data: PackedByteArray, rangev := Vector2(-1, -1)):
 	var start := int(rangev.x)
 	var end := int(rangev.y)
 
@@ -47,11 +45,11 @@ func put_data(p_data: PoolByteArray, rangev := Vector2(-1, -1)):
 	_buffer.put_data(p_data)
 	data = _buffer.data_array
 
-	if ranges.empty():
+	if ranges.is_empty():
 		ranges.append(rangev)
 		return
 
-	var new_ranges := PoolVector2Array()
+	var new_ranges := PackedVector2Array()
 	var added := false
 	for r in ranges:
 		match _relpos(rangev, r):
@@ -78,15 +76,15 @@ func get_range_statuses(start, end) -> Array:
 		result.append({rangev = m, missing = true})
 	for p in present:
 		result.append({rangev = p, missing = false})
-	result.sort_custom(self, "_sort_range_statuses")
+	result.sort_custom(self._sort_range_statuses)
 	return result
 
 
-func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2Array:
-	if p_ranges.empty():
-		return PoolVector2Array([Vector2(start, end)])
+func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PackedVector2Array:
+	if p_ranges.is_empty():
+		return PackedVector2Array([Vector2(start, end)])
 
-	var missing := PoolVector2Array()
+	var missing := PackedVector2Array()
 	var rangev := Vector2(start, end)
 	for r in p_ranges:
 		match _relpos(rangev, r):
@@ -109,8 +107,8 @@ func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2
 
 
 func clear() -> void:
-	data = PoolByteArray()
-	ranges = PoolVector2Array()
+	data = PackedByteArray()
+	ranges = PackedVector2Array()
 	_buffer = StreamPeerBuffer.new()
 	_buffer.data_array = data
 

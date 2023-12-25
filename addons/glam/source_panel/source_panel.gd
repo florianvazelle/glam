@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Control
 
 const Asset := preload("../assets/asset.gd")
@@ -12,7 +10,7 @@ const Thumbnail := preload("../controls/thumbnail/thumbnail.gd")
 
 signal source_selected(index)
 
-export(Script) var source_script
+@export var source_script: Script
 
 var source: Source
 var authentication_scene: PackedScene
@@ -20,40 +18,38 @@ var authentication: Control
 var editor_interface: EditorInterface
 var selected_thumbnail: Thumbnail
 
-var _file := File.new()
-
-onready var _account_button := find_node("AccountButton")
-onready var account_menu := find_node("AccountMenu")
-onready var user_label := find_node("UserLabel")
-onready var source_link := find_node("SourceLink")
-onready var thumbnail_grid := find_node("ThumbnailGrid")
-onready var _details_pane := find_node("DetailsPane")
-onready var _trailer := find_node("Trailer")
-onready var _results_pane := find_node("ResultsPane")
-onready var _status_bar := find_node("StatusBar")
-onready var _results := find_node("Results")
-onready var _glam = get_tree().get_meta("glam")
-onready var _thumbnail_grid := find_node("ThumbnailGrid")
-onready var _status_line := find_node("StatusLine")
-onready var _audio_controls := find_node("AudioControls")
-onready var _volume_slider := find_node("VolumeSlider")
-onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
+@onready var _account_button := find_child("AccountButton")
+@onready var account_menu := find_child("AccountMenu")
+@onready var user_label := find_child("UserLabel")
+@onready var source_link := find_child("SourceLink")
+@onready var thumbnail_grid := find_child("ThumbnailGrid")
+@onready var _details_pane := find_child("DetailsPane")
+@onready var _trailer := find_child("Trailer")
+@onready var _results_pane := find_child("ResultsPane")
+@onready var _status_bar := find_child("StatusBar")
+@onready var _results := find_child("Results")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _thumbnail_grid := find_child("ThumbnailGrid")
+@onready var _status_line := find_child("StatusLine")
+@onready var _audio_controls := find_child("AudioControls")
+@onready var _volume_slider := find_child("VolumeSlider")
+@onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
 
 
 func _ready():
 	if not source:
 		return
 
-	source.connect("fetch_started", self, "_on_fetch_started")
-	source.connect("fetch_completed", self, "_on_fetch_completed")
-	source.connect("query_changed", self, "_on_query_changed")
+	source.connect("fetch_started", self._on_fetch_started)
+	source.connect("fetch_completed", self._on_fetch_completed)
+	source.connect("query_changed", self._on_query_changed)
 	source_link.url = source.get_url()
 
 	source.connect("status_line_changed", _status_line, "set_text")
 	_status_line.text = source.status_line
 
 	# Update cache size status.
-	_request_cache.connect("cache_size_updated", self, "_on_cache_size_updated")
+	_request_cache.connect("cache_size_updated", self._on_cache_size_updated)
 	_request_cache.delete_expired()
 
 	# If the source requires authentication, then it must provide an authentication
@@ -79,7 +75,7 @@ func hide() -> void:
 
 
 func _on_cache_size_updated(size: int) -> void:
-	find_node("CacheLabel").text = "Cache Size: %dM" % (size / 1000000)
+	find_child("CacheLabel").text = "Cache Size: %dM" % (size / 1000000)
 
 
 func _on_search_entered(text: String) -> void:
@@ -107,15 +103,15 @@ func _on_fetch_completed(result: Source.FetchResult):
 
 	# Ensure results are for the current query. Yield for some frames to ensure
 	# everything is up to date before checking.
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 	if result.get_query_hash() != source.get_query_hash():
 		return
 
 	# Update downloaded status of assets.
 	for asset in assets:
 		asset.filepath = source.get_asset_path(asset)
-		asset.downloaded = _file.file_exists(asset.filepath)
+		asset.downloaded = FileAccess.file_exists(asset.filepath)
 		if asset is AudioStreamAsset:
 			_audio_controls.visible = true
 			asset.set_meta("volume", linear2db(_volume_slider.value))
@@ -132,7 +128,7 @@ func _on_fetch_completed(result: Source.FetchResult):
 				if is_instance_valid(source) and source.can_fetch_more():
 					_trailer.status = _trailer.Status.LOADING
 					for _i in range(2):
-						yield(get_tree(), "physics_frame")
+						await get_tree().physics_frame
 					_enusure_grid_full()
 				else:
 					_trailer.status = _trailer.Status.NO_MORE_RESULTS
@@ -156,12 +152,12 @@ func _enusure_grid_full() -> void:
 		and _thumbnail_grid.get_child_count() > 0
 	):
 		var num_fetched = _thumbnail_grid.get_child_count()
-		var thumbnail_height = _thumbnail_grid.get_child(0).rect_size.y
+		var thumbnail_height = _thumbnail_grid.get_child(0).size.y
 		var rows = ceil(num_fetched / _thumbnail_grid.columns)
 		var space = (
-			min(rect_size.y, get_viewport_rect().size.y)
+			min(size.y, get_viewport_rect().size.y)
 			- (rows * thumbnail_height)
-			+ _trailer.rect_size.y
+			+ _trailer.size.y
 		)
 		if space > 0:
 			_trailer.status = _trailer.Status.LOADING
@@ -176,18 +172,18 @@ func _on_query_changed():
 
 func _check_authentication():
 	if authentication:
-		var authenticated = yield(source.get_authenticated(), "completed")
+		var authenticated = await source.get_authenticated().completed
 		authentication.visible = not authenticated
 		_results_pane.visible = authenticated
 		_status_bar.visible = authenticated
 
 		var popup_menu: PopupMenu = _account_button.get_popup()
 
-		if not popup_menu.is_connected("id_pressed", self, "_on_account_menu_id_pressed"):
-			popup_menu.connect("id_pressed", self, "_on_account_menu_id_pressed")
+		if not popup_menu.is_connected("id_pressed", self._on_account_menu_id_pressed):
+			popup_menu.connect("id_pressed", self._on_account_menu_id_pressed)
 
 		if authenticated:
-			var user = yield(source.get_auth_user(), "completed")
+			var user = await source.get_auth_user().completed
 			_account_button.text = "Account"
 			popup_menu.clear()
 			popup_menu.add_item("User: %s" % user)

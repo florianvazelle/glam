@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <gdash@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Object
 
 const SCRIPT_PATH = "res://addons/glam/util/gdash.gd"
@@ -50,10 +48,10 @@ static func get_val(object, path: String, fallback = null):
 	var key = keys.pop_front()
 
 	if object is Dictionary and object.has(key) or object is Object and key in object:
-		if keys.empty():
+		if keys.is_empty():
 			return object.get(key)
 		elif object.get(key) is Object or object.get(key) is Dictionary:
-			return get_val(object.get(key), PoolStringArray(keys).join("."), fallback)
+			return get_val(object.get(key), ".".join(PackedStringArray(keys)), fallback)
 
 	return fallback
 
@@ -73,7 +71,7 @@ static func find(collection, predicate, from_index = 0):
 
 
 class Chain:
-	extends Reference
+	extends RefCounted
 	var GDash = load(SCRIPT_PATH)
 
 	var _value

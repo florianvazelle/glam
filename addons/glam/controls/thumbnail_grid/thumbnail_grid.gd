@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends GridContainer
 
 const Asset := preload("../../assets/asset.gd")
@@ -10,14 +8,14 @@ const ThumbnailScene := preload("../thumbnail/thumbnail.tscn")
 signal asset_selected(asset)
 signal download_requested(asset)
 
-var zoom_factor := 1.25 setget set_zoom_factor
+var zoom_factor := 1.25: set = set_zoom_factor
 
 var _button_group := ButtonGroup.new()
 
 
 func set_zoom_factor(value := 1.0) -> void:
 	zoom_factor = value
-	columns = floor(rect_size.x / (Thumbnail.DEFAULT_WIDTH * zoom_factor))
+	columns = floor(size.x / (Thumbnail.DEFAULT_WIDTH * zoom_factor))
 
 
 func _notification(what):
@@ -37,12 +35,12 @@ func append(assets := []) -> void:
 		assert(asset is Asset, "%s is not an Asset." % asset)
 		var thumbnail: Thumbnail = ThumbnailScene.instance()
 		thumbnail.group = _button_group
-		thumbnail.connect("toggled", self, "_on_thumbnail_toggled", [thumbnail])
-		thumbnail.connect("download_requested", self, "_on_download_requested")
+		# thumbnail.connect("toggled", self._on_thumbnail_toggled, [thumbnail])
+		thumbnail.connect("download_requested", self._on_download_requested)
 		add_child(thumbnail)
 		thumbnail.asset = asset
 		if first:
-			thumbnail.pressed = true
+			thumbnail.set_pressed(true)
 			first = false
 
 

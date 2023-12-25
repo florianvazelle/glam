@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../source.gd"
 
 const AuthenticationScene := preload("./authentication.tscn")
@@ -41,14 +39,14 @@ func get_url() -> String:
 
 
 func get_auth_user():
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	return _api_key.split("-")[0]
 
 
 func get_authenticated() -> bool:
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 
-	if not _api_key.empty():
+	if not _api_key.is_empty():
 		return true
 
 	var config := ConfigFile.new()
@@ -69,7 +67,7 @@ func get_authenticated() -> bool:
 		http_request.queue_free()
 		return false
 
-	var res = yield(http_request, "request_completed")
+	var res = await http_request.request_completed
 	if res[0] != OK or res[1] != 200:
 		http_request.queue_free()
 		return false
@@ -112,7 +110,7 @@ func fetch() -> void:
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(API_URL + query_string, result), "completed")
+	await _fetch(API_URL + query_string, result).completed
 	if result.get_query_hash() == get_query_hash():
 		#_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -123,11 +121,11 @@ func can_fetch_more() -> bool:
 
 
 func fetch_more() -> void:
-	yield(fetch(), "completed")
+	await fetch().completed
 
 
 func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
-	var json = yield(_fetch_json(url), "completed")
+	var json = await _fetch_json(url).completed
 
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
@@ -158,16 +156,16 @@ func _download(asset: GLAMAsset) -> void:
 	var format = "Vector" if extension == "svg" else asset.download_format.to_int()
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
-	var err = yield(_download_file(url, dest), "completed")
+	var err = await _download_file(url, dest).completed
 
 	if err != OK:
 		return
 
 	var glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
-	yield(import_files([dest]), "completed")
+	await import_files([dest]).completed
 	glam.locked = false
 
 	asset.create_license_file(dest)
@@ -176,7 +174,7 @@ func _download(asset: GLAMAsset) -> void:
 	var proxy_texture := ProxyTexture.new()
 	proxy_texture.set_base(load(dest))
 	proxy_texture.set_meta("glam_asset", asset)
-	ResourceSaver.save(get_asset_path(asset), proxy_texture)
+	ResourceSaver.save(proxy_texture, get_asset_path(asset))
 	create_metadata_license_file(get_asset_path(asset))
 	_save_glam_file(asset)
 
@@ -190,7 +188,7 @@ func _on_query_changed():
 
 class StreamTextureAsset:
 	tool
-	extends Reference
+	extends RefCounted
 
 	const Asset := preload("../../assets/asset.gd")
 	const GDash := preload("../../util/gdash.gd")
@@ -251,7 +249,7 @@ class StreamTextureAsset:
 			download_urls["Vector (Original)"] = data.vectorURL
 
 		asset.download_formats = download_urls.keys()
-		asset.download_formats.sort_custom(StreamTextureAsset, "_sort_numeric")
+		asset.download_formats.sort_custom(StreamTextureAsset._sort_numeric)
 		for format in asset.download_formats:
 			if format.begins_with("Vector"):
 				asset.download_format = format

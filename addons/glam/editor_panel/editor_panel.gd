@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Control
 
 const FileScanner := preload("../util/file_scanner.gd")
@@ -10,19 +8,18 @@ signal source_changed(new_source)
 
 var sources := []
 
-onready var source_panels := $VBoxContainer/SourcePanels
-onready var source_select: OptionButton = $VBoxContainer/HBoxContainer/SourceSelect
-onready var _query_bar := find_node("QueryBar")
-onready var _menu_button := find_node("MenuButton")
+@onready var source_panels := $VBoxContainer/SourcePanels
+@onready var source_select: OptionButton = $VBoxContainer/HBoxContainer/SourceSelect
+@onready var _query_bar := find_child("QueryBar")
+@onready var _menu_button := find_child("MenuButton")
 
 
 func _ready():
 	# Add sources to the OptionButton, clearing it first.
 	source_select.clear()
-	var dir = Directory.new()
 	var sources_dir := "%s/../sources" % filename.get_base_dir()  # ./sources
-	dir.open(sources_dir)
-	dir.list_dir_begin(true, true)
+	var dir := DirAccess.open(sources_dir)
+	dir.list_dir_begin()
 	var source_dir: String = dir.get_next()
 	while source_dir != "":
 		if dir.current_is_dir():
@@ -47,7 +44,7 @@ func _ready():
 	_menu_button.get_popup().add_item("Generate Licenses", 0)
 	#_menu_button.get_popup().add_item("Generate credits.json", 1)
 	_menu_button.get_popup().add_item("Generate CREDITS.md", 2)
-	_menu_button.get_popup().connect("id_pressed", self, "_on_menu_id_pressed")
+	_menu_button.get_popup().connect("id_pressed", self._on_menu_id_pressed)
 
 	select_source(0)
 
@@ -77,16 +74,15 @@ func _on_menu_id_pressed(id: int):
 
 	match id:
 		0:  # Generate Licenses.
-			var dir := Directory.new()
 			for path in paths:
 				var asset: GLAMAsset = load(path)
-				if dir.file_exists(path.get_basename()):
+				if FileAccess.file_exists(path.get_basename()):
 					asset.create_license_file(path.get_basename())
 
 		1:  # Generate credits.json.
-			var file := File.new()
-
-			if file.open("credits.json", File.WRITE) != OK:
+			var file := FileAccess.open("credits.json", FileAccess.WRITE)
+			var err := FileAccess.get_open_error()
+			if err != OK:
 				return
 
 			file.store_line(
@@ -108,9 +104,9 @@ func _on_menu_id_pressed(id: int):
 			file.close()
 
 		2:  # Generate CREDITS.md.
-			var file := File.new()
+			var file := FileAccess.open("res://CREDITS.md", FileAccess.WRITE)
 			assert(
-				file.open("res://CREDITS.md", File.WRITE) == OK,
+				FileAccess.get_open_error() == OK,
 				"Couldn't open res://CREDITS.md file for writing."
 			)
 			file.store_string(Markdown.generate_credits("res://", self.sources))
@@ -119,7 +115,6 @@ func _on_menu_id_pressed(id: int):
 
 static func _get_asset_paths_rec(root := "res://") -> Array:
 	var paths := []
-	var file := File.new()
 
 	for path in FileScanner.list_files_rec(root):
 		if path is String:

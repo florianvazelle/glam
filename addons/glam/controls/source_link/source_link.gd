@@ -1,19 +1,17 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Button
 
 const Source = preload("../../sources/source.gd")
 
-var url: String setget set_url
+var url: String: set = set_url
 
-onready var _glam = get_tree().get_meta("glam")
+@onready var _glam = get_tree().get_meta("glam")
 
 
 func set_url(value: String) -> void:
 	url = value
 	text = url
-	visible = not url.empty()
+	visible = not url.is_empty()
 
 
 func _ready():

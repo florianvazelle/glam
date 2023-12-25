@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends ScrollContainer
 
 signal authenticated
@@ -10,15 +8,15 @@ var source: Node
 var values: Dictionary
 var loading := false
 
-onready var instructions_label := $_/InstructionsLabel
-onready var http_request := $HTTPRequest
-onready var submit_button: Button = $_/SubmitButton
-onready var error_label: RichTextLabel = $_/ErrorLabel
-onready var fields = $_/Fields
+@onready var instructions_label := $_/InstructionsLabel
+@onready var http_request := $HTTPRequest
+@onready var submit_button: Button = $_/SubmitButton
+@onready var error_label: RichTextLabel = $_/ErrorLabel
+@onready var fields = $_/Fields
 
 
 class Field:
-	extends Reference
+	extends RefCounted
 	var name: String
 	var value
 
@@ -51,7 +49,7 @@ func set_submitting(submitting: bool, error_message := "") -> void:
 		submit_button.disabled = false
 		submit_button.loading = false
 
-		if error_message.empty():
+		if error_message.is_empty():
 			submit_button.status = submit_button.Status.NONE
 			for key in values.keys():
 				values[key] = ""
@@ -73,9 +71,9 @@ func get_label() -> String:
 
 func _ready():
 	if not http_request.is_connected(
-		"request_completed", self, "_on_HTTPRequest_request_completed"
+		"request_completed", self._on_HTTPRequest_request_completed
 	):
-		http_request.connect("request_completed", self, "_on_HTTPRequest_request_completed")
+		http_request.connect("request_completed", self._on_HTTPRequest_request_completed)
 
 	values = get_values()
 	instructions_label.bbcode_text = get_label()
@@ -87,9 +85,9 @@ func _ready():
 
 		var field_input := LineEdit.new()
 		field_input.align = LineEdit.ALIGN_CENTER
-		field_input.rect_min_size.x = 400
+		field_input.custom_minimum_size.x = 400
 		field_input.text = values[key]
-		field_input.connect("text_changed", self, "_on_field_text_changed", [key])
+		field_input.connect("text_changed", self._on_field_text_changed, [key])
 
 		fields.add_child(field_label)
 		fields.add_child(field_input)

@@ -1,23 +1,20 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <gdash@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
-extends Reference
+@tool
+extends RefCounted
 
 
-static func list_files_rec(path: String, extension := ".glam") -> PoolStringArray:
-	var dir := Directory.new()
-	var files := PoolStringArray()
+static func list_files_rec(path: String, extension := ".glam") -> PackedStringArray:
+	var files := PackedStringArray()
 
-	var err := dir.open(path)
-	if err != OK:
+	var dir := DirAccess.open(path)
+	if dir == null:
 		return files
 
-	dir.list_dir_begin(true)
+	dir.list_dir_begin()
 	var file_name: String = dir.get_next()
 	while file_name != "":
 		# Ignore directories containing .gdignore or .glamignore file.
 		if file_name == ".gdignore" or file_name == ".glamignore":
-			return PoolStringArray()
+			return PackedStringArray()
 
 		if dir.current_is_dir():
 			files.append_array(list_files_rec("%s/%s" % [path, file_name], extension))
@@ -29,9 +26,8 @@ static func list_files_rec(path: String, extension := ".glam") -> PoolStringArra
 	return files
 
 
-static func list_assets_rec(root := "res://") -> PoolStringArray:
-	var paths := PoolStringArray()
-	var file := File.new()
+static func list_assets_rec(root := "res://") -> PackedStringArray:
+	var paths := PackedStringArray()
 
 	for path in list_files_rec(root):
 		if path is String:

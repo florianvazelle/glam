@@ -1,20 +1,18 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends AudioStreamPlayer
 
 const CacheableHTTPRequest := preload("./cacheable_http_request.gd")
 
-export(String) var url := "" setget set_url
+@export var url := "": set = set_url
 
-onready var _http_request := CacheableHTTPRequest.new()
+@onready var _http_request := CacheableHTTPRequest.new()
 
 var loading := false
 
 
 func _ready():
 	add_child(_http_request)
-	_http_request.connect("request_completed", self, "_on_request_completed")
+	_http_request.connect("request_completed", self._on_request_completed)
 
 
 func set_url(value: String) -> void:

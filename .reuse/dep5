@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: GLAM (Godot Libre Asset Manager)
-Upstream-Contact: Leroy Hopson <glam@leroy.geek.nz>
-Source: https://github.com/lihop/glam
+Upstream-Name: glam
+Upstream-Contact: Florian Vazelle <florian.vazelle@vivaldi.net>
+Source: https://github.com/florianvazelle/glam
 
 # Licenses in this directory are not used by the project, but are used by
 # assets from the various sources. However the REUSE linter complains about
@@ -10,8 +10,38 @@ Files: addons/glam/.LICENSES/*
 Copyright: ignore
 License: CC0-1.0
 
-# Sample paragraph, commented out:
-#
-# Files: src/*
-# Copyright: $YEAR $NAME <$CONTACT>
-# License: ...
+Files: *
+Copyright: 
+  2021-2022 Leroy Hopson
+  2023-present Florian Vazelle
+License: MIT
+
+# Addons
+
+Files: addons/gd-plug/*
+Copyright: 2021 Tan Jian Ping
+License: MIT
+Source: https://github.com/imjp94/gd-plug
+
+Files: addons/gut/*
+Copyright: 2018 Tom "Butch" Wesley
+License: MIT
+Source: https://github.com/bitwes/Gut
+
+# Icons
+
+Files: addons/glam/icon_glam.svg
+Copyright: Fonticons, Inc.
+License: CC-BY-3.0
+
+Files: addons/glam/sources/ambient_cg/icon.png
+Copyright: Lennart Demes
+License: LicenseRef-branding
+
+Files: addons/glam/sources/freesound/icon.png
+Copyright: Music Technology Group
+License: LicenseRef-branding
+
+Files: addons/glam/sources/pixabay/icon.png
+Copyright: Pixabay
+License: LicenseRef-branding

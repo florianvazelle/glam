@@ -1,13 +1,11 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Control
 
-export(String) var waveform_image_url
-export(String) var preview_url setget set_preview_url
+@export var waveform_image_url: String
+@export var preview_url: String: set = set_preview_url
 
-onready var _button: Button = find_node("Button")
-onready var _http_request: HTTPRequest = find_node("HTTPRequest")
+@onready var _button: Button = find_child("Button")
+@onready var _http_request: HTTPRequest = find_child("HTTPRequest")
 
 
 func _ready():

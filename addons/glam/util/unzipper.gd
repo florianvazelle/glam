@@ -10,8 +10,8 @@ const ARG_PREFIX = "--zip-to-unpack "
 # Unpack a zip archive.
 # zip_path is the path of zip archive to unpack.
 static func unzip(zip_path) -> Dictionary:
-	var file := File.new()
-	var err = file.open(zip_path, File.READ)
+	var file := FileAccess.open(zip_path, FileAccess.READ)
+	var err = FileAccess.get_open_error()
 	if err != OK:
 		return {error = err}
 	var out = []
@@ -61,32 +61,32 @@ func _init():
 	var base_name = name_regex.search(zip_path).get_string(1)
 
 	var out_path = zip_path.left(zip_path.find(base_name)) + base_name + "/"
-	Directory.new().make_dir_recursive(out_path)
+	DirAccess.make_dir_recursive_absolute(out_path)
 	unpack_dir("res://", out_path)
 	quit(0)
 
 
 func unpack_dir(src_path, out_path):
-	var dir = Directory.new()
-	dir.open(src_path)
-	dir.list_dir_begin(true)
+	var dir := DirAccess.open(src_path)
+	dir.list_dir_begin()
 
 	var file_name = dir.get_next()
 	while file_name != "":
 		if dir.current_is_dir():
 			var new_src_path = "%s%s/" % [src_path, file_name]
 			var new_out_path = "%s%s/" % [out_path, file_name]
-			Directory.new().make_dir_recursive(new_out_path)
+			DirAccess.make_dir_recursive_absolute(new_out_path)
 			unpack_dir(new_src_path, new_out_path)
 		else:
 			var file_src_path = "%s%s" % [src_path, file_name]
 			var file_out_path = "%s%s" % [out_path, file_name]
 			print("UnzippedFile:%s\n" % file_out_path)
-			var file = File.new()
-			file.open(file_src_path, File.READ)
+			
+			var file = FileAccess.open(file_src_path, FileAccess.READ)
 			var data = file.get_buffer(file.get_len())
 			file.close()
-			file.open(file_out_path, File.WRITE)
+			
+			file = FileAccess.open(file_out_path, FileAccess.WRITE)
 			file.store_buffer(data)
 			file.close()
 		file_name = dir.get_next()

@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends AudioStreamPlayer
 
 const HTTPRangeRequest := preload("./cacheable_http_range_request.gd")
@@ -17,45 +15,45 @@ var _media_type: String
 var _size: int
 var _http: HTTPRangeRequest
 var _stream: AudioStream
-var _data := PoolByteArray()
+var _data := PackedByteArray()
 var _playing := false
 var _rangev: Vector2
 
 # The position that the audio started playing from as the result of a play() or
 # seek() call. _stream will never contain data before this position and actual
-# position in the track will be this position + .get_playback_position().
+# position in the track will be this position + super.get_playback_position().
 var _start_position := 0.0
 
 # The position that the parent player should resume from after data has been
-# appended to this stream. This is used to track .get_playback_position().
+# appended to this stream. This is used to track super.get_playback_position().
 var _resume_position := 0.0
 
 var _end_received := false
 
 
 func _ready():
-	.connect("finished", self, "_on_finished")
+	connect("fully_finished", self._on_finished)
 
 
 func is_open() -> bool:
-	return _size > 0 and not _media_type.empty()
+	return _size > 0 and not _media_type.is_empty()
 
 
 func is_buffering() -> bool:
-	return _playing and (not is_open() or not .is_playing())
+	return _playing and (not is_open() or not super.is_playing())
 
 
 func get_playback_position() -> float:
-	return _start_position + .get_playback_position()
+	return _start_position + super.get_playback_position()
 
 
-func connect(signal_name: String, target: Object, method: String, binds := [], flags := 0) -> int:
-	return .connect(signal_name, target, method, binds, flags)
-	match signal_name:
-		"finished":
-			return .connect("fully_finished", target, method, binds, flags)
-		_:
-			return .connect(signal_name, target, method, binds, flags)
+# func connect(signal_name: String, method: Callable, binds := [], flags := 0) -> int:
+# 	return super.connect(signal_name, target, method, binds, flags)
+# 	match signal_name:
+# 		"finished":
+# 			return super.connect("fully_finished", target, method, binds, flags)
+# 		_:
+# 			return super.connect(signal_name, target, method, binds, flags)
 
 
 func open(url: String, p_duration: float, headers := []) -> int:
@@ -65,7 +63,7 @@ func open(url: String, p_duration: float, headers := []) -> int:
 	duration = p_duration
 
 	_http = HTTPRangeRequest.new()
-	_http.connect("open_completed", self, "_on_http_opened")
+	_http.connect("open_completed", self._on_http_opened)
 	add_child(_http)
 
 	return _http.open(url, headers)
@@ -99,14 +97,15 @@ func seek(to_position: float):
 				_start = _start_position * Bps
 			_:
 				push_error("Unsupported media type: '%s'. Closing." % _media_type)
-				return close()
+				close()
+				return
 
 		_http.request_range(_start, _size - 1)
 
 
 func stop():
-	.stop()
-	_resume_position = .get_playback_position()
+	super.stop()
+	_resume_position = super.get_playback_position()
 	_playing = false
 
 	if is_open():
@@ -126,7 +125,7 @@ func close() -> void:
 		_http.queue_free()
 
 
-func _on_data_received(data: PoolByteArray, rangev: Vector2) -> void:
+func _on_data_received(data: PackedByteArray, rangev: Vector2) -> void:
 	if rangev.y >= _size - 1:
 		_end_received = true
 
@@ -135,7 +134,7 @@ func _on_data_received(data: PoolByteArray, rangev: Vector2) -> void:
 	if is_buffering():
 		_stream.data = _data
 		stream = _stream
-		.play(_resume_position)
+		super.play(_resume_position)
 		call_deferred("emit_signal", "started")
 
 
@@ -144,7 +143,7 @@ func _exit_tree():
 
 
 func _on_http_opened(result: int, size: int, media_type: String) -> void:
-	if result != OK or size < 0 or media_type.empty():
+	if result != OK or size < 0 or media_type.is_empty():
 		call_deferred("emit_signal", "open_completed", FAILED)
 		return
 
@@ -159,7 +158,7 @@ func _on_http_opened(result: int, size: int, media_type: String) -> void:
 			call_deferred("emit_signal", "open_completed", FAILED)
 			return
 
-	_http.connect("data_received", self, "_on_data_received")
+	_http.connect("data_received", self._on_data_received)
 	call_deferred("emit_signal", "open_completed", OK)
 
 	if is_buffering():
@@ -167,19 +166,19 @@ func _on_http_opened(result: int, size: int, media_type: String) -> void:
 
 
 func _on_finished():
-	_resume_position = .get_playback_position()
+	_resume_position = super.get_playback_position()
 
 	if is_buffering() and _stream.data.size() < _data.size():
 		_stream.data = _data
 		stream = _stream
-		.play(_resume_position)
+		super.play(_resume_position)
 	else:
 		emit_signal("stopped")
 
 	if (
 		_end_received
 		and _stream.data.size() >= _data.size()
-		and .get_playback_position() >= _stream.get_length()
+		and super.get_playback_position() >= _stream.get_length()
 	):
 		stop()
 		emit_signal("fully_finished")

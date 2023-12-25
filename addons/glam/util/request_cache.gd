@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Node
 
 const Request := preload("./request.gd")
@@ -15,8 +13,6 @@ var cache_dir := ProjectSettings.globalize_path(
 	ProjectSettings.get_meta("glam/directory") + "/cache"
 )
 
-var _dir := Directory.new()
-var _file := File.new()
 var _ttl_regex := RegEx.new()
 
 
@@ -26,8 +22,8 @@ func _ready():
 
 func set_cache_dir(value: String):
 	cache_dir = ProjectSettings.globalize_path(value)
-	if not _dir.dir_exists(cache_dir):
-		_dir.make_dir_recursive(cache_dir)
+	if not DirAccess.dir_exists_absolute(cache_dir):
+		DirAccess.make_dir_recursive_absolute(cache_dir)
 
 
 func get_response(request: Request) -> CachedResponse:
@@ -38,11 +34,11 @@ func get_response(request: Request) -> CachedResponse:
 func get_resource(request: Request) -> Resource:
 	var file_path = get_file_path(request)
 
-	if not _file.file_exists(file_path):
+	if not FileAccess.file_exists(file_path):
 		return null
 
 	if is_expired(file_path):
-		_dir.remove(file_path)
+		DirAccess.remove_absolute(file_path)
 		return null
 
 	return load(file_path)
@@ -56,7 +52,7 @@ func get_ttl(file_name: String) -> int:
 
 func is_expired(file_path: String) -> bool:
 	var ttl = get_ttl(file_path)
-	var age = OS.get_unix_time() - _file.get_modified_time(file_path)
+	var age = Time.get_unix_time_from_system() - FileAccess.get_modified_time(file_path)
 	return age >= ttl
 
 
@@ -71,28 +67,29 @@ func store(request: Request, result, response_code, headers, body):
 
 func store_resource(request: Request, resource: Resource):
 	var file_path := get_file_path(request)
-	ResourceSaver.save(file_path, resource, ResourceSaver.FLAG_COMPRESS)
-	_file.open(file_path, File.READ)
-	cache_size_bytes += _file.get_len()
-	_file.close()
+	ResourceSaver.save(resource, file_path, ResourceSaver.FLAG_COMPRESS)
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	cache_size_bytes += file.get_len()
+	file.close()
 	emit_signal("cache_size_updated", cache_size_bytes)
 
 
 func delete_expired():
 	cache_size_bytes = 0
-	if _dir.open(cache_dir) == OK:
-		_dir.list_dir_begin(true, true)
-		var file_name := _dir.get_next()
+	var dir := DirAccess.open(cache_dir)
+	if dir != null:
+		dir.list_dir_begin()
+		var file_name := dir.get_next()
 		while file_name != "":
 			if file_name.ends_with(".res"):
 				var file_path = "%s/%s" % [cache_dir, file_name]
 				if is_expired(file_path):
-					_dir.remove(file_path)
+					dir.remove(file_path)
 				else:
-					_file.open(file_path, File.READ)
-					cache_size_bytes += _file.get_len()
-					_file.close()
-			file_name = _dir.get_next()
+					var file := FileAccess.open(file_path, FileAccess.READ)
+					cache_size_bytes += file.get_len()
+					file.close()
+					file_name = dir.get_next()
 		emit_signal("cache_size_updated", cache_size_bytes)
 
 

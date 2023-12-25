@@ -1,15 +1,13 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMAssetSaver
 extends ResourceFormatSaver
 
 
-func get_recognized_extensions(resource) -> PoolStringArray:
+func get_recognized_extensions(resource) -> PackedStringArray:
 	if resource == null or not resource is GLAMAsset:
-		return PoolStringArray()
+		return PackedStringArray()
 
-	return PoolStringArray(["glam"])
+	return PackedStringArray(["glam"])
 
 
 func recognize(resource: Resource) -> bool:
@@ -24,22 +22,23 @@ func save(path: String, resource: Resource, flags: int) -> int:
 	flags &= ~ResourceSaver.FLAG_COMPRESS
 
 	# Save in a '.tres' file first using the regular ResourceSaver.
-	var err := ResourceSaver.save(tmp, resource, flags)
+	var err := ResourceSaver.save(resource, tmp, flags)
 	if err != OK:
 		return err
 
 	# Get the contents of the '.tres' file.
-	var file := File.new()
-	err = file.open(tmp, File.READ)
+	var file := FileAccess.open(tmp, FileAccess.READ)
+	err = FileAccess.get_open_error()
 	if err != OK:
-		Directory.new().remove(tmp)
+		DirAccess.remove_absolute(tmp)
 		return err
 
 	var body := file.get_buffer(file.get_len())
 	file.close()
-	Directory.new().remove(tmp)
+	DirAccess.remove_absolute(tmp)
 
-	err = file.open(path, File.WRITE)
+	file = FileAccess.open(path, FileAccess.WRITE)
+	err = FileAccess.get_open_error()
 	if err != OK:
 		return err
 

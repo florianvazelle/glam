@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2022 Leroy Hopson <copyright@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "res://addons/gut/test.gd"
 
 const EditorIcons := preload("res://addons/glam/icons/editor_icons.gd")
@@ -26,10 +24,9 @@ func before_all():
 	var paths = []
 	for path in required_directories:
 		paths.append(ProjectSettings.globalize_path(path))
-	var dir := Directory.new()
 	for path in paths:
-		if not dir.dir_exists(path):
-			dir.make_dir_recursive(path)
+		if not DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_recursive_absolute(path)
 		assert(dir.dir_exists(path), "Required directory '%s' does not exist." % path)
 
 	http_client_pool = {}
@@ -41,7 +38,7 @@ func before_all():
 
 
 class MockEditorFileSystem:
-	extends Reference
+	extends RefCounted
 	signal resources_reimported
 
 	func scan():

@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-extends Reference
+extends RefCounted
 
 const licenses = preload("./custom_license_data.gd").data
 const spdx_licenses = preload("./spdx_license_data.gd").data.licenses

@@ -1,27 +1,24 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Panel
 
 const Asset := preload("../assets/asset.gd")
-const AudioStreamAsset := preload("../assets/audio_stream_asset.gd")
 const LicenseDB := preload("../licenses/license_db.gd")
 
 signal tag_selected(tag)
 signal download_requested(asset)
 
-var asset: Asset setget set_asset
+var asset: Asset: set = set_asset
 var _popup_just_closed := false
 
-onready var _label := find_node("NoAssetLabel")
-onready var _preview_image := find_node("PreviewImage")
-onready var _display_name := find_node("DisplayName")
-onready var _scroll_container := find_node("ScrollContainer")
-onready var _details := find_node("Details")
-onready var _tooltip := find_node("Tooltip")
-onready var _spinner := find_node("Spinner")
-onready var _preview_popup := find_node("PreviewPopup")
-onready var _download_format_option_button := find_node("DownloadFormatOptionButton")
+@onready var _label := find_child("NoAssetLabel")
+@onready var _preview_image := find_child("PreviewImage")
+@onready var _display_name := find_child("DisplayName")
+@onready var _scroll_container := find_child("ScrollContainer")
+@onready var _details := find_child("Details")
+@onready var _tooltip := find_child("Tooltip")
+@onready var _spinner := find_child("Spinner")
+@onready var _preview_popup := find_child("PreviewPopup")
+@onready var _download_format_option_button := find_child("DownloadFormatOptionButton")
 
 
 func _ready():
@@ -39,14 +36,14 @@ func set_asset(value: Asset):
 		_label.show()
 		return
 
-	if not asset.is_connected("download_format_changed", self, "_on_download_format_changed"):
-		asset.connect("download_format_changed", self, "_on_download_format_changed")
+	if not asset.is_connected("download_format_changed", self._on_download_format_changed):
+		asset.connect("download_format_changed", self._on_download_format_changed)
 
 	_label.hide()
 	_scroll_container.show()
 	_preview_popup.hide()
 	_preview_image.cancel()
-	find_node("PreviewLarge").cancel()
+	find_child("PreviewLarge").cancel()
 
 	_display_name.text = asset.title
 
@@ -63,7 +60,7 @@ func set_asset(value: Asset):
 		_preview_image.call_deferred(
 			"load_image", asset.preview_image_url_lq, asset.preview_image_flags
 		)
-		yield(_preview_image, "image_loaded")
+		await _preview_image.image_loaded
 		asset.preview_image_lq = _preview_image.texture
 
 	if asset.preview_image_url_hq:
@@ -72,28 +69,28 @@ func set_asset(value: Asset):
 
 	_details.clear()
 	_details.append_bbcode("Author: ")
-	var authors := PoolStringArray()
+	var authors := PackedStringArray()
 	for author in asset.authors:
 		if author is Asset.Author:
 			if author.url:
 				authors.append("[url=%s]%s[/url]" % [author.url, author.name])
 			else:
 				authors.append(author.name)
-	_details.append_bbcode(authors.join(", "))
+	_details.append_bbcode(", ".join(authors))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("License: ")
-	var licenses := PoolStringArray()
+	var licenses := PackedStringArray()
 	for license in asset.licenses:
 		if license is Asset.License:
 			var details = LicenseDB.get_license(license.identifier)
 			_details.append_bbcode("[url=%s]%s[/url]" % [license.identifier, license.identifier])
-	_details.append_bbcode(licenses.join(", "))
+	_details.append_bbcode(", ".join(licenses))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("Tags: ")
-	var tags := PoolStringArray()
+	var tags := PackedStringArray()
 	for tag in asset.tags:
 		tags.append("[url=%s]%s[/url]" % [tag, tag])
-	_details.append_bbcode(tags.join(", "))
+	_details.append_bbcode(", ".join(tags))
 
 
 func _on_Download_pressed():
@@ -117,7 +114,7 @@ func _on_Details_meta_hover_started(meta):
 		if LicenseDB.has_license(meta):
 			_tooltip.get_node("Label").text = LicenseDB.get_license(meta).name
 			_tooltip.visible = true  # Don't use popup() as it steals focus and causes the "hover_ended" signal to emit prematurely.
-			_tooltip.set_global_position(get_global_mouse_position())
+			_tooltip.set_position(get_global_mouse_position())
 
 
 func _on_PreviewImage_image_loaded():
@@ -126,18 +123,18 @@ func _on_PreviewImage_image_loaded():
 
 func _on_PreviewImage_gui_input(event):
 	if event is InputEventMouseButton:
-		var popup = find_node("PreviewPopup")
+		var popup = find_child("PreviewPopup")
 		if event.button_index == BUTTON_LEFT:
-			if event.pressed and not _popup_just_closed:
-				find_node("PreviewLarge").load_image(asset.preview_image_url_hq)
-				yield(find_node("PreviewLarge"), "image_loaded")
+			if event.button_pressed and not _popup_just_closed:
+				find_child("PreviewLarge").load_image(asset.preview_image_url_hq)
+				await find_child("PreviewLarge").image_loaded
 				popup.set_as_toplevel(true)
 				popup.popup_centered()
 
 
 func _on_PreviewPopup_popup_hide():
 	_popup_just_closed = true
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	_popup_just_closed = false
 
 

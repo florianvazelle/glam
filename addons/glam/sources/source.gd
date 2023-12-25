@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMSource
 extends Node
 
@@ -35,7 +33,7 @@ var source
 var loading := false
 
 var status: int = Status.NONE
-var status_line := "" setget set_status_line
+var status_line: String = "": set = set_status_line
 var config_file := (
 	"%s/source_configs/%s.cfg"
 	% [
@@ -48,12 +46,12 @@ var config_file := (
 	]
 )
 
-var _filters := [] setget , get_filters
+var _filters := []: get = get_filters
 var _filters_hash := _filters.hash()
-var _search_string := "" setget set_search_string, get_search_string
-var _sort_options := {value = null, options = []} setget , get_sort_options
+var _search_string := "": set = set_search_string, get = get_search_string
+var _sort_options := {value = null, options = []}: get = get_sort_options
 
-onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
+@onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
 
 func set_status_line(value := ""):
@@ -127,9 +125,9 @@ func fetch_more() -> void:
 
 func _ready():
 	_touch_config_file()
-	connect("fetch_started", self, "_on_fetch_started")
-	connect("fetch_completed", self, "_on_fetch_completed")
-	connect("query_changed", self, "_on_query_changed")
+	connect("fetch_started", self._on_fetch_started)
+	connect("fetch_completed", self._on_fetch_completed)
+	connect("query_changed", self._on_query_changed)
 	fetch()
 
 
@@ -165,15 +163,15 @@ func get_query_hash() -> int:
 
 
 func download(asset: GLAMAsset) -> void:
-	yield(get_tree(), "idle_frame")  # Ensure function can be 'yielded'.
+	await get_tree().idle_frame # Ensure function can be 'yielded'.
 	asset.downloading = true
-	yield(_download(asset), "completed")
+	await _download(asset)
 	asset.downloading = false
 	asset.downloaded = true
 
 
 func _download(asset: GLAMAsset) -> void:
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	assert(false, "_download() not implemented.")
 
 
@@ -215,17 +213,15 @@ func get_slug(asset: GLAMAsset) -> String:
 
 func _touch_config_file():
 	var path := ProjectSettings.globalize_path(config_file)
-	var dir := Directory.new()
-	var file := File.new()
 
-	if not dir.dir_exists(path.get_base_dir()):
-		dir.make_dir_recursive(path.get_base_dir())
+	if not DirAccess.dir_exists_absolute(path.get_base_dir()):
+		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 
-	if not dir.file_exists(path):
-		file.open(path, File.WRITE)
+	if not FileAccess.file_exists(path):
+		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.close()
 	else:
-		file.open(path, File.READ)
+		var file := FileAccess.open(path, FileAccess.READ)
 		file.close()
 
 
@@ -241,20 +237,19 @@ func import_files(files: Array):
 	fs.call_deferred("scan")
 
 	if needs_import:
-		yield(fs, "resources_reimported")
+		await fs.resources_reimported
 	while fs.is_scanning():
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 
 	# Wait a few frames for things to "settle down", otherwise we
 	# get "possible cyclic resource inclusion" errors.
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 
 
 func create_metadata_license_file(path: String) -> void:
-	var file := File.new()
-	file.open(path + ".license", File.WRITE)
+	var file := FileAccess.open(path + ".license", FileAccess.WRITE)
 	file.store_line("SPDX-FileCopyrightText: none")
 	file.store_line("SPDX-License-Identifier: CC0-1.0")
 	file.close()
@@ -262,7 +257,7 @@ func create_metadata_license_file(path: String) -> void:
 
 # Fetches and parses json data from the given url.
 func _fetch_json(url: String, headers := []) -> Dictionary:
-	yield(get_tree(), "idle_frame")  # Ensure function can be yielded.
+	await get_tree().idle_frame # Ensure function can be yielded.
 
 	var http_request := CacheableHTTPRequest.new()
 	add_child(http_request)
@@ -277,12 +272,12 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 	if err != OK:
 		return {error = err}
 
-	var response = yield(http_request, "cacheable_request_completed")
+	var response = await http_request.cacheable_request_completed
 	http_request.queue_free()
 
 	var result: int = response[0]
 	var response_code: int = response[1]
-	var body: PoolByteArray = response[3]
+	var body: PackedByteArray = response[3]
 
 	if result != OK:
 		return {error = result}
@@ -301,10 +296,10 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 # Downloads a single file from `url` to `dest` on the local machine. `dest`
 # should begin with "res://" to ensure files are only downloaded within the
 # current project directory.
-func _download_file(url: String, dest: String, headers := PoolStringArray()) -> GDScriptFunctionState:
+func _download_file(url: String, dest: String, headers := PackedStringArray()) -> GDScriptFunctionState:
 	assert(dest.is_abs_path())
 	assert(dest.begins_with("res://"), "Location outside of project directory.")
-	Directory.new().make_dir_recursive(dest.get_base_dir())
+	DirAccess.make_dir_recursive_absolute(dest.get_base_dir())
 
 	# Don't cache download requests as these files can be quite large and will
 	# be stored on the local file system anyway.
@@ -315,10 +310,10 @@ func _download_file(url: String, dest: String, headers := PoolStringArray()) -> 
 
 	var err = http_request.request(url, headers)
 	if err != OK:
-		yield(get_tree(), "idle_frame")  # Ensure function can be 'yielded'.
+		await get_tree().idle_frame # Ensure function can be 'yielded'.
 		return err
 
-	var result = yield(http_request, "request_completed")
+	var result = await http_request.request_completed
 	http_request.queue_free()
 
 	# Check err and response_code.
@@ -332,11 +327,11 @@ func _download_file(url: String, dest: String, headers := PoolStringArray()) -> 
 
 func _save_glam_file(asset: GLAMAsset) -> int:
 	var path := "%s/%s.glam" % [get_asset_directory(asset), get_slug(asset)]
-	return ResourceSaver.save(path, asset as GLAMAsset)
+	return ResourceSaver.save(asset as GLAMAsset, path)
 
 
 class FetchResult:
-	extends Reference
+	extends RefCounted
 
 	var error := OK
 	var assets := []

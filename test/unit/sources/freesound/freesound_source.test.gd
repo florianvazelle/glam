@@ -1,10 +1,9 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
 extends "../base_source_test.gd"
 
 const Asset := preload("res://addons/glam/assets/asset.gd")
 const LicenseDB := preload("res://addons/glam/licenses/license_db.gd")
 const Freesound := preload("res://addons/glam/sources/freesound/freesound_source.gd")
+const AudioStreamAsset := preload("res://addons/glam/assets/audio_stream_asset.gd")
 
 var asset: Asset
 

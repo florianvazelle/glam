@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Node
 
 const BufferCache := preload("./buffer_cache.gd")
@@ -20,7 +18,7 @@ var _headers: Array
 var _size := -1
 var _media_type: String
 var _retries := 0
-var _client: HTTPClient setget _set_client, _get_client
+var _client: HTTPClient: set = _set_client, get = _get_client
 var _chunks := []
 var _request_sent := false
 var _request_cancelled := false
@@ -42,8 +40,8 @@ func is_requesting() -> bool:
 
 
 func _ready():
-	connect("open_completed", self, "_on_request_completed")
-	connect("request_completed", self, "_on_request_completed")
+	connect("open_completed", self._on_request_completed)
+	connect("request_completed", self._on_request_completed)
 	set_process(false)
 
 
@@ -87,7 +85,7 @@ func request_range(start: int, end: int) -> int:
 	if not _chunks[0].missing:
 		var rangev = _chunks[0].rangev
 		call_deferred(
-			"emit_signal", "data_received", _cache.data.subarray(rangev.x, rangev.y), rangev
+			"emit_signal", "data_received", _cache.data.slice(rangev.x, rangev.y), rangev
 		)
 		_chunks.pop_front()
 
@@ -137,7 +135,7 @@ func _get_client() -> HTTPClient:
 			var client_pool: Dictionary = get_tree().get_meta("glam").http_client_pool
 			if _url and client_pool.has(_url.origin):
 				var clients: Array = client_pool[_url.origin]
-				while not _client and not clients.empty():
+				while not _client and not clients.is_empty():
 					var client: HTTPClient = clients.pop_back()
 					client.poll()
 					if not [HTTPClient.STATUS_RESOLVING, HTTPClient.STATUS_CONNECTING, HTTPClient.STATUS_CONNECTED].has(
@@ -157,7 +155,7 @@ func _exit_tree():
 func _connect() -> int:
 	self._client.close()
 	self._client.read_chunk_size = CHUNK_SIZE
-	var err = self._client.connect_to_host(_url.hostname, _url.port, _url.protocol == "https:")
+	var err = self._client.connect_to_host(_url.hostname, _url.port)
 	if err != OK:
 		return _error("Failed to connect to host.", err)
 	set_process(true)
@@ -192,13 +190,13 @@ func _update_connection() -> bool:
 				return false
 
 			# Send a request for the next chunk, if any.
-			if _chunks.empty():
+			if _chunks.is_empty():
 				if _range != Vector2(-1, -1) and not _request_cancelled:
 					call_deferred(
 						"emit_signal",
 						"request_completed",
 						OK,
-						_cache.data.subarray(_range.x, _range.y),
+						_cache.data.slice(_range.x, _range.y),
 						_range
 					)
 					_range = Vector2(-1, -1)
@@ -212,14 +210,14 @@ func _update_connection() -> bool:
 			if not chunk.missing and not _request_cancelled:
 				# Return chunk from cache.
 				call_deferred(
-					"emit_signal", "data_received", _cache.data.subarray(start, end), chunk.rangev
+					"emit_signal", "data_received", _cache.data.slice(start, end), chunk.rangev
 				)
 				return false
 
 			var err = self._client.request(
 				HTTPClient.METHOD_GET,
 				_url.tail,
-				PoolStringArray(["Range: bytes=%d-%d" % [start, end]] + _headers)
+				PackedStringArray(["Range: bytes=%d-%d" % [start, end]] + _headers)
 			)
 			_cache.seek(start)
 
@@ -246,7 +244,7 @@ func _update_connection() -> bool:
 				)
 
 			return false
-		HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTION_ERROR, HTTPClient.STATUS_SSL_HANDSHAKE_ERROR, HTTPClient.STATUS_CANT_RESOLVE, HTTPClient.STATUS_CANT_CONNECT, _:
+		HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTION_ERROR, HTTPClient.STATUS_TLS_HANDSHAKE_ERROR, HTTPClient.STATUS_CANT_RESOLVE, HTTPClient.STATUS_CANT_CONNECT, _:
 			_retries += 1
 			if _retries > MAX_RETRIES:
 				_error("HTTPClient failed with status '%d'." % status)
@@ -278,7 +276,7 @@ func _handle_response() -> bool:
 		_error("No content-length header.")
 		return true
 
-	if _size < 0 and _media_type.empty():
+	if _size < 0 and _media_type.is_empty():
 		_media_type = response_headers.get("content-type", "application/octet-stream").split(";")[0]
 		_size = int(response_headers.get("content-length"))
 
@@ -301,10 +299,10 @@ func _process(_delta):
 func _error(message := "", code := FAILED) -> int:
 	assert(code != OK, "Code must not be OK.")
 	err_msg = message
-	if _size < 0 and _media_type.empty():
+	if _size < 0 and _media_type.is_empty():
 		call_deferred("emit_signal", "open_completed", code, -1, "")
 	else:
-		call_deferred("emit_signal", "request_completed", code, PoolByteArray(), Vector2(-1, -1))
+		call_deferred("emit_signal", "request_completed", code, PackedByteArray(), Vector2(-1, -1))
 	return code
 
 

@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends EditorPlugin
 
 const EditorIcons := preload("./icons/editor_icons.gd")
@@ -9,7 +7,6 @@ const RequestCache := preload("./util/request_cache.gd")
 const DEFAULT_GLAM_DIR := "user://../GLAM"
 
 var assets_panel: Control
-var editor_icons: EditorIcons
 var fs: EditorFileSystem
 var request_cache: RequestCache
 var locked := false
@@ -38,21 +35,17 @@ func _enter_tree():
 	var paths = []
 	for path in required_directories:
 		paths.append(ProjectSettings.globalize_path(path))
-	var dir := Directory.new()
 	for path in paths:
-		if not dir.dir_exists(path):
-			dir.make_dir_recursive(path)
-		assert(dir.dir_exists(path), "Required directory '%s' does not exist." % path)
+		if DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_recursive_absolute(path)
 	_ensure_cachedir_tag()
 
 	_clear_tmp()
 
 	http_client_pool = {}
 	get_tree().set_meta("glam", self)
-	editor_icons = EditorIcons.new()
-	add_child(editor_icons)
 	fs = get_editor_interface().get_resource_filesystem()
-	fs.connect("resources_reload", self, "_on_resources_reload")
+	fs.connect("resources_reload", self._on_resources_reload)
 	request_cache = RequestCache.new()
 	add_child(request_cache)
 	assets_panel = preload("./editor_panel/editor_panel.tscn").instance()
@@ -67,26 +60,22 @@ func _exit_tree():
 	remove_child(request_cache)
 	request_cache.free()
 	request_cache = null
-	remove_child(editor_icons)
-	editor_icons.free()
-	editor_icons = null
 	get_tree().remove_meta("glam")
 	http_client_pool.clear()
 
 
 func get_editor_icon(icon_name: String) -> Texture:
-	return editor_icons.get_icon(icon_name)
+	return EditorInterface.get_editor_theme().get_icon(icon_name, "EditorIcons")
 
 
-func _on_resources_reload(resources: PoolStringArray) -> void:
+func _on_resources_reload(resources: PackedStringArray) -> void:
 	print("reloaded resources: ", resources as Array)
 
 
 func _ensure_cachedir_tag(path := "") -> void:
-	if path.empty():
-		path = ProjectSettings.get_meta("glam/directory") + "/cache/CACHEDIR.TAG"
-	var file := File.new()
-	file.open(path, File.WRITE)
+	if path.is_empty():
+		path = ProjectSettings.get_meta("glam/directory", DEFAULT_GLAM_DIR) + "/cache/CACHEDIR.TAG"
+	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(
 		"""Signature: 8a477f597d28d172789f06886806bc55
 # This file is a cache directory tag created by GLAM (Godot Libre Asset Manager).
@@ -98,10 +87,9 @@ func _ensure_cachedir_tag(path := "") -> void:
 
 
 func _clear_tmp():
-	var tmp_dir = ProjectSettings.get_meta("glam/directory") + "/tmp"
-	var dir := Directory.new()
-	dir.open(tmp_dir)
-	dir.list_dir_begin(true)
+	var tmp_dir = ProjectSettings.get_meta("glam/directory", DEFAULT_GLAM_DIR) + "/tmp"
+	var dir := DirAccess.open(tmp_dir)
+	dir.list_dir_begin()
 	var file_name := dir.get_next()
 	while file_name != "":
 		if not dir.current_is_dir():

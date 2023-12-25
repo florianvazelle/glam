@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021-2022 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends TextureRect
 
 const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")
@@ -21,8 +19,8 @@ func cancel():
 		token.cancel()
 
 
-func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
-	if url.empty():
+func load_image(url := "", flags := 0):
+	if url.is_empty():
 		return CancellationToken.new(null, true)
 
 	for token in _cancellation_tokens:
@@ -32,13 +30,11 @@ func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
 	var cancellation_token := CancellationToken.new(_http_request)
 	_cancellation_tokens.append(cancellation_token)
 	add_child(_http_request)
-	_http_request.connect(
-		"request_completed",
-		self,
-		"_on_http_request_completed",
-		[url, flags, cancellation_token],
-		CONNECT_ONESHOT
-	)
+	# _http_request.request_completed.connect(
+	# 	self._on_http_request_completed,
+	# 	[url, flags, cancellation_token],
+	# 	CONNECT_ONE_SHOT
+	# )
 	_http_request.request(url)
 	return cancellation_token
 
@@ -81,7 +77,7 @@ func _on_http_request_completed(
 	if loaded != OK:
 		push_error("Could not load preview image")
 	texture = ImageTexture.new()
-	texture.create_from_image(image, flags)
+	texture.create_from_image(image)
 	emit_signal("image_loaded")
 
 

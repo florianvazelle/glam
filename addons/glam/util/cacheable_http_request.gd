@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends HTTPRequest
 
 const Request = preload("./request.gd")
@@ -19,11 +17,10 @@ func _ready():
 
 func request(
 	url: String,
-	custom_headers: PoolStringArray = PoolStringArray(),
-	ssl_validate_domain := true,
+	custom_headers: PackedStringArray = PackedStringArray(),
 	method = HTTPClient.METHOD_GET,
-	request_data := ""
-):
+	request_data := "",
+) -> Error:
 	var request = Request.new(url, custom_headers, method, request_data)
 	var response = _request_cache.get_response(request)
 	if response:
@@ -37,17 +34,17 @@ func request(
 		)
 		return OK
 	else:
-		.connect("request_completed", self, "_on_request_completed", [request], CONNECT_ONESHOT)
-		return .request(url, custom_headers, ssl_validate_domain, method, request_data)
+		# self.cacheable_request_completed.connect(self._on_request_completed, [request], CONNECT_ONE_SHOT)
+		return super.request(url, custom_headers, method, request_data)
 
 
-func connect(signal_name: String, target: Object, method: String, binds: Array = [], flags := 0):
-	if signal_name == "request_completed":
-		signal_name = "cacheable_request_completed"
-	return .connect(signal_name, target, method, binds, flags)
+# func connect(signal_name: StringName, method: Callable, flags := 0):
+# 	if signal_name == "request_completed":
+# 		signal_name = "cacheable_request_completed"
+# 	return super.connect(signal_name, method, flags)
 
 
 func _on_request_completed(result, response_code, headers, body, request: Request):
 	_request_cache.store(request, result, response_code, headers, body)
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	emit_signal("cacheable_request_completed", result, response_code, headers, body)

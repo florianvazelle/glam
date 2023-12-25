@@ -1,19 +1,17 @@
-# SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends Resource
 
 var result: int = 0
 var response_code: int = 0
-var headers := PoolStringArray()
-var body := PoolByteArray()
+var headers := PackedStringArray()
+var body := PackedByteArray()
 
 
 func _init(
 	p_result: int = 0,
 	p_response_code: int = 0,
-	p_headers := PoolStringArray(),
-	p_body := PoolByteArray()
+	p_headers := PackedStringArray(),
+	p_body := PackedByteArray()
 ):
 	result = p_result
 	response_code = p_response_code
@@ -35,12 +33,12 @@ func _get_property_list():
 		},
 		{
 			name = "headers",
-			type = TYPE_STRING_ARRAY,
+			type = TYPE_PACKED_STRING_ARRAY,
 			usage = PROPERTY_USAGE_STORAGE,
 		},
 		{
 			name = "body",
-			type = TYPE_RAW_ARRAY,
+			type = TYPE_PACKED_BYTE_ARRAY,
 			usage = PROPERTY_USAGE_STORAGE,
 		}
 	]

@@ -1,6 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Leroy Hopson <glam@leroy.geek.nz>
-# SPDX-License-Identifier: MIT
-tool
+@tool
 extends PopupPanel
 
 signal filters_changed
@@ -24,7 +22,7 @@ func add_filter(filter: Dictionary, source_id := "") -> void:
 			push_error("Unrecognized filter type: '%s'." % filter.type)
 
 	filter_control.init(filter, source_id)
-	filter_control.connect("changed", self, "emit_signal", ["filters_changed"])
+	filter_control.changed.connect(self.emit_signal, ["filters_changed"])
 	$_/Filters.add_child(filter_control)
 
 

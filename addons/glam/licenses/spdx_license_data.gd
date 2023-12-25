@@ -206,7 +206,7 @@ const data = {
 			"isDeprecatedLicenseId": false,
 			"detailsUrl": "https://spdx.org/licenses/libpng-2.0.json",
 			"referenceNumber": 18,
-			"name": "PNG Reference Library version 2",
+			"name": "PNG RefCounted Library version 2",
 			"licenseId": "libpng-2.0",
 			"seeAlso": ["http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"],
 			"isOsiApproved": false
