@@ -157,7 +157,7 @@ func _exit_tree():
 func _connect() -> int:
 	self._client.close()
 	self._client.read_chunk_size = CHUNK_SIZE
-	var err = self._client.connect_to_host(_url.hostname, _url.port, _url.protocol == "https:")
+	var err = self._client.connect_to_host(_url.hostname, _url.port)
 	if err != OK:
 		return _error("Failed to connect to host.", err)
 	set_process(true)
