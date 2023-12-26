@@ -7,5 +7,5 @@ extends Resource
 
 
 func _init(identifier := ""):
-	if not identifier.empty():
+	if not identifier.is_empty():
 		self.identifier = identifier

@@ -43,7 +43,7 @@ func _set(property: StringName, value) -> bool:
 
 
 func _on_Timer_timeout():
-	if _icons.empty():
+	if _icons.is_empty():
 		_load_icons()
 
 	_current_icon = (_current_icon + 1) % _icons.size()

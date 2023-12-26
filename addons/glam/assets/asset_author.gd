@@ -12,11 +12,11 @@ extends Resource
 func _init(year = null, name := "", contact := "", url := ""):
 	if year and typeof(year) == TYPE_INT:
 		self.year = year
-	if not name.empty():
+	if not name.is_empty():
 		self.name = name
-	if not contact.empty():
+	if not contact.is_empty():
 		self.contact = contact
-	if not url.empty():
+	if not url.is_empty():
 		self.url = url
 
 

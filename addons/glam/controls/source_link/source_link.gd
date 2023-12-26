@@ -13,7 +13,7 @@ var url: String: set = set_url
 func set_url(value: String) -> void:
 	url = value
 	text = url
-	visible = not url.empty()
+	visible = not url.is_empty()
 
 
 func _ready():

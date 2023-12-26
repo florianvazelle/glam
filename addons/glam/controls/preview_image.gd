@@ -22,7 +22,7 @@ func cancel():
 
 
 func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
-	if url.empty():
+	if url.is_empty():
 		return CancellationToken.new(null, true)
 
 	for token in _cancellation_tokens:

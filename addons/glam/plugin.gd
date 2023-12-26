@@ -83,7 +83,7 @@ func _on_resources_reload(resources: PoolStringArray) -> void:
 
 
 func _ensure_cachedir_tag(path := "") -> void:
-	if path.empty():
+	if path.is_empty():
 		path = ProjectSettings.get_meta("glam/directory") + "/cache/CACHEDIR.TAG"
 	var file := File.new()
 	file.open(path, File.WRITE)

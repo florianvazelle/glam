@@ -20,7 +20,7 @@ func get_values() -> Dictionary:
 
 
 func get_can_submit() -> bool:
-	return values["Authorization Code"].strip_edges().empty()
+	return values["Authorization Code"].strip_edges().is_empty()
 
 
 func _on_submit(values):

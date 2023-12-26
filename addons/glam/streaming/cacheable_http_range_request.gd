@@ -27,7 +27,7 @@ func open(url: String, headers := []) -> int:
 				_size = _cache.get_meta("size")
 			if _cache.has_meta("media_type"):
 				_media_type = _cache.get_meta("media_type")
-			if _size > 0 and not _media_type.empty():
+			if _size > 0 and not _media_type.is_empty():
 				call_deferred("emit_signal", "open_completed", OK, _size, _media_type)
 	return err
 

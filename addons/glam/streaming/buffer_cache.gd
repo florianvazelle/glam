@@ -13,8 +13,8 @@ func _init(p_data := PoolByteArray(), p_ranges := PoolVector2Array()):
 	data = p_data
 	ranges = p_ranges
 
-	if not data.empty():
-		assert(not ranges.empty(), "Data provided without ranges.")
+	if not data.is_empty():
+		assert(not ranges.is_empty(), "Data provided without ranges.")
 
 	_buffer.data_array = data
 
@@ -47,7 +47,7 @@ func put_data(p_data: PoolByteArray, rangev := Vector2(-1, -1)):
 	_buffer.put_data(p_data)
 	data = _buffer.data_array
 
-	if ranges.empty():
+	if ranges.is_empty():
 		ranges.append(rangev)
 		return
 
@@ -83,7 +83,7 @@ func get_range_statuses(start, end) -> Array:
 
 
 func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2Array:
-	if p_ranges.empty():
+	if p_ranges.is_empty():
 		return PoolVector2Array([Vector2(start, end)])
 
 	var missing := PoolVector2Array()

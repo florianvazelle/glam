@@ -51,7 +51,7 @@ func set_submitting(submitting: bool, error_message := "") -> void:
 		submit_button.disabled = false
 		submit_button.loading = false
 
-		if error_message.empty():
+		if error_message.is_empty():
 			submit_button.status = submit_button.Status.NONE
 			for key in values.keys():
 				values[key] = ""

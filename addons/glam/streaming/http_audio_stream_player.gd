@@ -38,7 +38,7 @@ func _ready():
 
 
 func is_open() -> bool:
-	return _size > 0 and not _media_type.empty()
+	return _size > 0 and not _media_type.is_empty()
 
 
 func is_buffering() -> bool:
@@ -144,7 +144,7 @@ func _exit_tree():
 
 
 func _on_http_opened(result: int, size: int, media_type: String) -> void:
-	if result != OK or size < 0 or media_type.empty():
+	if result != OK or size < 0 or media_type.is_empty():
 		call_deferred("emit_signal", "open_completed", FAILED)
 		return
 

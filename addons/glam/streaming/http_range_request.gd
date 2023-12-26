@@ -137,7 +137,7 @@ func _get_client() -> HTTPClient:
 			var client_pool: Dictionary = get_tree().get_meta("glam").http_client_pool
 			if _url and client_pool.has(_url.origin):
 				var clients: Array = client_pool[_url.origin]
-				while not _client and not clients.empty():
+				while not _client and not clients.is_empty():
 					var client: HTTPClient = clients.pop_back()
 					client.poll()
 					if not [HTTPClient.STATUS_RESOLVING, HTTPClient.STATUS_CONNECTING, HTTPClient.STATUS_CONNECTED].has(
@@ -192,7 +192,7 @@ func _update_connection() -> bool:
 				return false
 
 			# Send a request for the next chunk, if any.
-			if _chunks.empty():
+			if _chunks.is_empty():
 				if _range != Vector2(-1, -1) and not _request_cancelled:
 					call_deferred(
 						"emit_signal",
@@ -278,7 +278,7 @@ func _handle_response() -> bool:
 		_error("No content-length header.")
 		return true
 
-	if _size < 0 and _media_type.empty():
+	if _size < 0 and _media_type.is_empty():
 		_media_type = response_headers.get("content-type", "application/octet-stream").split(";")[0]
 		_size = int(response_headers.get("content-length"))
 
@@ -301,7 +301,7 @@ func _process(_delta):
 func _error(message := "", code := FAILED) -> int:
 	assert(code != OK, "Code must not be OK.")
 	err_msg = message
-	if _size < 0 and _media_type.empty():
+	if _size < 0 and _media_type.is_empty():
 		call_deferred("emit_signal", "open_completed", code, -1, "")
 	else:
 		call_deferred("emit_signal", "request_completed", code, PoolByteArray(), Vector2(-1, -1))

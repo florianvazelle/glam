@@ -48,7 +48,7 @@ func get_auth_user():
 func get_authenticated() -> bool:
 	yield(get_tree(), "idle_frame")
 
-	if not _api_key.empty():
+	if not _api_key.is_empty():
 		return true
 
 	var config := ConfigFile.new()

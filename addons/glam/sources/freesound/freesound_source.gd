@@ -79,10 +79,10 @@ func get_authenticated() -> bool:
 
 	var expired = expires_at <= OS.get_unix_time()
 
-	if not access_token.empty() and not expired:
+	if not access_token.is_empty() and not expired:
 		emit_signal("query_changed")
 		return true
-	elif expired and not refresh_token.empty():
+	elif expired and not refresh_token.is_empty():
 		var http_client := HTTPClient.new()
 		var query = http_client.query_string_from_dict(
 			{
@@ -122,7 +122,7 @@ func get_auth_user() -> String:
 	var http_request := HTTPRequest.new()
 	http_request.use_threads = true
 	add_child(http_request)
-	if yield(get_authenticated(), "completed") and auth_user.empty():
+	if yield(get_authenticated(), "completed") and auth_user.is_empty():
 		http_request.request("%s/me" % API_URL, ["Authorization: Bearer %s" % access_token])
 		var res = yield(http_request, "request_completed")
 		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
@@ -152,7 +152,7 @@ func fetch() -> void:
 		sort = _sort_options.value,
 	}
 	var filter_str = _get_filter_str(_filters)
-	if not filter_str.empty():
+	if not filter_str.is_empty():
 		query.filter = filter_str
 	var query_string: String = "/search/text/?" + HTTPClient.new().query_string_from_dict(query)
 	var result = FetchResult.new(get_query_hash())
@@ -163,7 +163,7 @@ func fetch() -> void:
 
 
 func can_fetch_more() -> bool:
-	return not _next.empty()
+	return not _next.is_empty()
 
 
 func fetch_more() -> void:
@@ -231,7 +231,7 @@ func _download(asset: GLAMAsset) -> void:
 
 
 func _update_status_line():
-	if _num_results.empty():
+	if _num_results.is_empty():
 		self.status_line = "Results: ? | Loaded ?/?"
 	else:
 		self.status_line = (

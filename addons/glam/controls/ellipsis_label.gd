@@ -33,7 +33,7 @@ func _update_text():
 	var width = font.get_string_size(value).x
 
 	if width > max_width:
-		while not value.empty() and width > (max_width):
+		while not value.is_empty() and width > (max_width):
 			value = value.substr(0, value.length() - 2) + ELLIPSIS
 			width = font.get_string_size(value).x
 

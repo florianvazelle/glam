@@ -33,7 +33,7 @@ static func generate_credits(root := "res://", sources := []) -> String:
 	for path in FileScanner.list_assets_rec(root):
 		var asset: GLAMAsset = load(path)
 
-		if not asset or (not asset.title and asset.authors.empty() and asset.licenses.empty()):
+		if not asset or (not asset.title and asset.authors.is_empty() and asset.licenses.is_empty()):
 			continue
 
 		if by_source.has(asset.source_id):
@@ -42,7 +42,7 @@ static func generate_credits(root := "res://", sources := []) -> String:
 			by_source.none.append(asset)
 
 	for source in by_source.values():
-		if source is Array or source.assets.empty():
+		if source is Array or source.assets.is_empty():
 			continue
 
 		credits += "\n## [%s](%s)" % [source.source.get_display_name(), source.source.get_url()]
@@ -50,7 +50,7 @@ static func generate_credits(root := "res://", sources := []) -> String:
 		for asset in source.assets:
 			credits += "\n%s\n" % create_credit(asset)
 
-	if by_source.has("none") and not by_source["none"].empty():
+	if by_source.has("none") and not by_source["none"].is_empty():
 		credits += "\n## Other"
 		for asset in by_source["none"]:
 			credits += "\n%s\n" % create_credit(asset)
@@ -68,11 +68,11 @@ static func create_credit(asset: GLAMAsset, level := 0) -> String:
 	strs.append("licensed under")
 	strs.append(_get_licenses(asset))
 
-	if not asset.notes.empty():
+	if not asset.notes.is_empty():
 		strs.append("/ %s" % asset.notes)
 
 	var derivatives := _get_derivative_credits(asset, derivative_level)
-	if not asset.derived_from.empty():
+	if not asset.derived_from.is_empty():
 		strs.append("/ Derived from:\n")
 		for source_asset in asset.derived_from:
 			assert(source_asset is GLAMAsset, "Expected asset to be GLAMAsset.")
@@ -85,13 +85,13 @@ static func create_credit(asset: GLAMAsset, level := 0) -> String:
 
 static func _get_title(asset: GLAMAsset) -> String:
 	var link := _get_link(asset.title, asset.source_url)
-	return link if asset.title.empty() or not asset.official_title else '"%s"' % link
+	return link if asset.title.is_empty() or not asset.official_title else '"%s"' % link
 
 
 static func _get_authors(asset: GLAMAsset) -> String:
 	var strs := PoolStringArray()
 
-	if asset.authors.empty():
+	if asset.authors.is_empty():
 		strs.append("Unknown")
 	else:
 		for author in asset.authors:
@@ -103,7 +103,7 @@ static func _get_authors(asset: GLAMAsset) -> String:
 static func _get_licenses(asset: GLAMAsset) -> String:
 	var strs := PoolStringArray()
 
-	if asset.licenses.empty():
+	if asset.licenses.is_empty():
 		strs.append("Unknown License")
 	else:
 		for license in asset.licenses:
@@ -125,9 +125,9 @@ static func _get_derivative_credits(asset: GLAMAsset, level := 1) -> String:
 static func _get_link(name := "", url := "", default_name := "Untitled") -> String:
 	if name and url:
 		return "[%s](%s)" % [name, url]
-	elif name.empty() and url:
+	elif name.is_empty() and url:
 		return "[%s](%s)" % [default_name, url]
-	elif name and url.empty():
+	elif name and url.is_empty():
 		return name
 	else:
 		return default_name

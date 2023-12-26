@@ -15,7 +15,7 @@ var tail: String  # Catch-all for path, query, and hash.
 
 
 static func is_valid(url: String) -> bool:
-	return not _parse(url).empty()
+	return not _parse(url).is_empty()
 
 
 static func _parse(url: String) -> Dictionary:
@@ -61,7 +61,7 @@ func _init(url: String):
 	origin = "%s//%s" % [protocol, host]
 
 	# Put 'path', 'query', and 'hash' components into tail.
-	tail = parsed.rest if not parsed.rest.empty() else "/"
+	tail = parsed.rest if not parsed.rest.is_empty() else "/"
 
 	href = "%s%s" % [origin, tail]
 

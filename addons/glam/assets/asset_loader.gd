@@ -28,7 +28,7 @@ func load(path: String, original_path: String):
 	if not resource is GLAMAsset:
 		return null
 
-	if resource.files.empty():
+	if resource.files.is_empty():
 		if dir.file_exists(path.get_basename()):
 			resource.files.append(GLAMAsset.AssetFile.new(path.get_basename()))
 

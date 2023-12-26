@@ -148,7 +148,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
 
 
 func _update_status_line():
-	if _num_results.empty():
+	if _num_results.is_empty():
 		self.status_line = "Results: ? | Loaded: ?/? | API Requests Remaining: ∞"
 	else:
 		self.status_line = (
@@ -171,7 +171,7 @@ func _download(asset: GLAMAsset) -> void:
 		return
 
 	var url = SpatialMaterialAsset.get_download_url(asset)
-	assert(url and not url.empty(), "Could not determine download url")
+	assert(url and not url.is_empty(), "Could not determine download url")
 	var dest = "%s/%s_%s.zip" % [get_asset_directory(asset), get_slug(asset), asset.download_format]
 	var err = yield(_download_file(url, dest), "completed")
 

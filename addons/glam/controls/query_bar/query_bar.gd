@@ -32,7 +32,7 @@ func _on_query_changed():
 		var search_string = source.get_search_string()
 		var sort_options = source.get_sort_options()
 
-		if filters.empty():
+		if filters.is_empty():
 			_filters_button.visible = false
 		else:
 			_filters_button.visible = true
@@ -45,7 +45,7 @@ func _on_query_changed():
 
 		if _sort_select:
 			_sort_select.clear()
-			if not sort_options.options.empty():
+			if not sort_options.options.is_empty():
 				_sort_label.visible = true
 				_sort_select.visible = true
 				for i in range(sort_options.options.size()):
@@ -69,7 +69,7 @@ func flush() -> void:
 		_on_LineEdit_text_entered(_line_edit.text)
 
 		# Flush sort options.
-		if not source.get_sort_options().options.empty():
+		if not source.get_sort_options().options.is_empty():
 			_on_SortSelect_item_selected(_sort_select.get_selected_id())
 
 
@@ -81,7 +81,7 @@ func _on_Timer_timeout() -> void:
 func _on_LineEdit_text_changed(new_text: String) -> void:
 	# Check if line edit X button was clicked as opposed to user clearing
 	# line with backspace in the process of entering a new query.
-	if new_text.empty() and _line_edit_clicked:
+	if new_text.is_empty() and _line_edit_clicked:
 		_on_LineEdit_text_entered(new_text)
 	else:
 		_timer.start()
