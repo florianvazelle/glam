@@ -41,7 +41,9 @@ func _enter_tree():
 	for path in paths:
 		if not DirAccess.dir_exists_absolute(path):
 			DirAccess.make_dir_recursive_absolute(path)
-		assert(DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path)
+		assert(
+			DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path
+		)
 	_ensure_cachedir_tag()
 
 	_clear_tmp()
@@ -85,12 +87,15 @@ func _ensure_cachedir_tag(path := "") -> void:
 	if path.is_empty():
 		path = ProjectSettings.get_meta("glam/directory") + "/cache/CACHEDIR.TAG"
 	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(
-		"""Signature: 8a477f597d28d172789f06886806bc55
+	(
+		file
+		. store_string(
+			"""Signature: 8a477f597d28d172789f06886806bc55
 # This file is a cache directory tag created by GLAM (Godot Libre Asset Manager).
 # For information about cache directory tags, see:
 #	https://bford.info/cachedir/
 """
+		)
 	)
 	file.close()
 

@@ -16,7 +16,8 @@ var _hits_loaded := 0
 func _ready():
 	_sort_options = {
 		value = "Popular",
-		options = [
+		options =
+		[
 			{value = "Popular", name = "Popular"},
 			{value = "Latest", name = "Latest"},
 		],
@@ -77,6 +78,7 @@ func get_authenticated() -> bool:
 	_api_key = api_key
 	emit_signal("query_changed")
 	http_request.queue_free()
+	# gdlint:ignore = max-returns
 	return true
 
 
@@ -96,23 +98,27 @@ func fetch() -> void:
 
 	var query_string: String = (
 		"?"
-		+ HTTPClient.new().query_string_from_dict(
-			{
-				key = _api_key,
-				q = _search_string,
-				limit = PER_PAGE_LIMIT,
-				lang = "en",
-				image_type = "all",
-				orientation = "all",
-				page = _page,
-				per_page = PER_PAGE_LIMIT,
-				order = _sort_options.value.to_lower(),
-				filter = 'license:"Creative Commons 0"',
-			}
+		+ (
+			HTTPClient
+			. new()
+			. query_string_from_dict(
+				{
+					key = _api_key,
+					q = _search_string,
+					limit = PER_PAGE_LIMIT,
+					lang = "en",
+					image_type = "all",
+					orientation = "all",
+					page = _page,
+					per_page = PER_PAGE_LIMIT,
+					order = _sort_options.value.to_lower(),
+					filter = 'license:"Creative Commons 0"',
+				}
+			)
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	await _fetch(API_URL + query_string, result) 
+	await _fetch(API_URL + query_string, result)
 	if result.get_query_hash() == get_query_hash():
 		#_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -123,7 +129,7 @@ func can_fetch_more() -> bool:
 
 
 func fetch_more() -> void:
-	await fetch() 
+	await fetch()
 
 
 func _fetch(url: String, fetch_result: FetchResult) -> void:
@@ -158,7 +164,7 @@ func _download(asset: GLAMAsset) -> void:
 	var format = "Vector" if extension == "svg" else asset.download_format.to_int()
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
-	var err = await _download_file(url, dest) 
+	var err = await _download_file(url, dest)
 
 	if err != OK:
 		return
@@ -167,7 +173,7 @@ func _download(asset: GLAMAsset) -> void:
 	while glam.locked:
 		await get_tree().idle_frame
 	glam.locked = true
-	await import_files([dest]) 
+	await import_files([dest])
 	glam.locked = false
 
 	asset.create_license_file(dest)

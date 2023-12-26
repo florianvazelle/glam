@@ -29,7 +29,9 @@ func before_all():
 	for path in paths:
 		if not DirAccess.dir_exists_absolute(path):
 			DirAccess.make_dir_recursive_absolute(path)
-		assert(DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path)
+		assert(
+			DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path
+		)
 
 	http_client_pool = {}
 	get_tree().set_meta("glam", self)

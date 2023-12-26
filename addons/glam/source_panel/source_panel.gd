@@ -3,14 +3,14 @@
 @tool
 extends Control
 
+signal source_selected(index)
+
 const Asset := preload("../assets/asset.gd")
 const AudioStreamAsset := preload("../assets/audio_stream_asset.gd")
 const RequestCache := preload("../util/request_cache.gd")
 const Source := preload("../sources/source.gd")
 const ThumbnailScene := preload("../controls/thumbnail/thumbnail.tscn")
 const Thumbnail := preload("../controls/thumbnail/thumbnail.gd")
-
-signal source_selected(index)
 
 @export var source_script: Script
 
@@ -20,22 +20,22 @@ var authentication: Control
 var editor_interface: EditorInterface
 var selected_thumbnail: Thumbnail
 
-@onready var _account_button := find_child("AccountButton")
 @onready var account_menu := find_child("AccountMenu")
-@onready var user_label := find_child("UserLabel")
 @onready var source_link := find_child("SourceLink")
 @onready var thumbnail_grid := find_child("ThumbnailGrid")
+@onready var user_label := find_child("UserLabel")
+@onready var _account_button := find_child("AccountButton")
+@onready var _audio_controls := find_child("AudioControls")
 @onready var _details_pane := find_child("DetailsPane")
-@onready var _trailer := find_child("Trailer")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
+@onready var _results := find_child("Results")
 @onready var _results_pane := find_child("ResultsPane")
 @onready var _status_bar := find_child("StatusBar")
-@onready var _results := find_child("Results")
-@onready var _glam = get_tree().get_meta("glam")
-@onready var _thumbnail_grid := find_child("ThumbnailGrid")
 @onready var _status_line := find_child("StatusLine")
-@onready var _audio_controls := find_child("AudioControls")
+@onready var _thumbnail_grid := find_child("ThumbnailGrid")
+@onready var _trailer := find_child("Trailer")
 @onready var _volume_slider := find_child("VolumeSlider")
-@onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
 
 
 func _ready():
@@ -80,7 +80,7 @@ func _on_cache_size_updated(size: int) -> void:
 	find_child("CacheLabel").text = "Cache Size: %dM" % (size / 1000000)
 
 
-func _on_search_entered(text: String) -> void:
+func _on_search_entered(_text: String) -> void:
 	var filters = source.get_new_filters()
 	source.search(filters)
 
@@ -157,9 +157,7 @@ func _enusure_grid_full() -> void:
 		var thumbnail_height = _thumbnail_grid.get_child(0).size.y
 		var rows = ceil(num_fetched / _thumbnail_grid.columns)
 		var space = (
-			min(size.y, get_viewport_rect().size.y)
-			- (rows * thumbnail_height)
-			+ _trailer.size.y
+			min(size.y, get_viewport_rect().size.y) - (rows * thumbnail_height) + _trailer.size.y
 		)
 		if space > 0:
 			_trailer.status = _trailer.Status.LOADING
@@ -241,6 +239,7 @@ func _on_StopAllButton_pressed():
 	for child in _thumbnail_grid.get_children():
 		if child is Thumbnail:
 			if "_audio_preview" in child:
+				# gdlint:ignore = private-method-call
 				child._audio_preview._stop()
 
 

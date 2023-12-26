@@ -34,7 +34,7 @@ func get_fields() -> Array:
 	return []
 
 
-func _on_submit(values) -> void:
+func _on_submit(_values) -> void:
 	set_submitting(false, "Method _on_submit() Not Implemented!")
 
 
@@ -72,9 +72,7 @@ func get_label() -> String:
 
 
 func _ready():
-	if not http_request.is_connected(
-		"request_completed", self._on_HTTPRequest_request_completed
-	):
+	if not http_request.is_connected("request_completed", self._on_HTTPRequest_request_completed):
 		http_request.request_completed.connect(self._on_HTTPRequest_request_completed)
 
 	values = get_values()

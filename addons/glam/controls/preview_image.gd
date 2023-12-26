@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: MIT
 @tool
 extends TextureRect
+signal image_loaded
 
 const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")
-
-signal image_loaded
 
 var _http_request: CacheableHTTPRequest
 var _cancellation_tokens := []
@@ -33,20 +32,14 @@ func load_image(url := ""):
 	_cancellation_tokens.append(cancellation_token)
 	add_child(_http_request)
 	_http_request.request_completed.connect(
-		self._on_http_request_completed.bind(url, cancellation_token),
-		CONNECT_ONE_SHOT
+		self._on_http_request_completed.bind(url, cancellation_token), CONNECT_ONE_SHOT
 	)
 	_http_request.request(url)
 	return cancellation_token
 
 
 func _on_http_request_completed(
-	result,
-	response_code,
-	headers,
-	body,
-	url: String,
-	cancellation_token: CancellationToken
+	result, response_code, headers, body, url: String, cancellation_token: CancellationToken
 ):
 	cancellation_token.http_request.queue_free()
 
@@ -87,8 +80,6 @@ func _exit_tree():
 
 
 class CancellationToken:
-	const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")
-
 	var http_request: CacheableHTTPRequest
 	var cancelled := false
 

@@ -3,10 +3,10 @@
 @tool
 extends HTTPRequest
 
+signal cacheable_request_completed(result, response_code, headers, body)
+
 const Request = preload("./request.gd")
 const RequestCache = preload("./request_cache.gd")
-
-signal cacheable_request_completed(result, response_code, headers, body)
 
 var _request_cache: RequestCache
 
@@ -35,9 +35,9 @@ func request(
 			response.body
 		)
 		return OK
-	else:
-		request_completed.connect(self._on_request_completed.bind(request), CONNECT_ONE_SHOT)
-		return super.request(url, custom_headers, method, request_data)
+
+	request_completed.connect(self._on_request_completed.bind(request), CONNECT_ONE_SHOT)
+	return super.request(url, custom_headers, method, request_data)
 
 
 func _on_request_completed(result, response_code, headers, body, request: Request):

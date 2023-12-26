@@ -10,7 +10,11 @@ func get_label() -> String:
 		% [source.API_URL, source.CLIENT_ID]
 	)
 	return (
-		"Please follow this link [url=%s]%s[/url] to grant GLAM read-only permission to access the freesound API on your behalf. Copy the resulting authorization code to the field below:"
+		(
+			"Please follow this link [url=%s]%s[/url] to grant GLAM read-only "
+			+ "permission to access the freesound API on your behalf. "
+			+ "Copy the resulting authorization code to the field below:"
+		)
 		% [authorization_url, authorization_url]
 	)
 
@@ -41,7 +45,7 @@ func _on_submit(values):
 		set_submitting(false, "HTTPRequest error: %d" % err)
 
 
-func _on_HTTPRequest_request_completed(result, response_code, headers, body: PackedByteArray):
+func _on_HTTPRequest_request_completed(result, response_code, _headers, body: PackedByteArray):
 	if result == OK and response_code == 200:
 		var config := ConfigFile.new()
 		var json := JSON.new()
@@ -50,7 +54,9 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body: Pac
 			config.set_value("auth", "access_token", json.data.access_token)
 			config.set_value("auth", "refresh_token", json.data.result.refresh_token)
 			config.set_value(
-				"auth", "expires_at", int(int(Time.get_unix_time_from_system()) + int(json.data.result.expires_in))
+				"auth",
+				"expires_at",
+				int(int(Time.get_unix_time_from_system()) + int(json.data.result.expires_in))
 			)
 			if config.save(source.config_file) == OK:
 				set_submitting(false)

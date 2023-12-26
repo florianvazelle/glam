@@ -3,15 +3,15 @@
 @tool
 extends Node
 
+signal open_completed(result, size, media_type)
+signal data_received(data, rangev)
+signal request_completed(result, data, rangev)
+
 const BufferCache := preload("./buffer_cache.gd")
 const URL := preload("./url.gd")
 
 const CHUNK_SIZE := 512 * 1024  # 512 KiB
 const MAX_RETRIES := 1
-
-signal open_completed(result, size, media_type)
-signal data_received(data, rangev)
-signal request_completed(result, data, rangev)
 
 var err_msg := ""
 
@@ -20,7 +20,9 @@ var _headers: Array
 var _size := -1
 var _media_type: String
 var _retries := 0
-var _client: HTTPClient: set = _set_client, get = _get_client
+var _client: HTTPClient:
+	set = _set_client,
+	get = _get_client
 var _chunks := []
 var _request_sent := false
 var _request_cancelled := false
@@ -86,15 +88,14 @@ func request_range(start: int, end: int) -> int:
 	# wait for client to connect.
 	if not _chunks[0].missing:
 		var rangev = _chunks[0].rangev
-		call_deferred(
-			"emit_signal", "data_received", _cache.data.slice(rangev.x, rangev.y), rangev
-		)
+		call_deferred("emit_signal", "data_received", _cache.data.slice(rangev.x, rangev.y), rangev)
 		_chunks.pop_front()
 
 	# Check if connection timed out or receiving a large body and re-connect if so.
 	self._client.poll()
-	if not [HTTPClient.STATUS_RESOLVING, HTTPClient.STATUS_CONNECTING, HTTPClient.STATUS_CONNECTED].has(
-		self._client.get_status()
+	if not (
+		[HTTPClient.STATUS_RESOLVING, HTTPClient.STATUS_CONNECTING, HTTPClient.STATUS_CONNECTED]
+		. has(self._client.get_status())
 	):
 		self._client.close()
 		_connect()
@@ -140,8 +141,13 @@ func _get_client() -> HTTPClient:
 				while not _client and not clients.is_empty():
 					var client: HTTPClient = clients.pop_back()
 					client.poll()
-					if not [HTTPClient.STATUS_RESOLVING, HTTPClient.STATUS_CONNECTING, HTTPClient.STATUS_CONNECTED].has(
-						client.get_status()
+					if not (
+						[
+							HTTPClient.STATUS_RESOLVING,
+							HTTPClient.STATUS_CONNECTING,
+							HTTPClient.STATUS_CONNECTED
+						]
+						. has(client.get_status())
 					):
 						client.close()
 					_client = client
@@ -246,6 +252,7 @@ func _update_connection() -> bool:
 				)
 
 			return false
+		# gdlint:ignore = max-line-length
 		HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTION_ERROR, HTTPClient.STATUS_TLS_HANDSHAKE_ERROR, HTTPClient.STATUS_CANT_RESOLVE, HTTPClient.STATUS_CANT_CONNECT, _:
 			_retries += 1
 			if _retries > MAX_RETRIES:
@@ -257,6 +264,7 @@ func _update_connection() -> bool:
 				_error("Failed to connect to host.", err)
 				return true
 
+			# gdlint:ignore = max-returns
 			return false
 
 

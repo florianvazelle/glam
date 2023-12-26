@@ -5,7 +5,8 @@ extends Button
 
 const Source = preload("../../sources/source.gd")
 
-var url: String: set = set_url
+var url: String:
+	set = set_url
 
 @onready var _glam = get_tree().get_meta("glam")
 

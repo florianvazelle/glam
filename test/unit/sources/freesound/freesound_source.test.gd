@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
+
+# gdlint:disable = private-method-call
 extends "../base_source_test.gd"
 
 const Asset := preload("res://addons/glam/assets/asset.gd")

@@ -3,14 +3,14 @@
 @tool
 extends GridContainer
 
+signal asset_selected(asset)
+signal download_requested(asset)
 const Asset := preload("../../assets/asset.gd")
 const Thumbnail := preload("../thumbnail/thumbnail.gd")
 const ThumbnailScene := preload("../thumbnail/thumbnail.tscn")
 
-signal asset_selected(asset)
-signal download_requested(asset)
-
-var zoom_factor := 1.25: set = set_zoom_factor
+var zoom_factor := 1.25:
+	set = set_zoom_factor
 
 var _button_group := ButtonGroup.new()
 

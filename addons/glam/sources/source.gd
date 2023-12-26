@@ -1,14 +1,9 @@
+# gdlint:disable = max-public-methods
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
 @tool
 class_name GLAMSource
 extends Node
-
-const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")
-const EditorIcons := preload("../icons/editor_icons.gd")
-const GDash := preload("../util/gdash.gd")
-
-const PER_PAGE_LIMIT := 24
 
 # Deprecated
 signal search_started
@@ -28,6 +23,11 @@ enum Status {
 	NO_MORE_RESULTS,
 	ERROR,
 }
+const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")
+const EditorIcons := preload("../icons/editor_icons.gd")
+const GDash := preload("../util/gdash.gd")
+
+const PER_PAGE_LIMIT := 24
 
 var fetching := false
 var searching := false
@@ -35,7 +35,8 @@ var source
 var loading := false
 
 var status: int = Status.NONE
-var status_line := "": set = set_status_line
+var status_line := "":
+	set = set_status_line
 var config_file := (
 	"%s/source_configs/%s.cfg"
 	% [
@@ -48,10 +49,14 @@ var config_file := (
 	]
 )
 
-var _filters := []: get = get_filters
+var _filters := []:
+	get = get_filters
 var _filters_hash := _filters.hash()
-var _search_string := "": set = set_search_string, get = get_search_string
-var _sort_options := {value = null, options = []}: get = get_sort_options
+var _search_string := "":
+	set = set_search_string,
+	get = get_search_string
+var _sort_options := {value = null, options = []}:
+	get = get_sort_options
 
 @onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
@@ -172,7 +177,7 @@ func download(asset: GLAMAsset) -> void:
 	asset.downloaded = true
 
 
-func _download(asset: GLAMAsset) -> void:
+func _download(_asset: GLAMAsset) -> void:
 	await get_tree().idle_frame
 	assert(false, "_download() not implemented.")
 
@@ -286,7 +291,7 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 
 	if response_code != 200:
 		return {error = FAILED}
-	
+
 	var json := JSON.new()
 	err = json.parse(body.get_string_from_utf8())
 	if err != OK:

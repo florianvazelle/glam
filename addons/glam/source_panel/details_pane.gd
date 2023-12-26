@@ -3,14 +3,15 @@
 @tool
 extends Panel
 
+signal tag_selected(tag)
+signal download_requested(asset)
+
 const Asset := preload("../assets/asset.gd")
 const AudioStreamAsset := preload("../assets/audio_stream_asset.gd")
 const LicenseDB := preload("../license/license_db.gd")
 
-signal tag_selected(tag)
-signal download_requested(asset)
-
-var asset: Asset: set = set_asset
+var asset: Asset:
+	set = set_asset
 var _popup_just_closed := false
 
 @onready var _label := find_child("NoAssetLabel")
@@ -60,9 +61,7 @@ func set_asset(value: Asset):
 		_preview_image.texture = asset.preview_image_lq
 		_spinner.visible = false
 	else:
-		_preview_image.call_deferred(
-			"load_image", asset.preview_image_url_lq
-		)
+		_preview_image.call_deferred("load_image", asset.preview_image_url_lq)
 		await _preview_image.image_loaded
 		asset.preview_image_lq = _preview_image.texture
 
@@ -116,7 +115,9 @@ func _on_Details_meta_hover_started(meta):
 	if not _tooltip.visible:
 		if LicenseDB.has_license(meta):
 			_tooltip.get_node("Label").text = LicenseDB.get_license(meta).name
-			_tooltip.visible = true  # Don't use popup() as it steals focus and causes the "hover_ended" signal to emit prematurely.
+			# Don't use popup() as it steals focus and causes the "hover_ended"
+			# signal to emit prematurely.
+			_tooltip.visible = true
 			_tooltip.set_position(get_global_mouse_position())
 
 

@@ -1,5 +1,8 @@
+# gdlint:disable = max-public-methods
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
+
+# gdlint:disable = private-method-call
 extends "res://addons/gut/test.gd"
 
 const BufferCache := preload("res://addons/glam/streaming/buffer_cache.gd")
@@ -11,7 +14,7 @@ func before_each():
 	buffer = BufferCache.new()
 
 
-func test__relpos():
+func test_relpos():
 	assert_eq(BufferCache._relpos(Vector2(0, 0), Vector2(1, 1)), 0)
 	assert_eq(BufferCache._relpos(Vector2(0, 50), Vector2(100, 1000)), -1)
 	assert_eq(BufferCache._relpos(Vector2(51, 52), Vector2(53, 54)), 0)
@@ -23,7 +26,7 @@ func test__relpos():
 	assert_eq(BufferCache._relpos(Vector2(53, 54), Vector2(51, 52)), 0)
 
 
-func test__subtract_range():
+func test_subtract_range():
 	assert_eq(BufferCache._subtract_range(Vector2(0, 0), Vector2(0, 0)), [])
 	assert_eq(BufferCache._subtract_range(Vector2(1, 1), Vector2(0, 0)), [Vector2(1, 1)])
 	assert_eq(BufferCache._subtract_range(Vector2(0, 1), Vector2(0, 0)), [Vector2(1, 1)])

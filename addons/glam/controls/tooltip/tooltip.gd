@@ -3,8 +3,10 @@
 @tool
 extends PopupPanel
 
-@export var text: String: set = set_text
-@export var popup_delay := 0.5: set = set_popup_delay
+@export var text: String:
+	set = set_text
+@export var popup_delay := 0.5:
+	set = set_popup_delay
 @export var anchor_path := NodePath("..")
 
 

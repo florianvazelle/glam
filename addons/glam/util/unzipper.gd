@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2017 AltspaceVR
 # SPDX-FileContributor: Modified by Leroy Hopson
 # SPDX-License-Identifier: MIT
+
+# gdlint:ignore = max-line-length
 # Source: https://github.com/sketchfab/godot-plugin/blob/00fe32f8c9e3292a98e8977882786699d02b9924/addons/sketchfab/unzip.gd
 extends SceneTree
 
@@ -11,34 +13,38 @@ const ARG_PREFIX = "--zip-to-unpack "
 # zip_path is the path of zip archive to unpack.
 static func unzip(zip_path) -> Dictionary:
 	var file := FileAccess.open(zip_path, FileAccess.READ)
+
 	var err = FileAccess.get_open_error()
 	if err != OK:
 		return {error = err}
+
 	var out = []
-	var exit_code = OS.execute(
-		OS.get_executable_path(),
-		[
-			"--script",
-			ProjectSettings.globalize_path("res://addons/glam/util/unzipper.gd"),
-			"--zip-to-unpack %s" % ProjectSettings.globalize_path(zip_path),
-			"--headless",
-			"--quit",
-		],
-		out,
-		true,
+	var exit_code = (
+		OS
+		. execute(
+			OS.get_executable_path(),
+			[
+				"--script",
+				ProjectSettings.globalize_path("res://addons/glam/util/unzipper.gd"),
+				"--zip-to-unpack %s" % ProjectSettings.globalize_path(zip_path),
+				"--headless",
+				"--quit",
+			],
+			out,
+			true,
+		)
 	)
+
 	if exit_code != 0:
 		return {error = FAILED, files = []}
-	else:
-		var files = []
-		for line in out[0].split("\n"):
-			if line.begins_with("UnzippedFile:"):
-				files.append(
-					ProjectSettings.localize_path(
-						line.replace("UnzippedFile:", "").replace("\n", "")
-					)
-				)
-		return {error = OK, files = files}
+
+	var files = []
+	for line in out[0].split("\n"):
+		if line.begins_with("UnzippedFile:"):
+			files.append(
+				ProjectSettings.localize_path(line.replace("UnzippedFile:", "").replace("\n", ""))
+			)
+	return {error = OK, files = files}
 
 
 func _init():

@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: MIT
 @tool
 extends Control
+signal source_changed(new_source)
 
 const FileScanner := preload("../util/file_scanner.gd")
 const Markdown := preload("../credits/markdown.gd")
-
-signal source_changed(new_source)
 
 var sources := []
 
@@ -51,7 +50,7 @@ func _ready():
 	select_source(0)
 
 
-func select_panel(index: int) -> void:
+func select_panel(_index: int) -> void:
 	pass
 
 
@@ -72,6 +71,10 @@ func select_source(index: int):
 
 
 func _on_menu_id_pressed(id: int):
+	const COMMENT := (
+		"File generate by GLAM. Do not modify!"
+		+ " Edit the '.glam' files throughout the project instead."
+	)
 	var paths := _get_asset_paths_rec()
 
 	match id:
@@ -87,30 +90,19 @@ func _on_menu_id_pressed(id: int):
 			if FileAccess.get_open_error() != OK:
 				return
 
-			file.store_line(
-				"""{
-	"__comment": "File generate by GLAM. Do not modify! Edit the '.glam' files throughout the project instead.",
-	"credits": ["""
-			)
+			file.store_line("""{\n\t"__comment": "%s",\n\t"credits": [""" % COMMENT)
 
 			for i in paths.size():
 				var path = paths[i]
 				var asset: GLAMAsset = load(path)
-				file.store_line('		"%s"%s' % [path, "," if i < (paths.size() - 1) else ""])
+				file.store_line('\t\t"%s"%s' % [path, "," if i < (paths.size() - 1) else ""])
 
-			file.store_line(
-				"""	]
-}
-"""
-			)
+			file.store_line("\t]\n}")
 			file.close()
 
 		2:  # Generate CREDITS.md.
 			var file := FileAccess.open("res://CREDITS.md", FileAccess.WRITE)
-			assert(
-				file.get_open_error() == OK,
-				"Couldn't open res://CREDITS.md file for writing."
-			)
+			assert(file.get_open_error() == OK, "Couldn't open res://CREDITS.md file for writing.")
 			file.store_string(Markdown.generate_credits("res://", self.sources))
 			file.close()
 

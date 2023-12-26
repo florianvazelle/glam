@@ -17,7 +17,8 @@ var _num_loaded := 0
 func _ready():
 	_sort_options = {
 		value = "Popular",
-		options = [
+		options =
+		[
 			{value = "Popular", name = "Popular"},
 			{value = "Latest", name = "Latest"},
 			{value = "Downloads", name = "Most Downloads"},
@@ -30,7 +31,8 @@ func _ready():
 			name = "Method",
 			type = "multi_choice",
 			description = "The method that was used to create the texture",
-			options = [
+			options =
+			[
 				"PBRApproximated",
 				"PBRPhotogrammetry",
 				"PBRProcedural",
@@ -41,7 +43,8 @@ func _ready():
 				"HDRIStitchedEdited",
 				"UnknownOrOther",
 			],
-			value = [
+			value =
+			[
 				"PBRApproximated",
 				"PBRPhotogrammetry",
 				"PBRProcedural",
@@ -87,19 +90,23 @@ func fetch() -> void:
 			method_str += ",".join(PackedStringArray(filter.value)).replace(" ", "")
 	var query_string: String = (
 		"?"
-		+ HTTPClient.new().query_string_from_dict(
-			{
-				type = "Material",
-				q = _search_string,
-				limit = PER_PAGE_LIMIT,
-				sort = _sort_options.value,
-				include = "displayData,downloadData,imageData,tagData",
-				method = method_str,
-			}
+		+ (
+			HTTPClient
+			. new()
+			. query_string_from_dict(
+				{
+					type = "Material",
+					q = _search_string,
+					limit = PER_PAGE_LIMIT,
+					sort = _sort_options.value,
+					include = "displayData,downloadData,imageData,tagData",
+					method = method_str,
+				}
+			)
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	await _fetch(_API_URL + query_string, result) 
+	await _fetch(_API_URL + query_string, result)
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -112,7 +119,7 @@ func can_fetch_more() -> bool:
 func fetch_more() -> void:
 	emit_signal("fetch_started")
 	var result = FetchResult.new(get_query_hash())
-	await _fetch(_next_page_url, result) 
+	await _fetch(_next_page_url, result)
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -123,7 +130,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> void:
 	_num_results = "?"
 	_num_loaded = 0
 
-	var json = await _fetch_json(url) 
+	var json = await _fetch_json(url)
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
 	if json.error != OK:
@@ -172,7 +179,7 @@ func _download(asset: GLAMAsset) -> void:
 	var url = SpatialMaterialAsset.get_download_url(asset)
 	assert(url and not url.is_empty(), "Could not determine download url")
 	var dest = "%s/%s_%s.zip" % [get_asset_directory(asset), get_slug(asset), asset.download_format]
-	var err = await _download_file(url, dest) 
+	var err = await _download_file(url, dest)
 
 	if err != OK:
 		return

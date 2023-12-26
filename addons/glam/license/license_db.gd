@@ -2,18 +2,19 @@
 # SPDX-License-Identifier: MIT
 extends RefCounted
 
-static var licenses = preload("./custom_license_data.gd").data
-const spdx_licenses = preload("./spdx_license_data.gd").data.licenses
+const SPDX_LICENSES = preload("./spdx_license_data.gd").DATA.licenses
 const GDash = preload("../util/gdash.gd")
 
+# gdlint:ignore = class-variable-name
 static var STATIC := {}
+static var licenses = preload("./custom_license_data.gd").DATA
 
 
 static func get_license(id: String) -> Dictionary:
 	if licenses.has(id):
 		return licenses[id]
 
-	var license = GDash.find(spdx_licenses, {licenseId = id})
+	var license = GDash.find(SPDX_LICENSES, {licenseId = id})
 	licenses[id] = (
 		{
 			name = license.name,
@@ -28,8 +29,7 @@ static func get_license(id: String) -> Dictionary:
 static func has_license(id: String) -> bool:
 	if licenses.has(id):
 		return true
-	else:
-		return !!GDash.find(spdx_licenses, {licenseId = id}, false)
+	return !!GDash.find(SPDX_LICENSES, {licenseId = id}, false)
 
 
 static func get_license_from_cc_url(url: String) -> GLAMAsset.License:
@@ -38,8 +38,11 @@ static func get_license_from_cc_url(url: String) -> GLAMAsset.License:
 		regex = RegEx.new()
 		assert(
 			(
-				regex.compile(
-					"https?://creativecommons.org/[a-z]*/(?<conditions>[a-z-+]*)/(?<version>[\\d\\.]*)/"
+				(
+					regex
+					. compile(
+						"https?://creativecommons.org/[a-z]*/(?<conditions>[a-z-+]*)/(?<version>[\\d\\.]*)/"
+					)
 				)
 				== OK
 			)

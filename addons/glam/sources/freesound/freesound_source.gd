@@ -9,7 +9,7 @@ const Strings := preload("../../util/strings.gd")
 const API_URL := "https://freesound.org/apiv2"
 const CLIENT_ID := "0vy6LQde1arAmWBgHgYD"
 
-const License = {
+const LICENSE = {
 	Attribution = "https://creativecommons.org/licenses/by/3.0/",
 	Attribution_Noncommercial = "https://creativecommons.org/licenses/by-nc/3.0/",
 	Creative_Commons_0 = "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -26,7 +26,8 @@ var _num_loaded := 0
 func _ready():
 	_sort_options = {
 		value = "Score",
-		options = [
+		options =
+		[
 			{value = "score", name = "Automatic by relevance"},
 			{value = "duration_desc", name = "Duration (long first)"},
 			{value = "duration_asc", name = "Duration (short first)"},
@@ -82,21 +83,22 @@ func get_authenticated() -> bool:
 	if not access_token.is_empty() and not expired:
 		emit_signal("query_changed")
 		return true
-	elif expired and not refresh_token.is_empty():
+
+	if expired and not refresh_token.is_empty():
 		var http_client := HTTPClient.new()
-		var query = http_client.query_string_from_dict(
-			{
-				client_id = CLIENT_ID,
-				grant_type = "refresh_token",
-				refresh_token = refresh_token,
-			}
+		var query = (
+			http_client
+			. query_string_from_dict(
+				{
+					client_id = CLIENT_ID,
+					grant_type = "refresh_token",
+					refresh_token = refresh_token,
+				}
+			)
 		)
 		var url = "%s/oauth2/access_token/" % API_URL
 		http_request.request(
-			url,
-			["Content-Type: application/x-www-form-urlencoded"],
-			HTTPClient.METHOD_POST,
-			query
+			url, ["Content-Type: application/x-www-form-urlencoded"], HTTPClient.METHOD_POST, query
 		)
 		var res = await http_request.request_completed
 		var json := JSON.new()
@@ -149,7 +151,8 @@ func fetch() -> void:
 	var query = {
 		query = _search_string,
 		page_size = PER_PAGE_LIMIT,
-		fields = "id,url,name,tags,description,license,type,bitrate,duration,username,download,previews,images",
+		fields =
+		"id,url,name,tags,description,license,type,bitrate,duration,username,download,previews,images",
 		sort = _sort_options.value,
 	}
 	var filter_str = _get_filter_str(_filters)
@@ -234,8 +237,7 @@ func _update_status_line():
 		self.status_line = "Results: ? | Loaded ?/?"
 	else:
 		self.status_line = (
-			"Results: %s | Loaded: %s/%s"
-			% [_num_results, str(_num_loaded), _num_results]
+			"Results: %s | Loaded: %s/%s" % [_num_results, str(_num_loaded), _num_results]
 		)
 
 

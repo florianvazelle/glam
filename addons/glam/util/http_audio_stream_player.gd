@@ -5,11 +5,12 @@ extends AudioStreamPlayer
 
 const CacheableHTTPRequest := preload("./cacheable_http_request.gd")
 
-@export var url := "": set = set_url
-
-@onready var _http_request := CacheableHTTPRequest.new()
+@export var url := "":
+	set = set_url
 
 var loading := false
+
+@onready var _http_request := CacheableHTTPRequest.new()
 
 
 func _ready():
@@ -23,5 +24,5 @@ func set_url(value: String) -> void:
 	_http_request.request(url)
 
 
-func _on_request_completed(result, response_code, _headers, body) -> void:
+func _on_request_completed(_result, _response_code, _headers, _body) -> void:
 	pass

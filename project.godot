@@ -22,7 +22,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/editor_icon_previewer/plugin.cfg", "res://addons/epic-anchors/plugin.cfg", "res://addons/glam/plugin.cfg", "res://addons/godot_xterm/plugin.cfg", "res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/glam/plugin.cfg")
 
 [filesystem]
 

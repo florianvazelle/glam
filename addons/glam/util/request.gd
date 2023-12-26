@@ -19,4 +19,12 @@ func _init(
 
 
 func get_hash() -> int:
-	return {url = url.hash(), custom_headers = Array(custom_headers).hash(), method = method, request_data = request_data.hash()}.hash()
+	return (
+		{
+			url = url.hash(),
+			custom_headers = Array(custom_headers).hash(),
+			method = method,
+			request_data = request_data.hash()
+		}
+		. hash()
+	)

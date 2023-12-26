@@ -5,7 +5,8 @@ extends TextureRect
 
 signal icon_changed(new_icon)
 
-@export var spinning := false: set = set_spinning
+@export var spinning := false:
+	set = set_spinning
 
 var _icons := []
 var _current_icon := 0
@@ -28,7 +29,10 @@ func _load_icons():
 func set_spinning(value: bool) -> void:
 	spinning = value
 	if _timer:
-		_timer.start() if spinning else _timer.stop()
+		if spinning:
+			_timer.start()
+		else:
+			_timer.stop()
 
 
 func _set(property: StringName, value) -> bool:
@@ -36,7 +40,7 @@ func _set(property: StringName, value) -> bool:
 		"visible":
 			assert(value is bool)
 			visible = value
-			self.spinning = visible
+			spinning = visible
 			return true
 		_:
 			return false

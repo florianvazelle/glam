@@ -4,10 +4,6 @@
 class_name GLAMAsset
 extends Resource
 
-const Author := preload("./asset_author.gd")
-const License := preload("./asset_license.gd")
-const Strings := preload("../util/strings.gd")
-
 signal preview_image_loaded(image)
 signal download_format_changed(new_format)
 signal download_status_changed(is_downloaded)
@@ -23,53 +19,76 @@ enum Type {
 	MODEL,
 }
 
+const Author := preload("./asset_author.gd")
+const License := preload("./asset_license.gd")
+const Strings := preload("../util/strings.gd")
+
 @export var type := Type.OTHER
 
 @export_multiline var description: String
-@export_multiline var Tags := "": set = set_Tags, get = get_Tags
+@export_multiline var labels := "":
+	set(value):
+		set_tags(value.split(","))
+	get:
+		return ", ".join(PackedStringArray(get_tags()))
 
 @export var source_id: String
-var resource
 # Unique identifier amongst assets from the same source. Preferably human friendly.
 @export var id: String
 @export var title: String
 @export var official_title := true
-var download_format := "": set = set_download_format
-var download_formats := []
-var download_urls := {}
+
 @export var source_url := ""
-@export var authors := []: set = set_authors
-@export var licenses := []: set = set_licenses
-@export var derived_from := []: set = set_derived_from
-var downloading := false: set = set_downloading
+@export var authors := []:
+	set = set_authors
+@export var licenses := []:
+	set = set_licenses
+@export var derived_from := []:
+	set = set_derived_from
 
 @export var files := []
+
+@export var preview_image_lq: Texture = null
+@export var preview_image_hq: Texture = null
+
+# Low quality preview image url for displaying the asset in thumbnails.
+@export var preview_image_url_lq: String
+# High quality preview image url for displaying the asset in the preview panel.
+# Falls back to preview_image_url_lq if not set.
+@export var preview_image_url_hq: String:
+	get = get_preview_image_url_hq
+
+# Additional notes to be displayed in credits. Could include things such as who
+# commissioned the work or what modifications were made to the original.
+@export_multiline var notes := ""
+
+var resource
+
+var download_format := "":
+	set = set_download_format
+var download_formats := []
+var download_urls := {}
+
+var downloading := false:
+	set = set_downloading
 
 var filepath: String
 
 # Keep this one.
 var options := {}
 
-# Low quality preview image url for displaying the asset in thumbnails.
-@export var preview_image_url_lq: String
-# High quality preview image url for displaying the asset in the preview panel.
-# Falls back to preview_image_url_lq if not set.
-@export var preview_image_url_hq: String: get = get_preview_image_url_hq
 # Lower case tags.
-var tags := []: set = set_tags, get = get_tags
-
-@export var preview_image_lq: Texture = null
-@export var preview_image_hq: Texture = null
+var tags := []:
+	set = set_tags,
+	get = get_tags
 
 var preview_image_url: String
-var preview_image: ImageTexture: set = set_preview_image
+var preview_image: ImageTexture:
+	set = set_preview_image
 
-var downloaded := false: set = set_downloaded
+var downloaded := false:
+	set = set_downloaded
 var expected_files: PackedStringArray = []
-
-# Additional notes to be displayed in credits. Could include things such as who
-# commissioned the work or what modifications were made to the original.
-@export_multiline var notes := ""
 
 
 # Workaround for: https://github.com/godotengine/godot/issues/29179
@@ -142,14 +161,6 @@ func set_derived_from(value := []) -> void:
 func set_preview_image(value: ImageTexture) -> void:
 	preview_image = value
 	emit_signal("preview_image_loaded", preview_image)
-
-
-func set_Tags(value: String) -> void:
-	set_tags(value.split(","))
-
-
-func get_Tags() -> String:
-	return ", ".join(PackedStringArray(get_tags()))
 
 
 func set_tags(value) -> void:

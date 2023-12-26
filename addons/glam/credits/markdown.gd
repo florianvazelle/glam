@@ -33,7 +33,10 @@ static func generate_credits(root := "res://", sources := []) -> String:
 	for path in FileScanner.list_assets_rec(root):
 		var asset: GLAMAsset = load(path)
 
-		if not asset or (not asset.title and asset.authors.is_empty() and asset.licenses.is_empty()):
+		if (
+			not asset
+			or (not asset.title and asset.authors.is_empty() and asset.licenses.is_empty())
+		):
 			continue
 
 		if by_source.has(asset.source_id):
@@ -118,16 +121,15 @@ static func _get_licenses(asset: GLAMAsset) -> String:
 	return ", ".join(strs)
 
 
-static func _get_derivative_credits(asset: GLAMAsset, level := 1) -> String:
+static func _get_derivative_credits(_asset: GLAMAsset, level := 1) -> String:
 	return "  ".repeat(level) + "- lol"
 
 
 static func _get_link(name := "", url := "", default_name := "Untitled") -> String:
 	if name and url:
 		return "[%s](%s)" % [name, url]
-	elif name.is_empty() and url:
+	if name.is_empty() and url:
 		return "[%s](%s)" % [default_name, url]
-	elif name and url.is_empty():
+	if name and url.is_empty():
 		return name
-	else:
-		return default_name
+	return default_name

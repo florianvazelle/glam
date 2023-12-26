@@ -125,23 +125,21 @@ static func _relpos(a: Vector2, b: Vector2) -> int:
 		return 0
 	if a.y < b.x:
 		return -1
-	elif a.x > b.y:
+	if a.x > b.y:
 		return 1
-	else:
-		return 0
+	return 0
 
 
 static func _subtract_range(a: Vector2, b: Vector2) -> Array:
 	if a.x >= b.x and a.y <= b.y:
 		return []
-	elif a.x < b.x and a.y > b.y:
+	if a.x < b.x and a.y > b.y:
 		return [Vector2(a.x, b.x - 1), Vector2(b.y + 1, a.y)]
-	elif a.x < b.x and a.y <= b.y:
+	if a.x < b.x and a.y <= b.y:
 		return [Vector2(a.x, b.x - 1)]
-	elif a.x >= b.x and a.x <= b.y and a.y > b.y:
+	if a.x >= b.x and a.x <= b.y and a.y > b.y:
 		return [Vector2(b.y + 1, a.y)]
-	else:
-		return [a]
+	return [a]
 
 
 static func _sort_range_statuses(a: Dictionary, b: Dictionary) -> bool:

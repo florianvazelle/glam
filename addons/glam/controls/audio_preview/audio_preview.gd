@@ -4,7 +4,8 @@
 extends Control
 
 @export var waveform_image_url: String
-@export var preview_url: String: set = set_preview_url
+@export var preview_url: String:
+	set = set_preview_url
 
 @onready var _button: Button = find_child("Button")
 @onready var _http_request: HTTPRequest = find_child("HTTPRequest")
@@ -24,11 +25,11 @@ func _draw():
 	pass
 
 
-func _gui_input(event):
+func _gui_input(_event):
 	# TODO: Move playhead based on click position
 	#update()
 	pass
 
 
-func _on_Button_toggled(button_pressed):
+func _on_Button_toggled(_button_pressed):
 	pass

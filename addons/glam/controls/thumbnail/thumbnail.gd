@@ -3,6 +3,9 @@
 @tool
 extends Button
 
+signal download_requested(asset)
+signal selected
+
 const Asset := preload("../../assets/asset.gd")
 const AudioStreamAsset := preload("../../assets/audio_stream_asset.gd")
 const PreviewImage := preload("../preview_image.gd")
@@ -10,11 +13,13 @@ const PreviewImage := preload("../preview_image.gd")
 const DEFAULT_WIDTH = 120
 const DEFAULT_HEIGHT = 156
 
-signal download_requested(asset)
-signal selected
+var asset: Asset:
+	set = set_asset
+var is_selected = false:
+	set = set_selected
 
-var asset: Asset: set = set_asset
-var is_selected = false: set = set_selected
+var _dragging := false
+var _drag_data = null
 
 @onready var _preview_image: PreviewImage = find_child("PreviewImage")
 @onready var _type_icon = find_child("Icon")
@@ -29,9 +34,6 @@ var is_selected = false: set = set_selected
 @onready var _glam = get_tree().get_meta("glam")
 @onready var _format_option_button := find_child("FormatOptionButton")
 @onready var _audio_preview := find_child("AudioStreamEditor")
-
-var _dragging := false
-var _drag_data = null
 
 #func _ready():
 #	item_rect_changed.connect(self._on_size_changed)
@@ -69,7 +71,7 @@ func set_asset(value: Asset) -> void:
 	asset.download_format_changed.connect(self._on_download_format_changed)
 
 
-func set_selected(value):
+func set_selected(_value):
 	if is_selected:
 		add_theme_stylebox_override("panel", _focused_stylebox)
 		emit_signal("selected")
@@ -108,9 +110,9 @@ func get_drag_data(_position):
 		preview.asset = asset
 		set_drag_preview(preview)
 		return {files = [asset.filepath], type = "files"}
-	else:
-		set_drag_preview(preview)
-		return {files = [], type = "files"}
+
+	set_drag_preview(preview)
+	return {files = [], type = "files"}
 
 
 func _notification(what):

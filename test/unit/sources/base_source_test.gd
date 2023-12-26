@@ -11,7 +11,7 @@ func load_json(path: String):
 
 	if path.is_rel_path():
 		path = "%s/%s" % [get_script().get_path().get_base_dir(), path]
-	
+
 	var file := FileAccess.open(path, FileAccess.READ)
 	assert(FileAccess.get_open_error() == OK)
 	var json := JSON.new()

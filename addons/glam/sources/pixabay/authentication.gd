@@ -7,7 +7,10 @@ extends "../../controls/authentication/authentication.gd"
 func get_label() -> String:
 	var api_key_url = "%s/docs/#api_search_images" % source.API_URL
 	return (
-		"Please login to your Pixabay account and copy the api key from [url=%s]%s[/url] to the field below:"
+		(
+			"Please login to your Pixabay account and copy the"
+			+ " api key from [url=%s]%s[/url] to the field below:"
+		)
 		% [api_key_url, api_key_url]
 	)
 
@@ -28,7 +31,7 @@ func _on_submit(values):
 		set_submitting(false, "HTTPRequest error: %d" % err)
 
 
-func _on_HTTPRequest_request_completed(result, response_code, headers, body: PackedByteArray):
+func _on_HTTPRequest_request_completed(result, response_code, _headers, body: PackedByteArray):
 	if result == OK and response_code == 200:
 		var config := ConfigFile.new()
 		config.set_value("auth", "api_key", values["API Key"].strip_edges())
@@ -38,7 +41,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body: Pac
 			set_submitting(false)
 	else:
 		var error_message := (
-			"Error. Response code: %s, body: %s"
-			% [response_code, body.get_string_from_utf8()]
+			"Error. Response code: %s, body: %s" % [response_code, body.get_string_from_utf8()]
 		)
 		set_submitting(false, error_message)
