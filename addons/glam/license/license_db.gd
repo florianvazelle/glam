@@ -6,7 +6,7 @@ static var licenses = preload("./custom_license_data.gd").data
 const spdx_licenses = preload("./spdx_license_data.gd").data.licenses
 const GDash = preload("../util/gdash.gd")
 
-const STATIC := {}
+static var STATIC := {}
 
 
 static func get_license(id: String) -> Dictionary:
