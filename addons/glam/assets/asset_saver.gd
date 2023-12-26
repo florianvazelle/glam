@@ -24,7 +24,7 @@ func save(path: String, resource: Resource, flags: int) -> int:
 	flags &= ~ResourceSaver.FLAG_COMPRESS
 
 	# Save in a '.tres' file first using the regular ResourceSaver.
-	var err := ResourceSaver.save(tmp, resource, flags)
+	var err := ResourceSaver.save(resource, tmp, flags)
 	if err != OK:
 		return err
 

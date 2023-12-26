@@ -225,7 +225,7 @@ func _download(asset: GLAMAsset) -> void:
 				"PREVIEW", _:
 					continue
 
-		err = ResourceSaver.save(get_asset_path(asset), material)
+		err = ResourceSaver.save(material, get_asset_path(asset))
 		if err != OK:
 			push_error(err)
 		create_metadata_license_file(get_asset_path(asset))

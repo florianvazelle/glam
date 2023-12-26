@@ -69,7 +69,7 @@ func store(request: Request, result, response_code, headers, body):
 
 func store_resource(request: Request, resource: Resource):
 	var file_path := get_file_path(request)
-	ResourceSaver.save(file_path, resource, ResourceSaver.FLAG_COMPRESS)
+	ResourceSaver.save(resource, file_path, ResourceSaver.FLAG_COMPRESS)
 	var file := FileAccess.open(file_path, FileAccess.READ)
 	cache_size_bytes += file.get_len()
 	file.close()

@@ -329,7 +329,7 @@ func _download_file(url: String, dest: String, headers := PackedStringArray()) -
 
 func _save_glam_file(asset: GLAMAsset) -> int:
 	var path := "%s/%s.glam" % [get_asset_directory(asset), get_slug(asset)]
-	return ResourceSaver.save(path, asset as GLAMAsset)
+	return ResourceSaver.save(asset as GLAMAsset, path)
 
 
 class FetchResult:
