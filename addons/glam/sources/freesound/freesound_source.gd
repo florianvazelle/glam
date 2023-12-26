@@ -74,10 +74,10 @@ func get_authenticated() -> bool:
 	config.load(config_file)
 
 	var refresh_token = config.get_value("auth", "refresh_token", "")
-	var expires_at = config.get_value("auth", "expires_at", OS.get_unix_time())
+	var expires_at = config.get_value("auth", "expires_at", Time.get_unix_time_from_system())
 	access_token = config.get_value("auth", "access_token", "")
 
-	var expired = expires_at <= OS.get_unix_time()
+	var expired = expires_at <= Time.get_unix_time_from_system()
 
 	if not access_token.is_empty() and not expired:
 		emit_signal("query_changed")
@@ -104,7 +104,7 @@ func get_authenticated() -> bool:
 		if res[0] == OK and res[1] == 200 and parsed.error == OK:
 			access_token = parsed.result.access_token
 			refresh_token = parsed.result.refresh_token
-			expires_at = int(int(OS.get_unix_time()) + int(parsed.result.expires_in))
+			expires_at = int(int(Time.get_unix_time_from_system()) + int(parsed.result.expires_in))
 			config.set_value("auth", "access_token", access_token)
 			config.set_value("auth", "refresh_token", refresh_token)
 			config.set_value("auth", "expires_at", expires_at)

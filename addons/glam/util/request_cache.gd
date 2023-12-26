@@ -54,7 +54,7 @@ func get_ttl(file_name: String) -> int:
 
 func is_expired(file_path: String) -> bool:
 	var ttl = get_ttl(file_path)
-	var age = OS.get_unix_time() - FileAccess.get_modified_time(file_path)
+	var age = Time.get_unix_time_from_system() - FileAccess.get_modified_time(file_path)
 	return age >= ttl
 
 

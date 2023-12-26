@@ -49,7 +49,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body: Pac
 			config.set_value("auth", "access_token", parsed.result.access_token)
 			config.set_value("auth", "refresh_token", parsed.result.refresh_token)
 			config.set_value(
-				"auth", "expires_at", int(int(OS.get_unix_time()) + int(parsed.result.expires_in))
+				"auth", "expires_at", int(int(Time.get_unix_time_from_system()) + int(parsed.result.expires_in))
 			)
 			if config.save(source.config_file) == OK:
 				set_submitting(false)
