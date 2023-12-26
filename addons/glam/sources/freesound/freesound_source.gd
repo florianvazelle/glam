@@ -176,7 +176,7 @@ func fetch_more() -> void:
 		emit_signal("fetch_completed", result)
 
 
-func _fetch(url: String, fetch_result: FetchResult) -> Error:
+func _fetch(url: String, fetch_result: FetchResult) -> void:
 	var json = await _fetch_json(url, ["Authorization: Bearer %s" % access_token])
 	if fetch_result.get_query_hash() != get_query_hash():
 		return

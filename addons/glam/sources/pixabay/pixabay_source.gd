@@ -126,7 +126,7 @@ func fetch_more() -> void:
 	await fetch() 
 
 
-func _fetch(url: String, fetch_result: FetchResult) -> Error:
+func _fetch(url: String, fetch_result: FetchResult) -> void:
 	var json = await _fetch_json(url)
 
 	if fetch_result.get_query_hash() != get_query_hash():

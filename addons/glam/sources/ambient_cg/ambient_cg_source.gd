@@ -118,7 +118,7 @@ func fetch_more() -> void:
 		emit_signal("fetch_completed", result)
 
 
-func _fetch(url: String, fetch_result: FetchResult) -> Error:
+func _fetch(url: String, fetch_result: FetchResult) -> void:
 	_next_page_url = null
 	_num_results = "?"
 	_num_loaded = 0
