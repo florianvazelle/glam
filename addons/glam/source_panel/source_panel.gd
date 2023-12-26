@@ -156,12 +156,12 @@ func _enusure_grid_full() -> void:
 		and _thumbnail_grid.get_child_count() > 0
 	):
 		var num_fetched = _thumbnail_grid.get_child_count()
-		var thumbnail_height = _thumbnail_grid.get_child(0).rect_size.y
+		var thumbnail_height = _thumbnail_grid.get_child(0).size.y
 		var rows = ceil(num_fetched / _thumbnail_grid.columns)
 		var space = (
-			min(rect_size.y, get_viewport_rect().size.y)
+			min(size.y, get_viewport_rect().size.y)
 			- (rows * thumbnail_height)
-			+ _trailer.rect_size.y
+			+ _trailer.size.y
 		)
 		if space > 0:
 			_trailer.status = _trailer.Status.LOADING

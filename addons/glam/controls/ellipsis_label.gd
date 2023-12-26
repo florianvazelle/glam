@@ -29,7 +29,7 @@ func _set(property: String, value) -> bool:
 func _update_text():
 	var value = full_text
 	var font := get_font("")
-	var max_width = clamp(max(rect_size.x, rect_min_size.x) - PADDING, 0, INF)
+	var max_width = clamp(max(size.x, custom_minimum_size.x) - PADDING, 0, INF)
 	var width = font.get_string_size(value).x
 
 	if width > max_width:

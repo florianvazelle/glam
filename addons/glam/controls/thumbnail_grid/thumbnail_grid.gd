@@ -17,7 +17,7 @@ var _button_group := ButtonGroup.new()
 
 func set_zoom_factor(value := 1.0) -> void:
 	zoom_factor = value
-	columns = floor(rect_size.x / (Thumbnail.DEFAULT_WIDTH * zoom_factor))
+	columns = floor(size.x / (Thumbnail.DEFAULT_WIDTH * zoom_factor))
 
 
 func _notification(what):

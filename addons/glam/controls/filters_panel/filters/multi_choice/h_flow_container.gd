@@ -61,7 +61,7 @@ func _notification(what):
 func _calculate_layout(apply: bool) -> float:
 	var child_position: Vector2 = Vector2(0, 0)
 	var row_height: float = 0
-	var container_width: float = rect_size.x
+	var container_width: float = size.x
 	var num_children_in_current_row: float = 0
 
 	for child in get_children():
@@ -95,5 +95,5 @@ func _calculate_layout(apply: bool) -> float:
 
 func _make_parent_reevaluate_our_size():
 	# Hacky solution. Once there is a function for this, use it.
-	rect_min_size = Vector2(0, 20000)
-	rect_min_size = Vector2(0, 0)
+	custom_minimum_size = Vector2(0, 20000)
+	custom_minimum_size = Vector2(0, 0)

@@ -87,7 +87,7 @@ func _ready():
 
 		var field_input := LineEdit.new()
 		field_input.align = LineEdit.ALIGN_CENTER
-		field_input.rect_min_size.x = 400
+		field_input.custom_minimum_size.x = 400
 		field_input.text = values[key]
 		field_input.text_changed.connect(self._on_field_text_changed.bind(key))
 

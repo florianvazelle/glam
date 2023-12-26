@@ -116,13 +116,13 @@ func get_drag_data(_position):
 func _notification(what):
 	match what:
 		NOTIFICATION_RESIZED:
-			var x = rect_size.x
-			var y = rect_size.x * 1.3
-			var min_y = rect_size.x * 1.3
-			if rect_size != Vector2(x, y):
-				rect_size = Vector2(x, y)
-			if rect_min_size.y != min_y:
-				rect_min_size.y = min_y
+			var x = size.x
+			var y = size.x * 1.3
+			var min_y = size.x * 1.3
+			if size != Vector2(x, y):
+				size = Vector2(x, y)
+			if custom_minimum_size.y != min_y:
+				custom_minimum_size.y = min_y
 
 
 func _on_DownloadButton_pressed():
