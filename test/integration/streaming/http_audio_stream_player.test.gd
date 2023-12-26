@@ -40,14 +40,14 @@ func before_each():
 func after_each():
 	# Ensure we wait until player file opened, otherwise we get errors about yield resuming
 	# after instance was deleted.
-	yield(yield_to(player, "open_completed", 0.1), YIELD)
+	yield(wait_for_signal(player, "open_completed", 0.1), YIELD)
 
 
 func test_can_play_file_shorter_than_one_second():
 	ref_player.stream = preload(SHORT_MP3_PATH)
 	assert_eq(player.open(BASE_URL + SHORT_MP3_PATH, 0.31), OK)
 	player.play()
-	yield(yield_to(player, "finished", 5), YIELD)
+	yield(wait_for_signal(player, "finished", 5), YIELD)
 	assert_signal_emit_count(player, "finished", 1)
 	assert_eq(hash(player.stream.data), hash(ref_player.stream.data))
 
@@ -56,7 +56,7 @@ func test_emits_started_signal_when_playback_started():
 	assert_eq(player.open(BASE_URL + LONG_MP3_PATH, 127.69), OK)
 	player.play()
 	assert_signal_emit_count(player, "started", 0)
-	yield(yield_to(player, "started", 1), YIELD)
+	yield(wait_for_signal(player, "started", 1), YIELD)
 	assert_signal_emit_count(player, "started", 1)
 
 
@@ -69,9 +69,9 @@ func test_initial_playback_position():
 func test_play_from_near_the_end():
 	assert_eq(player.open(BASE_URL + LONG_MP3_PATH, 127.69), OK)
 	player.play(124)
-	yield(yield_to(player, "started", 1), YIELD)
+	yield(wait_for_signal(player, "started", 1), YIELD)
 	assert_signal_not_emitted(player, "fully_finished")
-	yield(yield_to(player, "fully_finished", 4), YIELD)
+	yield(wait_for_signal(player, "fully_finished", 4), YIELD)
 	assert_signal_emitted(player, "fully_finished")
 
 
@@ -81,8 +81,8 @@ func test_playback_position_after_playing_for_a_few_seconds():
 	player.play()
 	# warning-ignore:return_value_discarded
 	player.connect("started", ref_player, "play")
-	yield(yield_to(player, "started", 1), YIELD)
-	yield(yield_for(3.375, "Play for a few seconds"), YIELD)
+	yield(wait_for_signal(player, "started", 1), YIELD)
+	yield(wait_seconds(3.375, "Play for a few seconds"), YIELD)
 	assert_almost_eq(player.get_playback_position(), ref_player.get_playback_position(), 0.5)
 
 
@@ -92,8 +92,8 @@ func test_playback_position_after_playing_for_a_few_seconds_from_the_middle():
 	player.play(127.69 / 2)
 	# warning-ignore:return_value_discarded
 	player.connect("started", ref_player, "play", [127.69 / 2])
-	yield(yield_to(player, "started", 1), YIELD)
-	yield(yield_for(3.375, "Play for a few seconds"), YIELD)
+	yield(wait_for_signal(player, "started", 1), YIELD)
+	yield(wait_seconds(3.375, "Play for a few seconds"), YIELD)
 	# Due to seeking method the player and ref_player will probably not begin playing from exactly
 	# the same position, so check for approximate equality of playback position.
 	assert_almost_eq(player.get_playback_position(), ref_player.get_playback_position(), 1.0)
@@ -103,7 +103,7 @@ func test_not_buffering_when_fully_finished():
 	assert_eq(player.open(BASE_URL + SHORT_MP3_PATH, 0.309), OK)
 	player.play()
 	assert_true(player.is_buffering())
-	yield(yield_to(player, "stopped", 1), YIELD)
+	yield(wait_for_signal(player, "stopped", 1), YIELD)
 	assert_signal_emitted(player, "fully_finished")
 	assert_false(player.is_buffering())
 
@@ -113,7 +113,7 @@ func test_playing_property():
 	assert_eq(player.open(BASE_URL + LONG_MP3_PATH, 127.69), OK)
 	assert_eq(player.playing, false)
 	player.play()
-	yield(yield_to(player, "started", 1), YIELD)
+	yield(wait_for_signal(player, "started", 1), YIELD)
 	assert_eq(player.playing, true)
 	player.stop()
 	assert_eq(player.playing, false)
