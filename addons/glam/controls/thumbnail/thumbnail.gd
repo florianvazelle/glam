@@ -71,10 +71,10 @@ func set_asset(value: Asset) -> void:
 
 func set_selected(value):
 	if is_selected:
-		add_stylebox_override("panel", _focused_stylebox)
+		add_theme_stylebox_override("panel", _focused_stylebox)
 		emit_signal("selected")
 	else:
-		add_stylebox_override("panel", _unfocused_stylebox)
+		add_theme_stylebox_override("panel", _unfocused_stylebox)
 
 
 func _update_downloaded_status(is_downloaded: bool = asset.downloaded) -> void:
