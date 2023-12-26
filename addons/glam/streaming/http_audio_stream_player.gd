@@ -34,7 +34,7 @@ var _end_received := false
 
 
 func _ready():
-	super.finished.connect(self._on_finished)
+	finished.connect(self._on_finished)
 
 
 func is_open() -> bool:
@@ -47,15 +47,6 @@ func is_buffering() -> bool:
 
 func get_playback_position() -> float:
 	return _start_position + super.get_playback_position()
-
-
-func connect(signal_name: String, target: Object, method: String, binds := [], flags := 0) -> int:
-	return super.connect(signal_name, target, method, binds, flags)
-	match signal_name:
-		"finished":
-			return super.connect("fully_finished", target, method, binds, flags)
-		_:
-			return super.connect(signal_name, target, method, binds, flags)
 
 
 func open(url: String, p_duration: float, headers := []) -> int:

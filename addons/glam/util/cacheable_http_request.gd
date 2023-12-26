@@ -37,14 +37,8 @@ func request(
 		)
 		return OK
 	else:
-		super.request_completed.connect(self._on_request_completed.bind(request), CONNECT_ONE_SHOT)
+		request_completed.connect(self._on_request_completed.bind(request), CONNECT_ONE_SHOT)
 		return super.request(url, custom_headers, ssl_validate_domain, method, request_data)
-
-
-func connect(signal_name: String, target: Object, method: String, binds: Array = [], flags := 0):
-	if signal_name == "request_completed":
-		signal_name = "cacheable_request_completed"
-	return super.connect(signal_name, target, method, binds, flags)
 
 
 func _on_request_completed(result, response_code, headers, body, request: Request):
