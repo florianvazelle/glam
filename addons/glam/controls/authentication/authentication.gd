@@ -83,10 +83,12 @@ func _ready():
 	for key in values.keys():
 		var field_label := Label.new()
 		field_label.text = "%s:" % key
-		field_label.align = Label.ALIGN_CENTER
+		field_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+		field_label.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 
 		var field_input := LineEdit.new()
-		field_input.align = LineEdit.ALIGN_CENTER
+		field_input.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+		field_input.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 		field_input.custom_minimum_size.x = 400
 		field_input.text = values[key]
 		field_input.text_changed.connect(self._on_field_text_changed.bind(key))
