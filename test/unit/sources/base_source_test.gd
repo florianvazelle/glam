@@ -14,7 +14,8 @@ func load_json(path: String):
 	
 	var file := FileAccess.open(path, FileAccess.READ)
 	assert(FileAccess.get_open_error() == OK)
-	var result = JSON.parse(file.get_as_text()).result
+	var json := JSON.new()
+	var result := json.parse(file.get_as_text()).data
 	file.close()
 	_cache[path] = result
 

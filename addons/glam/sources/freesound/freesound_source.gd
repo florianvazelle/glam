@@ -99,11 +99,12 @@ func get_authenticated() -> bool:
 			query
 		)
 		var res = await http_request.request_completed
-		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
-		if res[0] == OK and res[1] == 200 and parsed.error == OK:
-			access_token = parsed.result.access_token
-			refresh_token = parsed.result.refresh_token
-			expires_at = int(int(Time.get_unix_time_from_system()) + int(parsed.result.expires_in))
+		var json := JSON.new()
+		var err := json.parse(res[3].get_string_from_utf8())
+		if res[0] == OK and res[1] == 200 and err == OK:
+			access_token = json.data.access_token
+			refresh_token = json.data.refresh_token
+			expires_at = int(int(Time.get_unix_time_from_system()) + int(json.data.expires_in))
 			config.set_value("auth", "access_token", access_token)
 			config.set_value("auth", "refresh_token", refresh_token)
 			config.set_value("auth", "expires_at", expires_at)
@@ -124,9 +125,10 @@ func get_auth_user() -> String:
 	if await get_authenticated() and auth_user.is_empty():
 		http_request.request("%s/me" % API_URL, ["Authorization: Bearer %s" % access_token])
 		var res = await http_request.request_completed
-		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
-		if res[0] == OK and res[1] == 200 and parsed.error == OK:
-			auth_user = parsed.result.username
+		var json := JSON.new()
+		var err := json.parse(res[3].get_string_from_utf8())
+		if res[0] == OK and res[1] == 200 and err == OK:
+			auth_user = json.data.username
 	await get_tree().idle_frame
 	return auth_user
 
@@ -190,7 +192,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
 		var asset := AudioStreamAsset.from_data(asset_data, access_token)
 		if not asset:
 			push_error("Failed to create asset: ")
-			print(JSON.print(asset_data))
+			print(asset_data)
 		asset.source_id = get_id()
 		asset.source_url = asset_data.url
 		results.append(asset)

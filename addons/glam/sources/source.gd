@@ -286,13 +286,13 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 
 	if response_code != 200:
 		return {error = FAILED}
+	
+	var json := JSON.new()
+	err = json.parse(body.get_string_from_utf8())
+	if err != OK:
+		return {error = err}
 
-	var parsed = JSON.parse(body.get_string_from_utf8())
-
-	if parsed.error:
-		return {error = parsed.error}
-
-	return {error = OK, data = parsed.result}
+	return {error = OK, data = json.data}
 
 
 # Downloads a single file from `url` to `dest` on the local machine. `dest`
