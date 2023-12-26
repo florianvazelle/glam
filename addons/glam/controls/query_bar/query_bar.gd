@@ -113,7 +113,7 @@ func _on_FiltersButton_toggled(button_pressed: bool) -> void:
 
 
 func _on_FiltersPanel_modal_closed():
-	_filters_button.pressed = false
+	_filters_button.set_pressed(false)
 	_filters_button.call_deferred("set_mouse_filter", MOUSE_FILTER_PASS)
 	source.check_filters()
 

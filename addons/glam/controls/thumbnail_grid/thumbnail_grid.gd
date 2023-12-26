@@ -42,7 +42,7 @@ func append(assets := []) -> void:
 		add_child(thumbnail)
 		thumbnail.asset = asset
 		if first:
-			thumbnail.pressed = true
+			thumbnail.set_pressed(true)
 			first = false
 
 

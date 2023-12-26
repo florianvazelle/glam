@@ -12,7 +12,7 @@ func init(filter: Dictionary, source_id := ""):
 		assert(choice is String, "Choice must be a string.")
 		var check_box := CheckBox.new()
 		check_box.text = choice
-		check_box.pressed = choice in _filter.value
+		check_box.set_pressed(choice in _filter.value)
 		check_box.toggled.connect(self._on_CheckBox_toggled)
 		$Options.add_child(check_box)
 
