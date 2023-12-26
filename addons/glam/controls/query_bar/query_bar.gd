@@ -21,7 +21,7 @@ var _line_edit_clicked
 func set_source(value: Source) -> void:
 	flush()
 	source = value
-	if not source.is_connected("query_changed", self, "_on_query_changed"):
+	if not source.is_connected("query_changed", self._on_query_changed):
 		source.query_changed.connect(self._on_query_changed)
 	_on_query_changed()
 

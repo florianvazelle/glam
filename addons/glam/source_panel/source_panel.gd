@@ -181,7 +181,7 @@ func _check_authentication():
 
 		var popup_menu: PopupMenu = _account_button.get_popup()
 
-		if not popup_menu.is_connected("id_pressed", self, "_on_account_menu_id_pressed"):
+		if not popup_menu.is_connected("id_pressed", self._on_account_menu_id_pressed):
 			popup_menu.id_pressed.connect(self._on_account_menu_id_pressed)
 
 		if authenticated:

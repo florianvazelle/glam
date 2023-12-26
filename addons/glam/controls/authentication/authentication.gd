@@ -73,7 +73,7 @@ func get_label() -> String:
 
 func _ready():
 	if not http_request.is_connected(
-		"request_completed", self, "_on_HTTPRequest_request_completed"
+		"request_completed", self._on_HTTPRequest_request_completed
 	):
 		http_request.request_completed.connect(self._on_HTTPRequest_request_completed)
 
