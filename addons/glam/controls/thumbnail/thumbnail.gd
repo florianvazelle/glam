@@ -21,7 +21,7 @@ var selected = false: set = set_selected
 @onready var _status_icon = find_child("Status")
 @onready var _download_button = find_child("DownloadButton")
 @onready var _display_name = find_child("DisplayName")
-@onready var _focused_stylebox := get_stylebox("panel")
+@onready var _focused_stylebox := EditorInterface.get_editor_theme().get_stylebox("panel", "Editor")
 @onready var _unfocused_stylebox := StyleBoxEmpty.new()
 @onready var _http_request: HTTPRequest = find_child("CacheableHTTPRequest")
 @onready var _spinner := _preview_image.find_child("Spinner")

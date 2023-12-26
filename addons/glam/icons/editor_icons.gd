@@ -6,7 +6,7 @@ extends Node
 
 func get_icon(icon_name: String) -> Texture:
 	if Engine.editor_hint and is_inside_tree():
-		return get_tree().get_root().get_child(0).get_gui_base().get_icon(icon_name, "EditorIcons")
+		return EditorInterface.get_editor_theme().get_icon(icon_name, "EditorIcons")
 	else:
 		match icon_name:
 			"AudioStreamSample":

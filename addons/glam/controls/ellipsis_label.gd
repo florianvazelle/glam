@@ -28,7 +28,7 @@ func _set(property: StringName, value) -> bool:
 
 func _update_text():
 	var value = full_text
-	var font := get_font("")
+	var font := EditorInterface.get_editor_theme().default_font
 	var max_width = clamp(max(size.x, custom_minimum_size.x) - PADDING, 0, INF)
 	var width = font.get_string_size(value).x
 

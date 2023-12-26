@@ -32,7 +32,7 @@ var _pausing := false
 @onready var _spinner := find_child("Spinner")
 
 @onready var _glam = get_tree().get_meta("glam")
-@onready var _accent_color := get_color("accent_color", "Editor")
+@onready var _accent_color := EditorInterface.get_editor_theme().get_color("accent_color", "Editor")
 
 
 func set_asset(value: AudioStreamAsset) -> void:
