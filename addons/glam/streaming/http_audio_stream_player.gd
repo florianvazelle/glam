@@ -17,7 +17,7 @@ var _media_type: String
 var _size: int
 var _http: HTTPRangeRequest
 var _stream: AudioStream
-var _data := PoolByteArray()
+var _data := PackedByteArray()
 var _playing := false
 var _rangev: Vector2
 
@@ -117,7 +117,7 @@ func close() -> void:
 		_http.queue_free()
 
 
-func _on_data_received(data: PoolByteArray, rangev: Vector2) -> void:
+func _on_data_received(data: PackedByteArray, rangev: Vector2) -> void:
 	if rangev.y >= _size - 1:
 		_end_received = true
 

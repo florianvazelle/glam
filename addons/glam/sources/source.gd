@@ -282,7 +282,7 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 
 	var result: int = response[0]
 	var response_code: int = response[1]
-	var body: PoolByteArray = response[3]
+	var body: PackedByteArray = response[3]
 
 	if result != OK:
 		return {error = result}

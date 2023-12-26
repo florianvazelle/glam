@@ -304,7 +304,7 @@ func _error(message := "", code := FAILED) -> int:
 	if _size < 0 and _media_type.is_empty():
 		call_deferred("emit_signal", "open_completed", code, -1, "")
 	else:
-		call_deferred("emit_signal", "request_completed", code, PoolByteArray(), Vector2(-1, -1))
+		call_deferred("emit_signal", "request_completed", code, PackedByteArray(), Vector2(-1, -1))
 	return code
 
 

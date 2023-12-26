@@ -3,13 +3,13 @@
 @tool
 extends Resource
 
-var data := PoolByteArray()
+var data := PackedByteArray()
 var ranges := PoolVector2Array()
 
 var _buffer := StreamPeerBuffer.new()
 
 
-func _init(p_data := PoolByteArray(), p_ranges := PoolVector2Array()):
+func _init(p_data := PackedByteArray(), p_ranges := PoolVector2Array()):
 	data = p_data
 	ranges = p_ranges
 
@@ -29,7 +29,7 @@ func get_position() -> int:
 	return _buffer.get_position()
 
 
-func put_data(p_data: PoolByteArray, rangev := Vector2(-1, -1)):
+func put_data(p_data: PackedByteArray, rangev := Vector2(-1, -1)):
 	var start := int(rangev.x)
 	var end := int(rangev.y)
 
@@ -109,7 +109,7 @@ func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2
 
 
 func clear() -> void:
-	data = PoolByteArray()
+	data = PackedByteArray()
 	ranges = PoolVector2Array()
 	_buffer = StreamPeerBuffer.new()
 	_buffer.data_array = data

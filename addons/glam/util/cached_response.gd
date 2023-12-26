@@ -6,14 +6,14 @@ extends Resource
 var result: int = 0
 var response_code: int = 0
 var headers := PoolStringArray()
-var body := PoolByteArray()
+var body := PackedByteArray()
 
 
 func _init(
 	p_result: int = 0,
 	p_response_code: int = 0,
 	p_headers := PoolStringArray(),
-	p_body := PoolByteArray()
+	p_body := PackedByteArray()
 ):
 	result = p_result
 	response_code = p_response_code
