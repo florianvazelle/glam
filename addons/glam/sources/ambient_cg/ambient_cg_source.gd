@@ -203,7 +203,7 @@ func _download(asset: GLAMAsset) -> void:
 		asset.create_license_file(file)
 		create_metadata_license_file("%s.import" % file)
 
-	var material := SpatialMaterial.new()
+	var material := StandardMaterial3D.new()
 	material.set_meta("glam_asset", asset)
 
 	for file in importable_files:
