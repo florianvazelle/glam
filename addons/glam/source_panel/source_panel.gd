@@ -20,8 +20,6 @@ var authentication: Control
 var editor_interface: EditorInterface
 var selected_thumbnail: Thumbnail
 
-var _file := File.new()
-
 @onready var _account_button := find_child("AccountButton")
 @onready var account_menu := find_child("AccountMenu")
 @onready var user_label := find_child("UserLabel")
@@ -115,7 +113,7 @@ func _on_fetch_completed(result: Source.FetchResult):
 	# Update downloaded status of assets.
 	for asset in assets:
 		asset.filepath = source.get_asset_path(asset)
-		asset.downloaded = _file.file_exists(asset.filepath)
+		asset.downloaded = FileAccess.file_exists(asset.filepath)
 		if asset is AudioStreamAsset:
 			_audio_controls.visible = true
 			asset.set_meta("volume", linear2db(_volume_slider.value))

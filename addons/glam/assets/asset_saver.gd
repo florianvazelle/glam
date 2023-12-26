@@ -29,8 +29,8 @@ func save(path: String, resource: Resource, flags: int) -> int:
 		return err
 
 	# Get the contents of the '.tres' file.
-	var file := File.new()
-	err = file.open(tmp, File.READ)
+	var file := FileAccess.open(tmp, FileAccess.READ)
+	err = FileAccess.get_open_error()
 	if err != OK:
 		DirAccess.remove_absolute(tmp)
 		return err
@@ -39,7 +39,8 @@ func save(path: String, resource: Resource, flags: int) -> int:
 	file.close()
 	DirAccess.remove_absolute(tmp)
 
-	err = file.open(path, File.WRITE)
+	file = FileAccess.open(path, FileAccess.WRITE)
+	err = FileAccess.get_open_error()
 	if err != OK:
 		return err
 

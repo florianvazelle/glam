@@ -215,16 +215,15 @@ func get_slug(asset: GLAMAsset) -> String:
 
 func _touch_config_file():
 	var path := ProjectSettings.globalize_path(config_file)
-	var file := File.new()
 
 	if not DirAccess.dir_exists_absolute(path.get_base_dir()):
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 
 	if not FileAccess.file_exists(path):
-		file.open(path, File.WRITE)
+		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.close()
 	else:
-		file.open(path, File.READ)
+		var file := FileAccess.open(path, FileAccess.READ)
 		file.close()
 
 
@@ -252,8 +251,7 @@ func import_files(files: Array):
 
 
 func create_metadata_license_file(path: String) -> void:
-	var file := File.new()
-	file.open(path + ".license", File.WRITE)
+	var file := FileAccess.open(path + ".license", FileAccess.WRITE)
 	file.store_line("SPDX-FileCopyrightText: none")
 	file.store_line("SPDX-License-Identifier: CC0-1.0")
 	file.close()

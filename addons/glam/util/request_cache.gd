@@ -15,7 +15,6 @@ var cache_dir := ProjectSettings.globalize_path(
 	ProjectSettings.get_meta("glam/directory") + "/cache"
 )
 
-var _file := File.new()
 var _ttl_regex := RegEx.new()
 
 
@@ -37,7 +36,7 @@ func get_response(request: Request) -> CachedResponse:
 func get_resource(request: Request) -> Resource:
 	var file_path = get_file_path(request)
 
-	if not _file.file_exists(file_path):
+	if not FileAccess.file_exists(file_path):
 		return null
 
 	if is_expired(file_path):
@@ -55,7 +54,7 @@ func get_ttl(file_name: String) -> int:
 
 func is_expired(file_path: String) -> bool:
 	var ttl = get_ttl(file_path)
-	var age = OS.get_unix_time() - _file.get_modified_time(file_path)
+	var age = OS.get_unix_time() - FileAccess.get_modified_time(file_path)
 	return age >= ttl
 
 
@@ -71,9 +70,9 @@ func store(request: Request, result, response_code, headers, body):
 func store_resource(request: Request, resource: Resource):
 	var file_path := get_file_path(request)
 	ResourceSaver.save(file_path, resource, ResourceSaver.FLAG_COMPRESS)
-	_file.open(file_path, File.READ)
-	cache_size_bytes += _file.get_len()
-	_file.close()
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	cache_size_bytes += file.get_len()
+	file.close()
 	emit_signal("cache_size_updated", cache_size_bytes)
 
 
@@ -91,9 +90,9 @@ func delete_expired():
 				if is_expired(file_path):
 					dir.remove(file_path)
 				else:
-					_file.open(file_path, File.READ)
-					cache_size_bytes += _file.get_len()
-					_file.close()
+					var file := FileAccess.open(file_path, FileAccess.READ)
+					cache_size_bytes += file.get_len()
+					file.close()
 			file_name = dir.get_next()
 		emit_signal("cache_size_updated", cache_size_bytes)
 

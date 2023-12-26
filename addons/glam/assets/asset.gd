@@ -189,8 +189,7 @@ func get_file_name() -> String:
 
 
 func create_license_file(path: String):
-	var file := File.new()
-	file.open("%s.license" % path, File.WRITE)
+	var file := FileAccess.open("%s.license" % path, FileAccess.WRITE)
 
 	for author in authors:
 		if author is Author:

@@ -31,7 +31,6 @@ static func list_files_rec(path: String, extension := ".glam") -> PackedStringAr
 
 static func list_assets_rec(root := "res://") -> PackedStringArray:
 	var paths := PackedStringArray()
-	var file := File.new()
 
 	for path in list_files_rec(root):
 		if path is String:

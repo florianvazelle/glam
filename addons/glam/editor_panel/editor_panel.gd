@@ -82,9 +82,9 @@ func _on_menu_id_pressed(id: int):
 					asset.create_license_file(path.get_basename())
 
 		1:  # Generate credits.json.
-			var file := File.new()
+			var file := FileAccess.open("credits.json", FileAccess.WRITE)
 
-			if file.open("credits.json", File.WRITE) != OK:
+			if FileAccess.get_open_error() != OK:
 				return
 
 			file.store_line(
@@ -106,9 +106,9 @@ func _on_menu_id_pressed(id: int):
 			file.close()
 
 		2:  # Generate CREDITS.md.
-			var file := File.new()
+			var file := FileAccess.open("res://CREDITS.md", FileAccess.WRITE)
 			assert(
-				file.open("res://CREDITS.md", File.WRITE) == OK,
+				file.get_open_error() == OK,
 				"Couldn't open res://CREDITS.md file for writing."
 			)
 			file.store_string(Markdown.generate_credits("res://", self.sources))
@@ -117,7 +117,6 @@ func _on_menu_id_pressed(id: int):
 
 static func _get_asset_paths_rec(root := "res://") -> Array:
 	var paths := []
-	var file := File.new()
 
 	for path in FileScanner.list_files_rec(root):
 		if path is String:

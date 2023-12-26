@@ -85,8 +85,8 @@ func test__get_authors_multiple():
 
 
 func test_generate_credits():
-	var file := File.new()
-	assert_eq(OK, file.open("res://test/unit/credits/fixtures/CREDITS.md", File.READ))
+	var file := FileAccess.open("res://test/unit/credits/fixtures/CREDITS.md", File.READ)
+	assert_eq(OK, FileAccess.get_open_error())
 	var credits = file.get_as_text()
 	file.close()
 	assert_eq(Markdown.generate_credits("res://test/unit/credits/fixtures/assets"), credits)

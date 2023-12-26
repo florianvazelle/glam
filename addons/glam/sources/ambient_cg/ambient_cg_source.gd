@@ -12,7 +12,6 @@ const _API_URL := "https://ambientCG.com/api/v2/full_json"
 var _next_page_url = null
 var _num_results := ""
 var _num_loaded := 0
-var _file := File.new()
 
 
 func _ready():
