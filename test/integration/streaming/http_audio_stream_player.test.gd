@@ -80,7 +80,7 @@ func test_playback_position_after_playing_for_a_few_seconds():
 	assert_eq(player.open(BASE_URL + LONG_MP3_PATH, 127.69), OK)
 	player.play()
 	# warning-ignore:return_value_discarded
-	player.connect("started", ref_player, "play")
+	player.started.connect(ref_player.play)
 	yield(wait_for_signal(player, "started", 1), YIELD)
 	yield(wait_seconds(3.375, "Play for a few seconds"), YIELD)
 	assert_almost_eq(player.get_playback_position(), ref_player.get_playback_position(), 0.5)
@@ -91,7 +91,7 @@ func test_playback_position_after_playing_for_a_few_seconds_from_the_middle():
 	assert_eq(player.open(BASE_URL + LONG_MP3_PATH, 127.69), OK)
 	player.play(127.69 / 2)
 	# warning-ignore:return_value_discarded
-	player.connect("started", ref_player, "play", [127.69 / 2])
+	player.started.connect(ref_player.play, [127.69 / 2])
 	yield(wait_for_signal(player, "started", 1), YIELD)
 	yield(wait_seconds(3.375, "Play for a few seconds"), YIELD)
 	# Due to seeking method the player and ref_player will probably not begin playing from exactly

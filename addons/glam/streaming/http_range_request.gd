@@ -42,8 +42,8 @@ func is_requesting() -> bool:
 
 
 func _ready():
-	connect("open_completed", self, "_on_request_completed")
-	connect("request_completed", self, "_on_request_completed")
+	open_completed.connect(self._on_request_completed)
+	request_completed.connect(self._on_request_completed)
 	set_process(false)
 
 

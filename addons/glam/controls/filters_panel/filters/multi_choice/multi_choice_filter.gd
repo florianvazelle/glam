@@ -13,7 +13,7 @@ func init(filter: Dictionary, source_id := ""):
 		var check_box := CheckBox.new()
 		check_box.text = choice
 		check_box.pressed = choice in _filter.value
-		check_box.connect("toggled", self, "_on_CheckBox_toggled")
+		check_box.toggled.connect(self._on_CheckBox_toggled)
 		$Options.add_child(check_box)
 
 

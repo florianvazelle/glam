@@ -47,7 +47,7 @@ func _ready():
 	_menu_button.get_popup().add_item("Generate Licenses", 0)
 	#_menu_button.get_popup().add_item("Generate credits.json", 1)
 	_menu_button.get_popup().add_item("Generate CREDITS.md", 2)
-	_menu_button.get_popup().connect("id_pressed", self, "_on_menu_id_pressed")
+	_menu_button.get_popup().id_pressed.connect(self._on_menu_id_pressed)
 
 	select_source(0)
 

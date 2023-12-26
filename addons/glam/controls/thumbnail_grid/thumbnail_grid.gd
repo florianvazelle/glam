@@ -37,8 +37,8 @@ func append(assets := []) -> void:
 		assert(asset is Asset, "%s is not an Asset." % asset)
 		var thumbnail: Thumbnail = ThumbnailScene.instance()
 		thumbnail.group = _button_group
-		thumbnail.connect("toggled", self, "_on_thumbnail_toggled", [thumbnail])
-		thumbnail.connect("download_requested", self, "_on_download_requested")
+		thumbnail.toggled.connect(self._on_thumbnail_toggled.bind(thumbnail))
+		thumbnail.download_requested.connect(self._on_download_requested)
 		add_child(thumbnail)
 		thumbnail.asset = asset
 		if first:

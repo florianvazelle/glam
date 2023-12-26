@@ -34,7 +34,7 @@ var _dragging := false
 var _drag_data = null
 
 #func _ready():
-#	connect("item_rect_changed", self, "_on_size_changed")
+#	item_rect_changed.connect(self._on_size_changed)
 
 
 func set_asset(value: Asset) -> void:
@@ -63,10 +63,10 @@ func set_asset(value: Asset) -> void:
 			yield(_preview_image, "image_loaded")
 			_spinner.visible = false
 
-	asset.connect("download_started", self, "_update_downloaded_status")
-	asset.connect("download_completed", self, "_update_downloaded_status")
-	asset.connect("download_status_changed", self, "_update_downloaded_status")
-	asset.connect("download_format_changed", self, "_on_download_format_changed")
+	asset.download_started.connect(self._update_downloaded_status)
+	asset.download_completed.connect(self._update_downloaded_status)
+	asset.download_status_changed.connect(self._update_downloaded_status)
+	asset.download_format_changed.connect(self._on_download_format_changed)
 
 
 func set_selected(value):

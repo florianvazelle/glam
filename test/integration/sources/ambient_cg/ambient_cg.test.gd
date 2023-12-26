@@ -11,7 +11,7 @@ var results: Object
 func before_each():
 	ambient_cg = add_child_autoqfree(AmbientCG.new())
 	# warning-ignore:return_value_discarded
-	ambient_cg.connect("fetch_completed", self, "_on_fetch_completed")
+	ambient_cg.fetch_completed.connect(self._on_fetch_completed)
 
 
 func _on_fetch_completed(p_results: Object) -> void:

@@ -75,7 +75,7 @@ func _ready():
 	if not http_request.is_connected(
 		"request_completed", self, "_on_HTTPRequest_request_completed"
 	):
-		http_request.connect("request_completed", self, "_on_HTTPRequest_request_completed")
+		http_request.request_completed.connect(self._on_HTTPRequest_request_completed)
 
 	values = get_values()
 	instructions_label.bbcode_text = get_label()
@@ -89,7 +89,7 @@ func _ready():
 		field_input.align = LineEdit.ALIGN_CENTER
 		field_input.rect_min_size.x = 400
 		field_input.text = values[key]
-		field_input.connect("text_changed", self, "_on_field_text_changed", [key])
+		field_input.text_changed.connect(self._on_field_text_changed.bind(key))
 
 		fields.add_child(field_label)
 		fields.add_child(field_input)

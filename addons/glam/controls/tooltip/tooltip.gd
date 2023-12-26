@@ -11,8 +11,8 @@ extends PopupPanel
 func _ready():
 	assert(has_node(anchor_path), "Path to anchor required.")
 	var anchor: Control = get_node(anchor_path)
-	anchor.connect("mouse_entered", $Timer, "start")
-	anchor.connect("mouse_exited", self, "_hide")
+	anchor.mouse_entered.connect($Timer.start)
+	anchor.mouse_exited.connect(self._hide)
 
 
 func _show() -> void:

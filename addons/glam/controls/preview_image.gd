@@ -32,11 +32,8 @@ func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
 	var cancellation_token := CancellationToken.new(_http_request)
 	_cancellation_tokens.append(cancellation_token)
 	add_child(_http_request)
-	_http_request.connect(
-		"request_completed",
-		self,
-		"_on_http_request_completed",
-		[url, flags, cancellation_token],
+	_http_request.request_completed.connect(
+		self._on_http_request_completed.bind(url, flags, cancellation_token),
 		CONNECT_ONESHOT
 	)
 	_http_request.request(url)

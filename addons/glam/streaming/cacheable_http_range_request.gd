@@ -17,7 +17,7 @@ func _ready():
 
 
 func open(url: String, headers := []) -> int:
-	var err := .open(url, headers)
+	var err := super.open(url, headers)
 	if _request_cache and err == OK:
 		_request = Request.new(url, PoolStringArray(headers))
 		var cache: BufferCache = _request_cache.get_resource(_request)

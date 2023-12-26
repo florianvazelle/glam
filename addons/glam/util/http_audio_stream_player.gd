@@ -14,7 +14,7 @@ var loading := false
 
 func _ready():
 	add_child(_http_request)
-	_http_request.connect("request_completed", self, "_on_request_completed")
+	_http_request.request_completed.connect(self._on_request_completed)
 
 
 func set_url(value: String) -> void:

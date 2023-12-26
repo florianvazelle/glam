@@ -127,9 +127,9 @@ func fetch_more() -> void:
 
 func _ready():
 	_touch_config_file()
-	connect("fetch_started", self, "_on_fetch_started")
-	connect("fetch_completed", self, "_on_fetch_completed")
-	connect("query_changed", self, "_on_query_changed")
+	fetch_started.connect(self._on_fetch_started)
+	fetch_completed.connect(self._on_fetch_completed)
+	query_changed.connect(self._on_query_changed)
 	fetch()
 
 

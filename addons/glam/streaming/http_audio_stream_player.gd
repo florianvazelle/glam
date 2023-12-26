@@ -34,7 +34,7 @@ var _end_received := false
 
 
 func _ready():
-	super.connect("finished", self, "_on_finished")
+	super.finished.connect(self._on_finished)
 
 
 func is_open() -> bool:
@@ -42,20 +42,20 @@ func is_open() -> bool:
 
 
 func is_buffering() -> bool:
-	return _playing and (not is_open() or not .is_playing())
+	return _playing and (not is_open() or not super.is_playing())
 
 
 func get_playback_position() -> float:
-	return _start_position + .get_playback_position()
+	return _start_position + super.get_playback_position()
 
 
 func connect(signal_name: String, target: Object, method: String, binds := [], flags := 0) -> int:
-	return .connect(signal_name, target, method, binds, flags)
+	return super.connect(signal_name, target, method, binds, flags)
 	match signal_name:
 		"finished":
-			return .connect("fully_finished", target, method, binds, flags)
+			return super.connect("fully_finished", target, method, binds, flags)
 		_:
-			return .connect(signal_name, target, method, binds, flags)
+			return super.connect(signal_name, target, method, binds, flags)
 
 
 func open(url: String, p_duration: float, headers := []) -> int:
@@ -65,7 +65,7 @@ func open(url: String, p_duration: float, headers := []) -> int:
 	duration = p_duration
 
 	_http = HTTPRangeRequest.new()
-	_http.connect("open_completed", self, "_on_http_opened")
+	_http.open_completed.connect(self._on_http_opened)
 	add_child(_http)
 
 	return _http.open(url, headers)
@@ -106,7 +106,7 @@ func seek(to_position: float):
 
 func stop():
 	super.stop()
-	_resume_position = .get_playback_position()
+	_resume_position = super.get_playback_position()
 	_playing = false
 
 	if is_open():
@@ -159,7 +159,7 @@ func _on_http_opened(result: int, size: int, media_type: String) -> void:
 			call_deferred("emit_signal", "open_completed", FAILED)
 			return
 
-	_http.connect("data_received", self, "_on_data_received")
+	_http.data_received.connect(self._on_data_received)
 	call_deferred("emit_signal", "open_completed", OK)
 
 	if is_buffering():
@@ -167,7 +167,7 @@ func _on_http_opened(result: int, size: int, media_type: String) -> void:
 
 
 func _on_finished():
-	_resume_position = .get_playback_position()
+	_resume_position = super.get_playback_position()
 
 	if is_buffering() and _stream.data.size() < _data.size():
 		_stream.data = _data
@@ -179,7 +179,7 @@ func _on_finished():
 	if (
 		_end_received
 		and _stream.data.size() >= _data.size()
-		and .get_playback_position() >= _stream.get_length()
+		and super.get_playback_position() >= _stream.get_length()
 	):
 		stop()
 		emit_signal("fully_finished")

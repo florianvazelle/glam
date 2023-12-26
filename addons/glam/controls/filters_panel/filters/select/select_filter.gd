@@ -14,7 +14,7 @@ func init(filter: Dictionary, source_id := "") -> void:
 		if option == filter.value:
 			$OptionButton.select(i)
 
-	$OptionButton.connect("item_selected", self, "_on_OptionButton_item_selected")
+	$OptionButton.item_selected.connect(self._on_OptionButton_item_selected)
 
 
 func _on_OptionButton_item_selected(index):

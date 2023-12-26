@@ -44,16 +44,16 @@ func _ready():
 	if not source:
 		return
 
-	source.connect("fetch_started", self, "_on_fetch_started")
-	source.connect("fetch_completed", self, "_on_fetch_completed")
-	source.connect("query_changed", self, "_on_query_changed")
+	source.fetch_started.connect(self._on_fetch_started)
+	source.fetch_completed.connect(self._on_fetch_completed)
+	source.query_changed.connect(self._on_query_changed)
 	source_link.url = source.get_url()
 
-	source.connect("status_line_changed", _status_line, "set_text")
+	source.status_line_changed.connect(_status_line.set_text)
 	_status_line.text = source.status_line
 
 	# Update cache size status.
-	_request_cache.connect("cache_size_updated", self, "_on_cache_size_updated")
+	_request_cache.cache_size_updated.connect(self._on_cache_size_updated)
 	_request_cache.delete_expired()
 
 	# If the source requires authentication, then it must provide an authentication
@@ -62,7 +62,7 @@ func _ready():
 		_account_button.visible = true
 		$StatusBar/VSeparator.visible = true
 		authentication = source.AuthenticationScene.instance()
-		authentication.connect("authenticated", self, "_check_authentication")
+		authentication.authenticated.connect(self._check_authentication)
 		authentication.source = source
 		authentication.size_flags_vertical |= SIZE_EXPAND
 		authentication.visible = false
@@ -184,7 +184,7 @@ func _check_authentication():
 		var popup_menu: PopupMenu = _account_button.get_popup()
 
 		if not popup_menu.is_connected("id_pressed", self, "_on_account_menu_id_pressed"):
-			popup_menu.connect("id_pressed", self, "_on_account_menu_id_pressed")
+			popup_menu.id_pressed.connect(self._on_account_menu_id_pressed)
 
 		if authenticated:
 			var user = yield(source.get_auth_user(), "completed")

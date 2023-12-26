@@ -52,7 +52,7 @@ func _enter_tree():
 	editor_icons = EditorIcons.new()
 	add_child(editor_icons)
 	fs = get_editor_interface().get_resource_filesystem()
-	fs.connect("resources_reload", self, "_on_resources_reload")
+	fs.resources_reload.connect(self._on_resources_reload)
 	request_cache = RequestCache.new()
 	add_child(request_cache)
 	assets_panel = preload("./editor_panel/editor_panel.tscn").instance()

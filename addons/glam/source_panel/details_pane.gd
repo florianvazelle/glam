@@ -40,7 +40,7 @@ func set_asset(value: Asset):
 		return
 
 	if not asset.is_connected("download_format_changed", self, "_on_download_format_changed"):
-		asset.connect("download_format_changed", self, "_on_download_format_changed")
+		asset.download_format_changed.connect(self._on_download_format_changed)
 
 	_label.hide()
 	_scroll_container.show()
