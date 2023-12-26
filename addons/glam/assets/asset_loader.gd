@@ -4,6 +4,8 @@
 class_name GLAMAssetLoader
 extends ResourceFormatLoader
 
+const AssetFile := preload("./asset_file.gd")
+
 
 func get_recognized_extensions() -> PackedStringArray:
 	return PackedStringArray(["glam"])
@@ -29,7 +31,7 @@ func load(path: String, original_path: String):
 
 	if resource.files.is_empty():
 		if FileAccess.file_exists(path.get_basename()):
-			resource.files.append(GLAMAsset.AssetFile.new(path.get_basename()))
+			resource.files.append(AssetFile.new(path.get_basename()))
 
 			if resource is GLAMAudioStreamAsset:
 				var audio_stream: AudioStream = load(path.get_basename())
