@@ -202,7 +202,7 @@ func authenticate() -> int:
 
 
 func get_display_name() -> String:
-	return filename.get_base_dir().get_basename().replace("_", " ").capitalize()
+	return get_script().get_path().get_base_dir().get_basename().replace("_", " ").capitalize()
 
 
 func get_icon() -> Texture:

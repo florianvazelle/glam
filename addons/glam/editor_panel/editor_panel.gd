@@ -19,7 +19,7 @@ var sources := []
 func _ready():
 	# Add sources to the OptionButton, clearing it first.
 	source_select.clear()
-	var sources_dir := "%s/../sources" % filename.get_base_dir()  # ./sources
+	var sources_dir: String = "%s/../sources" % get_script().get_path().get_base_dir()  # ./sources
 	var dir := DirAccess.open(sources_dir)
 	dir.list_dir_begin()
 	var source_dir: String = dir.get_next()
