@@ -18,7 +18,7 @@ func _ready():
 func _show() -> void:
 	if not visible:
 		visible = true
-		set_global_position(get_global_mouse_position())
+		set_position(get_mouse_position())
 
 
 func _hide() -> void:

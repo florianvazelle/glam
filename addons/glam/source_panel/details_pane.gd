@@ -117,7 +117,7 @@ func _on_Details_meta_hover_started(meta):
 		if LicenseDB.has_license(meta):
 			_tooltip.get_node("Label").text = LicenseDB.get_license(meta).name
 			_tooltip.visible = true  # Don't use popup() as it steals focus and causes the "hover_ended" signal to emit prematurely.
-			_tooltip.set_global_position(get_global_mouse_position())
+			_tooltip.set_position(get_global_mouse_position())
 
 
 func _on_PreviewImage_image_loaded():
