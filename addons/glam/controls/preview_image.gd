@@ -21,7 +21,7 @@ func cancel():
 		token.cancel()
 
 
-func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
+func load_image(url := ""):
 	if url.is_empty():
 		return CancellationToken.new(null, true)
 
@@ -33,7 +33,7 @@ func load_image(url := "", flags := Texture.FLAGS_DEFAULT):
 	_cancellation_tokens.append(cancellation_token)
 	add_child(_http_request)
 	_http_request.request_completed.connect(
-		self._on_http_request_completed.bind(url, flags, cancellation_token),
+		self._on_http_request_completed.bind(url, cancellation_token),
 		CONNECT_ONE_SHOT
 	)
 	_http_request.request(url)
@@ -46,7 +46,6 @@ func _on_http_request_completed(
 	headers,
 	body,
 	url: String,
-	flags: int,
 	cancellation_token: CancellationToken
 ):
 	cancellation_token.http_request.queue_free()
@@ -78,7 +77,7 @@ func _on_http_request_completed(
 	if loaded != OK:
 		push_error("Could not load preview image")
 	texture = ImageTexture.new()
-	texture.create_from_image(image, flags)
+	texture.create_from_image(image)
 	emit_signal("image_loaded")
 
 

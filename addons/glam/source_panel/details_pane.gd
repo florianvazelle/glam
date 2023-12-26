@@ -61,14 +61,14 @@ func set_asset(value: Asset):
 		_spinner.visible = false
 	else:
 		_preview_image.call_deferred(
-			"load_image", asset.preview_image_url_lq, asset.preview_image_flags
+			"load_image", asset.preview_image_url_lq
 		)
 		yield(_preview_image, "image_loaded")
 		asset.preview_image_lq = _preview_image.texture
 
 	if asset.preview_image_url_hq:
 		_spinner.visible = true
-		_preview_image.load_image(asset.preview_image_url_hq, asset.preview_image_flags)
+		_preview_image.load_image(asset.preview_image_url_hq)
 
 	_details.clear()
 	_details.append_bbcode("Author: ")

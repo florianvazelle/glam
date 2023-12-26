@@ -280,7 +280,6 @@ class AudioStreamAsset:
 
 		asset.preview_image_url_lq = GDash.get_val(data, "images.waveform_m")
 		asset.preview_image_url_hq = GDash.get_val(data, "images.waveform_l")
-		asset.preview_image_flags = Texture.FLAGS_DEFAULT & ~Texture.FLAG_FILTER
 
 		asset.duration = data.duration
 		asset.preview_audio_url = GDash.get_val(data, "previews.preview-lq-mp3")

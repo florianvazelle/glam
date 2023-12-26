@@ -55,7 +55,6 @@ var options := {}
 # High quality preview image url for displaying the asset in the preview panel.
 # Falls back to preview_image_url_lq if not set.
 @export var preview_image_url_hq: String: get = get_preview_image_url_hq
-var preview_image_flags: int = Texture.FLAGS_DEFAULT
 # Lower case tags.
 var tags := []: set = set_tags, get = get_tags
 

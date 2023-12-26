@@ -59,7 +59,7 @@ func set_asset(value: Asset) -> void:
 			_spinner.visible = false
 		else:
 			_spinner.visible = true
-			_preview_image.load_image(asset.preview_image_url_lq, asset.preview_image_flags)
+			_preview_image.load_image(asset.preview_image_url_lq)
 			yield(_preview_image, "image_loaded")
 			_spinner.visible = false
 
