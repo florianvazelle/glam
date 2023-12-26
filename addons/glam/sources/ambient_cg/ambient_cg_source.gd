@@ -118,7 +118,7 @@ func fetch_more() -> void:
 		emit_signal("fetch_completed", result)
 
 
-func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
+func _fetch(url: String, fetch_result: FetchResult) -> Error:
 	_next_page_url = null
 	_num_results = "?"
 	_num_loaded = 0
