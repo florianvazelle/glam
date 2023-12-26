@@ -70,7 +70,7 @@ func test_contiguous_data_from_middle():
 	assert_eq(buffer.ranges.size(), 1)
 	assert_eq(buffer.ranges[0], Vector2(5, 13))
 	assert_eq(buffer.data.size(), 14)
-	assert_eq_deep(buffer.data.subarray(5, 13) as Array, [0, 1, 2, 3, 44, 215, 6, 72, 8])
+	assert_eq_deep(buffer.data.slice(5, 13) as Array, [0, 1, 2, 3, 44, 215, 6, 72, 8])
 
 
 func test_contiguous_data_backwards_from_start():
@@ -90,7 +90,7 @@ func test_contiguous_data_backwards_from_middle():
 	assert_eq(buffer.ranges.size(), 1)
 	assert_eq(buffer.ranges[0], Vector2(5, 13))
 	assert_eq(buffer.data.size(), 14)
-	assert_eq_deep(buffer.data.subarray(5, 13) as Array, [0, 1, 2, 3, 44, 215, 6, 72, 8])
+	assert_eq_deep(buffer.data.slice(5, 13) as Array, [0, 1, 2, 3, 44, 215, 6, 72, 8])
 
 
 func test_overlapping_data_from_start():
@@ -120,7 +120,7 @@ func test_overlapping_data_from_middle():
 	assert_eq(buffer.ranges.size(), 1)
 	assert_eq(buffer.ranges[0], Vector2(1, 4))
 	assert_eq(buffer.data.size(), 5)
-	assert_eq_deep(buffer.data.subarray(1, 4) as Array, [1, 2, 2, 2])
+	assert_eq_deep(buffer.data.slice(1, 4) as Array, [1, 2, 2, 2])
 
 
 func test_overlapping_data_from_middle_backwards():
@@ -130,7 +130,7 @@ func test_overlapping_data_from_middle_backwards():
 	assert_eq(buffer.ranges.size(), 1)
 	assert_eq(buffer.ranges[0], Vector2(1, 4))
 	assert_eq(buffer.data.size(), 5)
-	assert_eq_deep(buffer.data.subarray(1, 4) as Array, [0, 1, 2, 2])
+	assert_eq_deep(buffer.data.slice(1, 4) as Array, [0, 1, 2, 2])
 
 
 func test_non_contiguos_data():
@@ -141,9 +141,9 @@ func test_non_contiguos_data():
 	assert_eq(buffer.ranges[0], Vector2(1, 3))
 	assert_eq(buffer.ranges[1], Vector2(5, 7))
 	assert_eq(buffer.ranges[2], Vector2(9, 11))
-	assert_eq_deep(buffer.data.subarray(1, 3) as Array, [1, 1, 1])
-	assert_eq_deep(buffer.data.subarray(5, 7) as Array, [5, 5, 5])
-	assert_eq_deep(buffer.data.subarray(9, 11) as Array, [9, 9, 9])
+	assert_eq_deep(buffer.data.slice(1, 3) as Array, [1, 1, 1])
+	assert_eq_deep(buffer.data.slice(5, 7) as Array, [5, 5, 5])
+	assert_eq_deep(buffer.data.slice(9, 11) as Array, [9, 9, 9])
 
 
 func test_partially_overlapping_two_ranges():
@@ -151,7 +151,7 @@ func test_partially_overlapping_two_ranges():
 	buffer.put_data(PoolByteArray([1, 2, 3]), Vector2(1, 3))
 	buffer.put_data(PoolByteArray([3, 4, 5]), Vector2(3, 5))
 	assert_eq_deep(buffer.ranges as Array, [Vector2(1, 7)])
-	assert_eq_deep(buffer.data.subarray(1, 7) as Array, [1, 2, 3, 4, 5, 6, 7])
+	assert_eq_deep(buffer.data.slice(1, 7) as Array, [1, 2, 3, 4, 5, 6, 7])
 
 
 func test_get_missing_ranges_no_data():

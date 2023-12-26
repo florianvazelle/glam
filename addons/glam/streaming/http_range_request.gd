@@ -87,7 +87,7 @@ func request_range(start: int, end: int) -> int:
 	if not _chunks[0].missing:
 		var rangev = _chunks[0].rangev
 		call_deferred(
-			"emit_signal", "data_received", _cache.data.subarray(rangev.x, rangev.y), rangev
+			"emit_signal", "data_received", _cache.data.slice(rangev.x, rangev.y), rangev
 		)
 		_chunks.pop_front()
 
@@ -198,7 +198,7 @@ func _update_connection() -> bool:
 						"emit_signal",
 						"request_completed",
 						OK,
-						_cache.data.subarray(_range.x, _range.y),
+						_cache.data.slice(_range.x, _range.y),
 						_range
 					)
 					_range = Vector2(-1, -1)
@@ -212,7 +212,7 @@ func _update_connection() -> bool:
 			if not chunk.missing and not _request_cancelled:
 				# Return chunk from cache.
 				call_deferred(
-					"emit_signal", "data_received", _cache.data.subarray(start, end), chunk.rangev
+					"emit_signal", "data_received", _cache.data.slice(start, end), chunk.rangev
 				)
 				return false
 
