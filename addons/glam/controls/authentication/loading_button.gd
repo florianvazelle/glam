@@ -9,8 +9,8 @@ enum Status {
 	ERROR,
 }
 
-@export(bool) var loading := false setget set_loading
-@export(Status) var status := Status.NONE setget set_status
+@export(bool) var loading := false: set = set_loading
+@export(Status) var status := Status.NONE: set = set_status
 
 var _icons := []
 var _current_icon := 0

@@ -5,7 +5,7 @@ extends TextureRect
 
 signal icon_changed(new_icon)
 
-@export var spinning := false setget set_spinning
+@export var spinning := false: set = set_spinning
 
 var _icons := []
 var _current_icon := 0

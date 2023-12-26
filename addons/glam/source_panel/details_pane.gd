@@ -10,7 +10,7 @@ const LicenseDB := preload("../license/license_db.gd")
 signal tag_selected(tag)
 signal download_requested(asset)
 
-var asset: Asset setget set_asset
+var asset: Asset: set = set_asset
 var _popup_just_closed := false
 
 @onready var _label := find_node("NoAssetLabel")

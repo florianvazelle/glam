@@ -35,7 +35,7 @@ var source
 var loading := false
 
 var status: int = Status.NONE
-var status_line := "" setget set_status_line
+var status_line := "": set = set_status_line
 var config_file := (
 	"%s/source_configs/%s.cfg"
 	% [
@@ -48,10 +48,10 @@ var config_file := (
 	]
 )
 
-var _filters := [] setget , get_filters
+var _filters := []: get = get_filters
 var _filters_hash := _filters.hash()
-var _search_string := "" setget set_search_string, get_search_string
-var _sort_options := {value = null, options = []} setget , get_sort_options
+var _search_string := "": set = set_search_string, get = get_search_string
+var _sort_options := {value = null, options = []}: get = get_sort_options
 
 @onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 

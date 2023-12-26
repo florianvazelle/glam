@@ -13,8 +13,8 @@ const DEFAULT_HEIGHT = 156
 signal download_requested(asset)
 signal selected
 
-var asset: Asset setget set_asset
-var selected = false setget set_selected
+var asset: Asset: set = set_asset
+var selected = false: set = set_selected
 
 @onready var _preview_image: PreviewImage = find_node("PreviewImage")
 @onready var _type_icon = find_node("Icon")

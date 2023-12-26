@@ -20,7 +20,7 @@ var _headers: Array
 var _size := -1
 var _media_type: String
 var _retries := 0
-var _client: HTTPClient setget _set_client, _get_client
+var _client: HTTPClient: set = _set_client, get = _get_client
 var _chunks := []
 var _request_sent := false
 var _request_cancelled := false

@@ -26,7 +26,7 @@ enum Type {
 @export(Type) var type := Type.OTHER
 
 @export(String, MULTILINE) var description: String
-@export(String, MULTILINE) var Tags := "" setget set_Tags, get_Tags
+@export(String, MULTILINE) var Tags := "": set = set_Tags, get = get_Tags
 
 @export var source_id: String
 var resource
@@ -34,14 +34,14 @@ var resource
 @export var id: String
 @export var title: String
 @export var official_title := true
-var download_format := "" setget set_download_format
+var download_format := "": set = set_download_format
 var download_formats := []
 var download_urls := {}
 @export var source_url := ""
-@export(Array) var authors := [] setget set_authors
-@export(Array) var licenses := [] setget set_licenses
-@export(Array) var derived_from := [] setget set_derived_from
-var downloading := false setget set_downloading
+@export(Array) var authors := []: set = set_authors
+@export(Array) var licenses := []: set = set_licenses
+@export(Array) var derived_from := []: set = set_derived_from
+var downloading := false: set = set_downloading
 
 @export(Array) var files := []
 
@@ -54,18 +54,18 @@ var options := {}
 @export var preview_image_url_lq: String
 # High quality preview image url for displaying the asset in the preview panel.
 # Falls back to preview_image_url_lq if not set.
-@export var preview_image_url_hq: String setget , get_preview_image_url_hq
+@export var preview_image_url_hq: String: get = get_preview_image_url_hq
 var preview_image_flags: int = Texture.FLAGS_DEFAULT
 # Lower case tags.
-var tags := [] setget set_tags, get_tags
+var tags := []: set = set_tags, get = get_tags
 
 @export var preview_image_lq: Texture = null
 @export var preview_image_hq: Texture = null
 
 var preview_image_url: String
-var preview_image: ImageTexture setget set_preview_image
+var preview_image: ImageTexture: set = set_preview_image
 
-var downloaded := false setget set_downloaded
+var downloaded := false: set = set_downloaded
 var expected_files: PoolStringArray = []
 
 # Additional notes to be displayed in credits. Could include things such as who

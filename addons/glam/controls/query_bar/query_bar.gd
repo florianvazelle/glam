@@ -5,7 +5,7 @@ extends HBoxContainer
 
 const Source := preload("../../sources/source.gd")
 
-var source: Source setget set_source
+var source: Source: set = set_source
 
 var _line_edit_clicked
 

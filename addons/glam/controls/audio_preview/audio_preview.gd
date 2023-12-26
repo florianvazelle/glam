@@ -4,7 +4,7 @@
 extends Control
 
 @export(String) var waveform_image_url
-@export(String) var preview_url setget set_preview_url
+@export(String) var preview_url: set = set_preview_url
 
 @onready var _button: Button = find_node("Button")
 @onready var _http_request: HTTPRequest = find_node("HTTPRequest")
