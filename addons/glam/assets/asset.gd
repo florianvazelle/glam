@@ -136,7 +136,7 @@ func set_derived_from(value := []) -> void:
 
 	for i in derived_from.size():
 		if derived_from[i] == null:
-			derived_from[i] = Object()
+			derived_from[i] = Object.new()
 
 
 func set_preview_image(value: ImageTexture) -> void:
