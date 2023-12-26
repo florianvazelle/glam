@@ -299,7 +299,7 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 # should begin with "res://" to ensure files are only downloaded within the
 # current project directory.
 func _download_file(url: String, dest: String, headers := PackedStringArray()) -> GDScriptFunctionState:
-	assert(dest.is_abs_path())
+	assert(dest.is_absolute_path())
 	assert(dest.begins_with("res://"), "Location outside of project directory.")
 	DirAccess.make_dir_recursive_absolute(dest.get_base_dir())
 
