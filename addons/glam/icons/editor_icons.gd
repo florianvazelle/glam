@@ -5,7 +5,7 @@ extends Node
 
 
 func get_icon(icon_name: String) -> Texture:
-	if Engine.editor_hint and is_inside_tree():
+	if Engine.is_editor_hint() and is_inside_tree():
 		return EditorInterface.get_editor_theme().get_icon(icon_name, "EditorIcons")
 	else:
 		match icon_name:
