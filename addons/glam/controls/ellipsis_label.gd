@@ -19,7 +19,7 @@ func _set(property: StringName, value) -> bool:
 		"text":
 			assert(value is String)
 			full_text = value
-			hint_tooltip = full_text
+			tooltip_text = full_text
 			_update_text()
 			return true
 		_:
