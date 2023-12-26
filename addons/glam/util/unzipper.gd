@@ -18,10 +18,10 @@ static func unzip(zip_path) -> Dictionary:
 	var exit_code = OS.execute(
 		OS.get_executable_path(),
 		[
-			"-s",
+			"--script",
 			ProjectSettings.globalize_path("res://addons/glam/util/unzipper.gd"),
 			"--zip-to-unpack %s" % ProjectSettings.globalize_path(zip_path),
-			"--no-window",
+			"--headless",
 			"--quit",
 		],
 		true,

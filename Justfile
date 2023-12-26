@@ -32,12 +32,16 @@ godot_platform := if os() == "windows" {
         error("Architecture not supported")
     }
 } else if os() == "macos" {
-    "osx.universal"
+    "macos.universal"
 } else if os() == "linux" {
     if arch() == "x86" {
-        "x11.32"
+        "linux.x86_32"
     } else if arch() == "x86_64" {
-        "x11.64"
+        "linux.x86_64"
+    } else if arch() == "arm" {
+        "linux.arm32"
+    } else if arch() == "aarch64" {
+        "linux.arm64"
     } else {
         error("Architecture not supported")
     }
@@ -83,21 +87,16 @@ install-godot:
     if [ ! -e {{ godot_bin }} ]; then
         curl -X GET "https://downloads.tuxfamily.org/godotengine/{{ godot_version }}/{{ godot_filename }}.zip" --output {{ cache_dir }}/{{ godot_filename }}.zip
         unzip -o {{ cache_dir }}/{{ godot_filename }}.zip -d {{ cache_dir }}
-
-        if [ "{{ os() }}" = "macos" ]; then
-            cp {{ cache_dir }}/Godot.app/Contents/MacOS/Godot {{ godot_bin }}
-        else
-            cp {{ cache_dir }}/{{ godot_filename }} {{ godot_bin }}
-        fi
+        cp {{ cache_dir }}/{{ godot_filename }} {{ godot_bin }}
     fi
 
 # Download plugins
 install-addons:
-    [ -f plug.gd ] && just godot --no-window -s plug.gd install || true
+    [ -f plug.gd ] && just godot --headless --script plug.gd install || true
 
 # Import game resources
 import-resources:
-    just godot --no-window --editor --quit
+    just godot --headless --editor --quit
 
 # Updates the addon version
 @bump-version:
@@ -121,7 +120,7 @@ editor:
 
 # Run files formatters
 fmt:
-    just venv pip install pre-commit==3.5.0 reuse==2.1.0 gdtoolkit==3.*
+    just venv pip install pre-commit==3.5.0 reuse==2.1.0 gdtoolkit==4.*
     just venv pre-commit run -a
 
 # Remove cache and binaries created by this Justfile
@@ -169,8 +168,8 @@ publish:
 
 # Run unit tests
 unit: install-addons import-resources
-    just godot --no-window -s addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json
+    just godot --headless --script addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json
 
 # Run integration tests
 integration: install-addons import-resources
-    just godot --no-window -s addons/gut/gut_cmdln.gd -gdir=res://test/integration/sources -gexit
+    just godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://test/integration/sources -gexit
