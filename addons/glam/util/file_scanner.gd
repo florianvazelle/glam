@@ -4,9 +4,9 @@
 extends RefCounted
 
 
-static func list_files_rec(path: String, extension := ".glam") -> PoolStringArray:
+static func list_files_rec(path: String, extension := ".glam") -> PackedStringArray:
 	var dir := Directory.new()
-	var files := PoolStringArray()
+	var files := PackedStringArray()
 
 	var err := dir.open(path)
 	if err != OK:
@@ -17,7 +17,7 @@ static func list_files_rec(path: String, extension := ".glam") -> PoolStringArra
 	while file_name != "":
 		# Ignore directories containing .gdignore or .glamignore file.
 		if file_name == ".gdignore" or file_name == ".glamignore":
-			return PoolStringArray()
+			return PackedStringArray()
 
 		if dir.current_is_dir():
 			files.append_array(list_files_rec("%s/%s" % [path, file_name], extension))
@@ -29,8 +29,8 @@ static func list_files_rec(path: String, extension := ".glam") -> PoolStringArra
 	return files
 
 
-static func list_assets_rec(root := "res://") -> PoolStringArray:
-	var paths := PoolStringArray()
+static func list_assets_rec(root := "res://") -> PackedStringArray:
+	var paths := PackedStringArray()
 	var file := File.new()
 
 	for path in list_files_rec(root):

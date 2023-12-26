@@ -85,7 +85,7 @@ func fetch() -> void:
 	var method_str = ""
 	for filter in _filters:
 		if filter.name == "Method":
-			method_str += PoolStringArray(filter.value).join(",").replace(" ", "")
+			method_str += PackedStringArray(filter.value).join(",").replace(" ", "")
 	var query_string: String = (
 		"?"
 		+ HTTPClient.new().query_string_from_dict(

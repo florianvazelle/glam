@@ -212,7 +212,7 @@ func _download(asset: GLAMAsset) -> void:
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
 	var err = yield(
-		_download_file(url, dest, PoolStringArray(asset.get_meta("api_headers"))), "completed"
+		_download_file(url, dest, PackedStringArray(asset.get_meta("api_headers"))), "completed"
 	)
 
 	if err != OK:
@@ -247,7 +247,7 @@ static func _get_filter_str(filters := []) -> String:
 		match filter.name:
 			"License":
 				filter_str += "license:("
-				var licenses := PoolStringArray()
+				var licenses := PackedStringArray()
 				for license in filter.value:
 					licenses.append('"%s"' % license)
 				filter_str += "%s)%%20" % licenses.join(" OR ")

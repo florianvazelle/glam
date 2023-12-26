@@ -19,7 +19,7 @@ func _ready():
 
 func request(
 	url: String,
-	custom_headers: PoolStringArray = PoolStringArray(),
+	custom_headers: PackedStringArray = PackedStringArray(),
 	ssl_validate_domain := true,
 	method = HTTPClient.METHOD_GET,
 	request_data := ""

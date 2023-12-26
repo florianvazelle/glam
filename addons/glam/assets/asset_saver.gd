@@ -5,11 +5,11 @@ class_name GLAMAssetSaver
 extends ResourceFormatSaver
 
 
-func get_recognized_extensions(resource) -> PoolStringArray:
+func get_recognized_extensions(resource) -> PackedStringArray:
 	if resource == null or not resource is GLAMAsset:
-		return PoolStringArray()
+		return PackedStringArray()
 
-	return PoolStringArray(["glam"])
+	return PackedStringArray(["glam"])
 
 
 func recognize(resource: Resource) -> bool:

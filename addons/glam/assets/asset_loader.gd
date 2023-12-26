@@ -5,8 +5,8 @@ class_name GLAMAssetLoader
 extends ResourceFormatLoader
 
 
-func get_recognized_extensions() -> PoolStringArray:
-	return PoolStringArray(["glam"])
+func get_recognized_extensions() -> PackedStringArray:
+	return PackedStringArray(["glam"])
 
 
 func get_resource_type(path: String) -> String:

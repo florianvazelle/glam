@@ -21,7 +21,7 @@ func _init(year = null, name := "", contact := "", url := ""):
 
 
 func get_file_copyright_text() -> String:
-	var out := PoolStringArray()
+	var out := PackedStringArray()
 	if year:
 		out.append(str(year))
 	if name:

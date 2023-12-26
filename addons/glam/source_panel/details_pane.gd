@@ -72,7 +72,7 @@ func set_asset(value: Asset):
 
 	_details.clear()
 	_details.append_bbcode("Author: ")
-	var authors := PoolStringArray()
+	var authors := PackedStringArray()
 	for author in asset.authors:
 		if author is Asset.Author:
 			if author.url:
@@ -82,7 +82,7 @@ func set_asset(value: Asset):
 	_details.append_bbcode(authors.join(", "))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("License: ")
-	var licenses := PoolStringArray()
+	var licenses := PackedStringArray()
 	for license in asset.licenses:
 		if license is Asset.License:
 			var details = LicenseDB.get_license(license.identifier)
@@ -90,7 +90,7 @@ func set_asset(value: Asset):
 	_details.append_bbcode(licenses.join(", "))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("Tags: ")
-	var tags := PoolStringArray()
+	var tags := PackedStringArray()
 	for tag in asset.tags:
 		tags.append("[url=%s]%s[/url]" % [tag, tag])
 	_details.append_bbcode(tags.join(", "))

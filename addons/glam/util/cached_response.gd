@@ -5,14 +5,14 @@ extends Resource
 
 var result: int = 0
 var response_code: int = 0
-var headers := PoolStringArray()
+var headers := PackedStringArray()
 var body := PackedByteArray()
 
 
 func _init(
 	p_result: int = 0,
 	p_response_code: int = 0,
-	p_headers := PoolStringArray(),
+	p_headers := PackedStringArray(),
 	p_body := PackedByteArray()
 ):
 	result = p_result

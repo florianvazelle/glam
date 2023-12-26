@@ -65,7 +65,7 @@ var preview_image_url: String
 var preview_image: ImageTexture: set = set_preview_image
 
 var downloaded := false: set = set_downloaded
-var expected_files: PoolStringArray = []
+var expected_files: PackedStringArray = []
 
 # Additional notes to be displayed in credits. Could include things such as who
 # commissioned the work or what modifications were made to the original.
@@ -149,13 +149,13 @@ func set_Tags(value: String) -> void:
 
 
 func get_Tags() -> String:
-	return PoolStringArray(get_tags()).join(", ")
+	return PackedStringArray(get_tags()).join(", ")
 
 
 func set_tags(value) -> void:
 	if value is Dictionary:
 		value = value.values()
-	assert(value is Array or value is PoolStringArray, "Expected Array or PoolStringArray.")
+	assert(value is Array or value is PackedStringArray, "Expected Array or PackedStringArray.")
 	var normalized := []
 	for tag in value as Array:
 		if tag is String:

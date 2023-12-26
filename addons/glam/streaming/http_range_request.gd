@@ -219,7 +219,7 @@ func _update_connection() -> bool:
 			var err = self._client.request(
 				HTTPClient.METHOD_GET,
 				_url.tail,
-				PoolStringArray(["Range: bytes=%d-%d" % [start, end]] + _headers)
+				PackedStringArray(["Range: bytes=%d-%d" % [start, end]] + _headers)
 			)
 			_cache.seek(start)
 

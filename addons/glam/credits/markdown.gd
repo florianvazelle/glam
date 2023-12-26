@@ -60,7 +60,7 @@ static func generate_credits(root := "res://", sources := []) -> String:
 
 static func create_credit(asset: GLAMAsset, level := 0) -> String:
 	var derivative_level := 1
-	var strs := PoolStringArray()
+	var strs := PackedStringArray()
 
 	strs.append(_get_title(asset))
 	strs.append("by")
@@ -89,7 +89,7 @@ static func _get_title(asset: GLAMAsset) -> String:
 
 
 static func _get_authors(asset: GLAMAsset) -> String:
-	var strs := PoolStringArray()
+	var strs := PackedStringArray()
 
 	if asset.authors.is_empty():
 		strs.append("Unknown")
@@ -101,7 +101,7 @@ static func _get_authors(asset: GLAMAsset) -> String:
 
 
 static func _get_licenses(asset: GLAMAsset) -> String:
-	var strs := PoolStringArray()
+	var strs := PackedStringArray()
 
 	if asset.licenses.is_empty():
 		strs.append("Unknown License")

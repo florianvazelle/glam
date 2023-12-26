@@ -78,7 +78,7 @@ func get_editor_icon(icon_name: String) -> Texture:
 	return editor_icons.get_icon(icon_name)
 
 
-func _on_resources_reload(resources: PoolStringArray) -> void:
+func _on_resources_reload(resources: PackedStringArray) -> void:
 	print("reloaded resources: ", resources as Array)
 
 
