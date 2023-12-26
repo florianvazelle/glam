@@ -95,7 +95,6 @@ func get_authenticated() -> bool:
 		http_request.request(
 			url,
 			["Content-Type: application/x-www-form-urlencoded"],
-			true,
 			HTTPClient.METHOD_POST,
 			query
 		)

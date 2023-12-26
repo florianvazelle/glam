@@ -20,7 +20,6 @@ func _ready():
 func request(
 	url: String,
 	custom_headers: PackedStringArray = PackedStringArray(),
-	ssl_validate_domain := true,
 	method = HTTPClient.METHOD_GET,
 	request_data := ""
 ):
@@ -38,7 +37,7 @@ func request(
 		return OK
 	else:
 		request_completed.connect(self._on_request_completed.bind(request), CONNECT_ONE_SHOT)
-		return super.request(url, custom_headers, ssl_validate_domain, method, request_data)
+		return super.request(url, custom_headers, method, request_data)
 
 
 func _on_request_completed(result, response_code, headers, body, request: Request):
