@@ -14,7 +14,7 @@ enum Status {
 	ERROR,
 }
 
-@export(Status) var status: int = Status.NO_RESULTS: set = set_status
+@export var status: int = Status.NO_RESULTS: set = set_status
 
 var _was_on_screen := is_on_screen()
 

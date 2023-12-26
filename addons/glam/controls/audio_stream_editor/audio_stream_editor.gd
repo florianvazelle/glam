@@ -13,9 +13,9 @@ const AudioStreamAsset := preload("../../assets/audio_stream_asset.gd")
 const PlayIcon := preload("../../icons/icon_play.svg")
 const PauseIcon := preload("../../icons/icon_pause.svg")
 
-@export(AudioStream) var stream: set = set_stream
-@export(float) var duration: set = set_duration
-@export(Resource) var asset: set = set_asset
+@export var stream: AudioStream: set = set_stream
+@export var duration: float: set = set_duration
+@export var asset: Resource: set = set_asset
 
 var thumbnail: Button
 

@@ -23,7 +23,7 @@ enum Type {
 	MODEL,
 }
 
-@export(Type) var type := Type.OTHER
+@export var type := Type.OTHER
 
 @export_multiline var description: String
 @export_multiline var Tags := "": set = set_Tags, get = get_Tags
@@ -38,12 +38,12 @@ var download_format := "": set = set_download_format
 var download_formats := []
 var download_urls := {}
 @export var source_url := ""
-@export(Array) var authors := []: set = set_authors
-@export(Array) var licenses := []: set = set_licenses
-@export(Array) var derived_from := []: set = set_derived_from
+@export var authors := []: set = set_authors
+@export var licenses := []: set = set_licenses
+@export var derived_from := []: set = set_derived_from
 var downloading := false: set = set_downloading
 
-@export(Array) var files := []
+@export var files := []
 
 var filepath: String
 

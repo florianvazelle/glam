@@ -12,7 +12,7 @@ const Thumbnail := preload("../controls/thumbnail/thumbnail.gd")
 
 signal source_selected(index)
 
-@export(Script) var source_script
+@export var source_script: Script
 
 var source: Source
 var authentication_scene: PackedScene

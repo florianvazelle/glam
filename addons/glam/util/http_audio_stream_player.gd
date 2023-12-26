@@ -5,7 +5,7 @@ extends AudioStreamPlayer
 
 const CacheableHTTPRequest := preload("./cacheable_http_request.gd")
 
-@export(String) var url := "": set = set_url
+@export var url := "": set = set_url
 
 @onready var _http_request := CacheableHTTPRequest.new()
 
