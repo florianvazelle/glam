@@ -116,7 +116,7 @@ func _on_fetch_completed(result: Source.FetchResult):
 		asset.downloaded = FileAccess.file_exists(asset.filepath)
 		if asset is AudioStreamAsset:
 			_audio_controls.visible = true
-			asset.set_meta("volume", linear2db(_volume_slider.value))
+			asset.set_meta("volume", linear_to_db(_volume_slider.value))
 
 	_thumbnail_grid.append(assets)
 
@@ -249,4 +249,4 @@ func _on_VolumeSlider_value_changed(value):
 		if child is Thumbnail:
 			if "_audio_preview" in child:
 				var player: AudioStreamPlayer = child._audio_preview._player
-				player.volume_db = linear2db(value)
+				player.volume_db = linear_to_db(value)
