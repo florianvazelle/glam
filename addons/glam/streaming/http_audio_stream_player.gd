@@ -90,7 +90,8 @@ func seek(to_position: float):
 				_start = _start_position * Bps
 			_:
 				push_error("Unsupported media type: '%s'. Closing." % _media_type)
-				return close()
+				close()
+				return
 
 		_http.request_range(_start, _size - 1)
 
