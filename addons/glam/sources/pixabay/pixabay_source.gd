@@ -173,10 +173,10 @@ func _download(asset: GLAMAsset) -> void:
 	asset.create_license_file(dest)
 	create_metadata_license_file("%s.import" % dest)
 
-	var proxy_texture := ProxyTexture.new()
-	proxy_texture.set_base(load(dest))
-	proxy_texture.set_meta("glam_asset", asset)
-	ResourceSaver.save(proxy_texture, get_asset_path(asset))
+	var texture := Texture.new()
+	texture.set_base(load(dest))
+	texture.set_meta("glam_asset", asset)
+	ResourceSaver.save(texture, get_asset_path(asset))
 	create_metadata_license_file(get_asset_path(asset))
 	_save_glam_file(asset)
 
