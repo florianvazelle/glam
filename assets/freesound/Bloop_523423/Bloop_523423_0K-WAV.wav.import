@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/Bloop_523423_0K-WAV.wav-152dcc1a50c74ae2e6a42c7689b2f35b.sample"
+type="AudioStreamWAV"
+uid="uid://cgh46i67vk6tf"
+path="res://.godot/imported/Bloop_523423_0K-WAV.wav-152dcc1a50c74ae2e6a42c7689b2f35b.sample"
 
 [deps]
 
 source_file="res://assets/freesound/Bloop_523423/Bloop_523423_0K-WAV.wav"
-dest_files=[ "res://.import/Bloop_523423_0K-WAV.wav-152dcc1a50c74ae2e6a42c7689b2f35b.sample" ]
+dest_files=["res://.godot/imported/Bloop_523423_0K-WAV.wav-152dcc1a50c74ae2e6a42c7689b2f35b.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0
