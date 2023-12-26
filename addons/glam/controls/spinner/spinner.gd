@@ -31,7 +31,7 @@ func set_spinning(value: bool) -> void:
 		_timer.start() if spinning else _timer.stop()
 
 
-func _set(property: String, value) -> bool:
+func _set(property: StringName, value) -> bool:
 	match property:
 		"visible":
 			assert(value is bool)

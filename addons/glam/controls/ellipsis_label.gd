@@ -14,7 +14,7 @@ func _ready():
 	_update_text()
 
 
-func _set(property: String, value) -> bool:
+func _set(property: StringName, value) -> bool:
 	match property:
 		"text":
 			assert(value is String)
