@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends ScrollContainer
 
 signal authenticated
@@ -10,11 +10,11 @@ var source: Node
 var values: Dictionary
 var loading := false
 
-onready var instructions_label := $_/InstructionsLabel
-onready var http_request := $HTTPRequest
-onready var submit_button: Button = $_/SubmitButton
-onready var error_label: RichTextLabel = $_/ErrorLabel
-onready var fields = $_/Fields
+@onready var instructions_label := $_/InstructionsLabel
+@onready var http_request := $HTTPRequest
+@onready var submit_button: Button = $_/SubmitButton
+@onready var error_label: RichTextLabel = $_/ErrorLabel
+@onready var fields = $_/Fields
 
 
 class Field:

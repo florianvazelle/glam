@@ -6,16 +6,16 @@
 # Based on the AudioStream editor plugin from the Godot engine.
 # See: https://github.com/godotengine/godot/blob/3.4/editor/plugins/audio_stream_editor_plugin.h
 # and: https://github.com/godotengine/godot/blob/3.4/editor/plugins/audio_stream_editor_plugin.cpp
-tool
+@tool
 extends Control
 
 const AudioStreamAsset := preload("../../assets/audio_stream_asset.gd")
 const PlayIcon := preload("../../icons/icon_play.svg")
 const PauseIcon := preload("../../icons/icon_pause.svg")
 
-export(AudioStream) var stream setget set_stream
-export(float) var duration setget set_duration
-export(Resource) var asset setget set_asset
+@export(AudioStream) var stream setget set_stream
+@export(float) var duration setget set_duration
+@export(Resource) var asset setget set_asset
 
 var thumbnail: Button
 
@@ -23,16 +23,16 @@ var _current := 0.0
 var _dragging := false
 var _pausing := false
 
-onready var _player := find_node("HTTPAudioStreamPlayer")
-onready var _preview := find_node("Preview")
-onready var _indicator := find_node("Indicator")
-onready var _current_label := find_node("CurrentLabel")
-onready var _play_button := find_node("PlayButton")
-onready var _stop_button := find_node("StopButton")
-onready var _spinner := find_node("Spinner")
+@onready var _player := find_node("HTTPAudioStreamPlayer")
+@onready var _preview := find_node("Preview")
+@onready var _indicator := find_node("Indicator")
+@onready var _current_label := find_node("CurrentLabel")
+@onready var _play_button := find_node("PlayButton")
+@onready var _stop_button := find_node("StopButton")
+@onready var _spinner := find_node("Spinner")
 
-onready var _glam = get_tree().get_meta("glam")
-onready var _accent_color := get_color("accent_color", "Editor")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _accent_color := get_color("accent_color", "Editor")
 
 
 func set_asset(value: AudioStreamAsset) -> void:

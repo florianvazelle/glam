@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2020 Wybe Westra
 # SPDX-License-Identifier: MIT
 # Source: https://github.com/Wcubed/horizontal_flow_container
-tool
+@tool
 extends Container
 
 # The flow container will fit as many children in a row as it can
@@ -14,8 +14,8 @@ extends Container
 # TODO: Can we find a way to intuitively use a child's horizontal SIZE_EXPAND
 #       flag?
 
-export var horizontal_margin: float = 5
-export var vertical_margin: float = 5
+@export var horizontal_margin: float = 5
+@export var vertical_margin: float = 5
 
 # Used to make our parent re-evaluate our size when we have to create more or
 # less rows to fit in all the children.

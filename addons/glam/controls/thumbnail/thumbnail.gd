@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Button
 
 const Asset := preload("../../assets/asset.gd")
@@ -16,19 +16,19 @@ signal selected
 var asset: Asset setget set_asset
 var selected = false setget set_selected
 
-onready var _preview_image: PreviewImage = find_node("PreviewImage")
-onready var _type_icon = find_node("Icon")
-onready var _status_icon = find_node("Status")
-onready var _download_button = find_node("DownloadButton")
-onready var _display_name = find_node("DisplayName")
-onready var _focused_stylebox := get_stylebox("panel")
-onready var _unfocused_stylebox := StyleBoxEmpty.new()
-onready var _http_request: HTTPRequest = find_node("CacheableHTTPRequest")
-onready var _spinner := _preview_image.find_node("Spinner")
-onready var _download_spinner := find_node("DownloadSpinner")
-onready var _glam = get_tree().get_meta("glam")
-onready var _format_option_button := find_node("FormatOptionButton")
-onready var _audio_preview := find_node("AudioStreamEditor")
+@onready var _preview_image: PreviewImage = find_node("PreviewImage")
+@onready var _type_icon = find_node("Icon")
+@onready var _status_icon = find_node("Status")
+@onready var _download_button = find_node("DownloadButton")
+@onready var _display_name = find_node("DisplayName")
+@onready var _focused_stylebox := get_stylebox("panel")
+@onready var _unfocused_stylebox := StyleBoxEmpty.new()
+@onready var _http_request: HTTPRequest = find_node("CacheableHTTPRequest")
+@onready var _spinner := _preview_image.find_node("Spinner")
+@onready var _download_spinner := find_node("DownloadSpinner")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _format_option_button := find_node("FormatOptionButton")
+@onready var _audio_preview := find_node("AudioStreamEditor")
 
 var _dragging := false
 var _drag_data = null

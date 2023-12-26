@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Tan Jian Ping
 # SPDX-License-Identifier: MIT
 # Source: https://github.com/imjp94/gd-plug
-tool
+@tool
 extends SceneTree
 
 signal updated(plugin)

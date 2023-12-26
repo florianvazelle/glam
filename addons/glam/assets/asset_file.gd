@@ -1,10 +1,10 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Resource
 
-export var path := ""
-export var md5 := ""
+@export var path := ""
+@export var md5 := ""
 
 
 func _init(p_path := "", p_md5 := ""):

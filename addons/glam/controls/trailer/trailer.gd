@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends VBoxContainer
 
 signal screen_entered
@@ -14,7 +14,7 @@ enum Status {
 	ERROR,
 }
 
-export(Status) var status: int = Status.NO_RESULTS setget set_status
+@export(Status) var status: int = Status.NO_RESULTS setget set_status
 
 var _was_on_screen := is_on_screen()
 

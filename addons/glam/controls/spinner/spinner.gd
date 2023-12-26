@@ -1,16 +1,16 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends TextureRect
 
 signal icon_changed(new_icon)
 
-export var spinning := false setget set_spinning
+@export var spinning := false setget set_spinning
 
 var _icons := []
 var _current_icon := 0
 
-onready var _timer := $Timer
+@onready var _timer := $Timer
 
 
 func _ready():

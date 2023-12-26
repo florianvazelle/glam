@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2022 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends PopupPanel
 
 signal filters_changed

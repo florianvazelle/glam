@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Panel
 
 const Asset := preload("../assets/asset.gd")
@@ -13,15 +13,15 @@ signal download_requested(asset)
 var asset: Asset setget set_asset
 var _popup_just_closed := false
 
-onready var _label := find_node("NoAssetLabel")
-onready var _preview_image := find_node("PreviewImage")
-onready var _display_name := find_node("DisplayName")
-onready var _scroll_container := find_node("ScrollContainer")
-onready var _details := find_node("Details")
-onready var _tooltip := find_node("Tooltip")
-onready var _spinner := find_node("Spinner")
-onready var _preview_popup := find_node("PreviewPopup")
-onready var _download_format_option_button := find_node("DownloadFormatOptionButton")
+@onready var _label := find_node("NoAssetLabel")
+@onready var _preview_image := find_node("PreviewImage")
+@onready var _display_name := find_node("DisplayName")
+@onready var _scroll_container := find_node("ScrollContainer")
+@onready var _details := find_node("Details")
+@onready var _tooltip := find_node("Tooltip")
+@onready var _spinner := find_node("Spinner")
+@onready var _preview_popup := find_node("PreviewPopup")
+@onready var _download_format_option_button := find_node("DownloadFormatOptionButton")
 
 
 func _ready():

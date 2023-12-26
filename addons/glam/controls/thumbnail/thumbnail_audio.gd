@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends "res://addons/glam/controls/thumbnail/thumbnail.gd"
 
 var playing := false
 var audio_stream_player := find_node("AudioStreamPlayer")
 
-onready var _button: Button = find_node("Button")
+@onready var _button: Button = find_node("Button")
 
 
 func _ready():

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Button
 
 enum Status {
@@ -9,8 +9,8 @@ enum Status {
 	ERROR,
 }
 
-export(bool) var loading := false setget set_loading
-export(Status) var status := Status.NONE setget set_status
+@export(bool) var loading := false setget set_loading
+@export(Status) var status := Status.NONE setget set_status
 
 var _icons := []
 var _current_icon := 0

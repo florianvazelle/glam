@@ -13,12 +13,12 @@ extends Node
 
 const HTTPAudioStreamPlayer := preload("res://addons/glam/streaming/http_audio_stream_player.gd")
 
-export var use_http_player := true
+@export var use_http_player := true
 
 var url = "http://127.0.0.1:8081/mp3/padanaya_blokov.mp3"
 
-onready var hplayer: HTTPAudioStreamPlayer = find_node("HTTPAudioStreamPlayer")
-onready var aplayer := find_node("AudioStreamPlayer")
+@onready var hplayer: HTTPAudioStreamPlayer = find_node("HTTPAudioStreamPlayer")
+@onready var aplayer := find_node("AudioStreamPlayer")
 
 
 func _ready():

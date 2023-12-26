@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021-2022 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends TextureRect
 
 const CacheableHTTPRequest := preload("../util/cacheable_http_request.gd")

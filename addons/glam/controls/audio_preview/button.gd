@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 extends Button
 
-onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
+@onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
 
 func _ready():

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMSource
 extends Node
 
@@ -53,7 +53,7 @@ var _filters_hash := _filters.hash()
 var _search_string := "" setget set_search_string, get_search_string
 var _sort_options := {value = null, options = []} setget , get_sort_options
 
-onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
+@onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
 
 func set_status_line(value := ""):

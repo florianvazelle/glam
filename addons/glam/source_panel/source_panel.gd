@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Control
 
 const Asset := preload("../assets/asset.gd")
@@ -12,7 +12,7 @@ const Thumbnail := preload("../controls/thumbnail/thumbnail.gd")
 
 signal source_selected(index)
 
-export(Script) var source_script
+@export(Script) var source_script
 
 var source: Source
 var authentication_scene: PackedScene
@@ -22,22 +22,22 @@ var selected_thumbnail: Thumbnail
 
 var _file := File.new()
 
-onready var _account_button := find_node("AccountButton")
-onready var account_menu := find_node("AccountMenu")
-onready var user_label := find_node("UserLabel")
-onready var source_link := find_node("SourceLink")
-onready var thumbnail_grid := find_node("ThumbnailGrid")
-onready var _details_pane := find_node("DetailsPane")
-onready var _trailer := find_node("Trailer")
-onready var _results_pane := find_node("ResultsPane")
-onready var _status_bar := find_node("StatusBar")
-onready var _results := find_node("Results")
-onready var _glam = get_tree().get_meta("glam")
-onready var _thumbnail_grid := find_node("ThumbnailGrid")
-onready var _status_line := find_node("StatusLine")
-onready var _audio_controls := find_node("AudioControls")
-onready var _volume_slider := find_node("VolumeSlider")
-onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
+@onready var _account_button := find_node("AccountButton")
+@onready var account_menu := find_node("AccountMenu")
+@onready var user_label := find_node("UserLabel")
+@onready var source_link := find_node("SourceLink")
+@onready var thumbnail_grid := find_node("ThumbnailGrid")
+@onready var _details_pane := find_node("DetailsPane")
+@onready var _trailer := find_node("Trailer")
+@onready var _results_pane := find_node("ResultsPane")
+@onready var _status_bar := find_node("StatusBar")
+@onready var _results := find_node("Results")
+@onready var _glam = get_tree().get_meta("glam")
+@onready var _thumbnail_grid := find_node("ThumbnailGrid")
+@onready var _status_line := find_node("StatusLine")
+@onready var _audio_controls := find_node("AudioControls")
+@onready var _volume_slider := find_node("VolumeSlider")
+@onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
 
 
 func _ready():

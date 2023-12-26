@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2022 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends PopupPanel
 
-export var text: String setget set_text
-export var popup_delay := 0.5 setget set_popup_delay
-export var anchor_path := NodePath("..")
+@export var text: String setget set_text
+@export var popup_delay := 0.5 setget set_popup_delay
+@export var anchor_path := NodePath("..")
 
 
 func _ready():

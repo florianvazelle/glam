@@ -1,13 +1,13 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends HBoxContainer
 
 signal search_entered(text)
 
-onready var line_edit = find_node("LineEdit")
-onready var timer = find_node("Timer")
-onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
+@onready var line_edit = find_node("LineEdit")
+@onready var timer = find_node("Timer")
+@onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
 
 func _ready():

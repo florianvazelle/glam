@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2022 Leroy Hopson
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends "../filter.gd"
 
 

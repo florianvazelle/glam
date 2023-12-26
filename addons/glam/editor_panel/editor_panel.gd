@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Control
 
 const FileScanner := preload("../util/file_scanner.gd")
@@ -10,10 +10,10 @@ signal source_changed(new_source)
 
 var sources := []
 
-onready var source_panels := $VBoxContainer/SourcePanels
-onready var source_select: OptionButton = $VBoxContainer/HBoxContainer/SourceSelect
-onready var _query_bar := find_node("QueryBar")
-onready var _menu_button := find_node("MenuButton")
+@onready var source_panels := $VBoxContainer/SourcePanels
+@onready var source_select: OptionButton = $VBoxContainer/HBoxContainer/SourceSelect
+@onready var _query_bar := find_node("QueryBar")
+@onready var _menu_button := find_node("MenuButton")
 
 
 func _ready():

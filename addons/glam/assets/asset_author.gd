@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 extends Resource
 
-export var name: String
-export var year: int
-export var contact: String
-export var url: String
+@export var name: String
+@export var year: int
+@export var contact: String
+@export var url: String
 
 
 func _init(year = null, name := "", contact := "", url := ""):

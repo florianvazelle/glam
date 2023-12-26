@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
-tool
+@tool
 class_name GLAMAsset
 extends Resource
 
@@ -23,27 +23,27 @@ enum Type {
 	MODEL,
 }
 
-export(Type) var type := Type.OTHER
+@export(Type) var type := Type.OTHER
 
-export(String, MULTILINE) var description: String
-export(String, MULTILINE) var Tags := "" setget set_Tags, get_Tags
+@export(String, MULTILINE) var description: String
+@export(String, MULTILINE) var Tags := "" setget set_Tags, get_Tags
 
-export var source_id: String
+@export var source_id: String
 var resource
 # Unique identifier amongst assets from the same source. Preferably human friendly.
-export var id: String
-export var title: String
-export var official_title := true
+@export var id: String
+@export var title: String
+@export var official_title := true
 var download_format := "" setget set_download_format
 var download_formats := []
 var download_urls := {}
-export var source_url := ""
-export(Array) var authors := [] setget set_authors
-export(Array) var licenses := [] setget set_licenses
-export(Array) var derived_from := [] setget set_derived_from
+@export var source_url := ""
+@export(Array) var authors := [] setget set_authors
+@export(Array) var licenses := [] setget set_licenses
+@export(Array) var derived_from := [] setget set_derived_from
 var downloading := false setget set_downloading
 
-export(Array) var files := []
+@export(Array) var files := []
 
 var filepath: String
 
@@ -51,16 +51,16 @@ var filepath: String
 var options := {}
 
 # Low quality preview image url for displaying the asset in thumbnails.
-export var preview_image_url_lq: String
+@export var preview_image_url_lq: String
 # High quality preview image url for displaying the asset in the preview panel.
 # Falls back to preview_image_url_lq if not set.
-export var preview_image_url_hq: String setget , get_preview_image_url_hq
+@export var preview_image_url_hq: String setget , get_preview_image_url_hq
 var preview_image_flags: int = Texture.FLAGS_DEFAULT
 # Lower case tags.
 var tags := [] setget set_tags, get_tags
 
-export var preview_image_lq: Texture = null
-export var preview_image_hq: Texture = null
+@export var preview_image_lq: Texture = null
+@export var preview_image_hq: Texture = null
 
 var preview_image_url: String
 var preview_image: ImageTexture setget set_preview_image
@@ -70,7 +70,7 @@ var expected_files: PoolStringArray = []
 
 # Additional notes to be displayed in credits. Could include things such as who
 # commissioned the work or what modifications were made to the original.
-export(String, MULTILINE) var notes := ""
+@export(String, MULTILINE) var notes := ""
 
 
 # Workaround for: https://github.com/godotengine/godot/issues/29179
