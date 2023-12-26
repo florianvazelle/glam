@@ -19,10 +19,9 @@ var sources := []
 func _ready():
 	# Add sources to the OptionButton, clearing it first.
 	source_select.clear()
-	var dir = Directory.new()
 	var sources_dir := "%s/../sources" % filename.get_base_dir()  # ./sources
-	dir.open(sources_dir)
-	dir.list_dir_begin(true, true)
+	var dir := DirAccess.open(sources_dir)
+	dir.list_dir_begin()
 	var source_dir: String = dir.get_next()
 	while source_dir != "":
 		if dir.current_is_dir():
@@ -77,10 +76,9 @@ func _on_menu_id_pressed(id: int):
 
 	match id:
 		0:  # Generate Licenses.
-			var dir := Directory.new()
 			for path in paths:
 				var asset: GLAMAsset = load(path)
-				if dir.file_exists(path.get_basename()):
+				if FileAccess.file_exists(path.get_basename()):
 					asset.create_license_file(path.get_basename())
 
 		1:  # Generate credits.json.

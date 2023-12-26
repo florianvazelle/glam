@@ -32,12 +32,12 @@ func save(path: String, resource: Resource, flags: int) -> int:
 	var file := File.new()
 	err = file.open(tmp, File.READ)
 	if err != OK:
-		Directory.new().remove(tmp)
+		DirAccess.remove_absolute(tmp)
 		return err
 
 	var body := file.get_buffer(file.get_len())
 	file.close()
-	Directory.new().remove(tmp)
+	DirAccess.remove_absolute(tmp)
 
 	err = file.open(path, File.WRITE)
 	if err != OK:

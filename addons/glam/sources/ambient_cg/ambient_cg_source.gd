@@ -188,7 +188,7 @@ func _download(asset: GLAMAsset) -> void:
 		yield(get_tree(), "idle_frame")
 	glam.locked = true
 	var result = Unzipper.unzip(dest)
-	Directory.new().remove(dest)
+	DirAccess.remove_absolute(dest)
 	var importable_files := []
 	for file in result.files:
 		if regex.search(file):

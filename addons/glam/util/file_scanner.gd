@@ -5,14 +5,14 @@ extends RefCounted
 
 
 static func list_files_rec(path: String, extension := ".glam") -> PackedStringArray:
-	var dir := Directory.new()
+	var dir := DirAccess.open(path)
 	var files := PackedStringArray()
 
-	var err := dir.open(path)
+	var err := DirAccess.get_open_error()
 	if err != OK:
 		return files
 
-	dir.list_dir_begin(true)
+	dir.list_dir_begin()
 	var file_name: String = dir.get_next()
 	while file_name != "":
 		# Ignore directories containing .gdignore or .glamignore file.

@@ -116,7 +116,7 @@ func request_quit(exit_code=-1):
 # Index installed plugins, or create directory "plugged" if not exists
 func _plug_start():
 	logger.debug("Plug start")
-	if not project_dir.dir_exists(DEFAULT_PLUG_DIR):
+	if not project_dir.dir_exists_absolute(DEFAULT_PLUG_DIR):
 		if project_dir.make_dir(ProjectSettings.globalize_path(DEFAULT_PLUG_DIR)) == OK:
 			logger.debug("Make dir %s for plugin installation")
 	if installation_config.load(DEFAULT_CONFIG_PATH) == OK:
@@ -412,7 +412,7 @@ func download(plugin):
 	logger.info("Downloading %s from %s..." % [plugin.name, plugin.url])
 	var test = !OS.get_environment(ENV_TEST).is_empty()
 	var global_dest_dir = ProjectSettings.globalize_path(plugin.plug_dir)
-	if project_dir.dir_exists(plugin.plug_dir):
+	if project_dir.dir_exists_absolute(plugin.plug_dir):
 		directory_delete_recursively(plugin.plug_dir)
 	project_dir.make_dir(plugin.plug_dir)
 	var result = _GitExecutable.new(global_dest_dir, logger).clone(plugin.url, global_dest_dir, {"branch": plugin.branch, "tag": plugin.tag, "commit": plugin.commit})
@@ -466,7 +466,7 @@ func uninstall(plugin):
 	remove_installed_plugin(plugin.name)
 
 func is_plugin_downloaded(plugin):
-	if not project_dir.dir_exists(plugin.plug_dir + "/.git"):
+	if not project_dir.dir_exists_absolute(plugin.plug_dir + "/.git"):
 		return
 
 	var git = _GitExecutable.new(ProjectSettings.globalize_path(plugin.plug_dir), logger)
@@ -524,7 +524,7 @@ func directory_copy_recursively(from, to, args={}):
 							if test:
 								if not silent_test: logger.warn("[TEST] Writing to %s" % dest)
 							else:
-								dir.make_dir_recursive(to)
+								dir.make_dir_recursive_absolute(to)
 								if dir.copy(source, dest) == OK:
 									logger.debug("Copy from %s to %s" % [source, dest])
 							dest_files.append(dest)

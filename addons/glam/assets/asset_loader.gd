@@ -19,17 +19,16 @@ func handles_type(typename: String) -> bool:
 
 func load(path: String, original_path: String):
 	var tmp := path + ".tres"
-	var dir := Directory.new()
 
-	dir.copy(path, tmp)
+	DirAccess.copy_absolute(path, tmp)
 	var resource := ResourceLoader.load(tmp)
-	dir.remove(tmp)
+	DirAccess.remove_absolute(tmp)
 
 	if not resource is GLAMAsset:
 		return null
 
 	if resource.files.is_empty():
-		if dir.file_exists(path.get_basename()):
+		if FileAccess.file_exists(path.get_basename()):
 			resource.files.append(GLAMAsset.AssetFile.new(path.get_basename()))
 
 			if resource is GLAMAudioStreamAsset:

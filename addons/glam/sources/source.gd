@@ -215,13 +215,12 @@ func get_slug(asset: GLAMAsset) -> String:
 
 func _touch_config_file():
 	var path := ProjectSettings.globalize_path(config_file)
-	var dir := Directory.new()
 	var file := File.new()
 
-	if not dir.dir_exists(path.get_base_dir()):
-		dir.make_dir_recursive(path.get_base_dir())
+	if not DirAccess.dir_exists_absolute(path.get_base_dir()):
+		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 
-	if not dir.file_exists(path):
+	if not FileAccess.file_exists(path):
 		file.open(path, File.WRITE)
 		file.close()
 	else:
@@ -304,7 +303,7 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 func _download_file(url: String, dest: String, headers := PackedStringArray()) -> GDScriptFunctionState:
 	assert(dest.is_abs_path())
 	assert(dest.begins_with("res://"), "Location outside of project directory.")
-	Directory.new().make_dir_recursive(dest.get_base_dir())
+	DirAccess.make_dir_recursive_absolute(dest.get_base_dir())
 
 	# Don't cache download requests as these files can be quite large and will
 	# be stored on the local file system anyway.

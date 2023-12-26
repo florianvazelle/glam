@@ -15,7 +15,6 @@ var cache_dir := ProjectSettings.globalize_path(
 	ProjectSettings.get_meta("glam/directory") + "/cache"
 )
 
-var _dir := Directory.new()
 var _file := File.new()
 var _ttl_regex := RegEx.new()
 
@@ -26,8 +25,8 @@ func _ready():
 
 func set_cache_dir(value: String):
 	cache_dir = ProjectSettings.globalize_path(value)
-	if not _dir.dir_exists(cache_dir):
-		_dir.make_dir_recursive(cache_dir)
+	if not DirAccess.dir_exists_absolute(cache_dir):
+		DirAccess.make_dir_recursive_absolute(cache_dir)
 
 
 func get_response(request: Request) -> CachedResponse:
@@ -42,7 +41,7 @@ func get_resource(request: Request) -> Resource:
 		return null
 
 	if is_expired(file_path):
-		_dir.remove(file_path)
+		DirAccess.remove_absolute(file_path)
 		return null
 
 	return load(file_path)
@@ -79,20 +78,23 @@ func store_resource(request: Request, resource: Resource):
 
 
 func delete_expired():
+	var dir := DirAccess.open(cache_dir)
 	cache_size_bytes = 0
-	if _dir.open(cache_dir) == OK:
-		_dir.list_dir_begin(true, true)
-		var file_name := _dir.get_next()
+
+	var err := DirAccess.get_open_error()
+	if err == OK:
+		dir.list_dir_begin()
+		var file_name := dir.get_next()
 		while file_name != "":
 			if file_name.ends_with(".res"):
 				var file_path = "%s/%s" % [cache_dir, file_name]
 				if is_expired(file_path):
-					_dir.remove(file_path)
+					dir.remove(file_path)
 				else:
 					_file.open(file_path, File.READ)
 					cache_size_bytes += _file.get_len()
 					_file.close()
-			file_name = _dir.get_next()
+			file_name = dir.get_next()
 		emit_signal("cache_size_updated", cache_size_bytes)
 
 

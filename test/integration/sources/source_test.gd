@@ -26,11 +26,10 @@ func before_all():
 	var paths = []
 	for path in required_directories:
 		paths.append(ProjectSettings.globalize_path(path))
-	var dir := Directory.new()
 	for path in paths:
-		if not dir.dir_exists(path):
-			dir.make_dir_recursive(path)
-		assert(dir.dir_exists(path), "Required directory '%s' does not exist." % path)
+		if not DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_recursive_absolute(path)
+		assert(DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path)
 
 	http_client_pool = {}
 	get_tree().set_meta("glam", self)

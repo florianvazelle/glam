@@ -38,11 +38,10 @@ func _enter_tree():
 	var paths = []
 	for path in required_directories:
 		paths.append(ProjectSettings.globalize_path(path))
-	var dir := Directory.new()
 	for path in paths:
-		if not dir.dir_exists(path):
-			dir.make_dir_recursive(path)
-		assert(dir.dir_exists(path), "Required directory '%s' does not exist." % path)
+		if not DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_recursive_absolute(path)
+		assert(DirAccess.dir_exists_absolute(path), "Required directory '%s' does not exist." % path)
 	_ensure_cachedir_tag()
 
 	_clear_tmp()
@@ -99,9 +98,8 @@ func _ensure_cachedir_tag(path := "") -> void:
 
 func _clear_tmp():
 	var tmp_dir = ProjectSettings.get_meta("glam/directory") + "/tmp"
-	var dir := Directory.new()
-	dir.open(tmp_dir)
-	dir.list_dir_begin(true)
+	var dir := DirAccess.open(tmp_dir)
+	dir.list_dir_begin()
 	var file_name := dir.get_next()
 	while file_name != "":
 		if not dir.current_is_dir():
