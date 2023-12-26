@@ -25,8 +25,8 @@ enum Type {
 
 @export(Type) var type := Type.OTHER
 
-@export(String, MULTILINE) var description: String
-@export(String, MULTILINE) var Tags := "": set = set_Tags, get = get_Tags
+@export_multiline var description: String
+@export_multiline var Tags := "": set = set_Tags, get = get_Tags
 
 @export var source_id: String
 var resource
@@ -70,7 +70,7 @@ var expected_files: PoolStringArray = []
 
 # Additional notes to be displayed in credits. Could include things such as who
 # commissioned the work or what modifications were made to the original.
-@export(String, MULTILINE) var notes := ""
+@export_multiline var notes := ""
 
 
 # Workaround for: https://github.com/godotengine/godot/issues/29179
