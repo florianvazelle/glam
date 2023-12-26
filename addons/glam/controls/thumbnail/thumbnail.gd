@@ -14,7 +14,7 @@ signal download_requested(asset)
 signal selected
 
 var asset: Asset: set = set_asset
-var selected = false: set = set_selected
+var is_selected = false: set = set_selected
 
 @onready var _preview_image: PreviewImage = find_child("PreviewImage")
 @onready var _type_icon = find_child("Icon")
@@ -70,7 +70,7 @@ func set_asset(value: Asset) -> void:
 
 
 func set_selected(value):
-	if selected:
+	if is_selected:
 		add_stylebox_override("panel", _focused_stylebox)
 		emit_signal("selected")
 	else:
@@ -130,7 +130,7 @@ func _on_DownloadButton_pressed():
 
 
 func _on_download_format_changed(new_format: String) -> void:
-	if _format_option_button.get_item_text(_format_option_button.selected) != new_format:
+	if _format_option_button.get_item_text(_format_option_button.get_selected()) != new_format:
 		for i in range(_format_option_button.get_item_count()):
 			if _format_option_button.get_item_text(i) == new_format:
 				_format_option_button.select(i)

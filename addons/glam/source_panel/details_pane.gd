@@ -147,7 +147,7 @@ func _on_DownloadFormatOptionButton_item_selected(index):
 
 func _on_download_format_changed(new_format: String) -> void:
 	if (
-		_download_format_option_button.get_item_text(_download_format_option_button.selected)
+		_download_format_option_button.get_item_text(_download_format_option_button.get_selected())
 		!= new_format
 	):
 		for i in range(_download_format_option_button.get_item_count()):
