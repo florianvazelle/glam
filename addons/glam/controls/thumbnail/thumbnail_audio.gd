@@ -4,9 +4,9 @@
 extends "res://addons/glam/controls/thumbnail/thumbnail.gd"
 
 var playing := false
-var audio_stream_player := find_node("AudioStreamPlayer")
+var audio_stream_player := find_child("AudioStreamPlayer")
 
-@onready var _button: Button = find_node("Button")
+@onready var _button: Button = find_child("Button")
 
 
 func _ready():

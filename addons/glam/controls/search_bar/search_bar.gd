@@ -5,8 +5,8 @@ extends HBoxContainer
 
 signal search_entered(text)
 
-@onready var line_edit = find_node("LineEdit")
-@onready var timer = find_node("Timer")
+@onready var line_edit = find_child("LineEdit")
+@onready var timer = find_child("Timer")
 @onready var _glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 
 

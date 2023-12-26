@@ -17,8 +17,8 @@ const HTTPAudioStreamPlayer := preload("res://addons/glam/streaming/http_audio_s
 
 var url = "http://127.0.0.1:8081/mp3/padanaya_blokov.mp3"
 
-@onready var hplayer: HTTPAudioStreamPlayer = find_node("HTTPAudioStreamPlayer")
-@onready var aplayer := find_node("AudioStreamPlayer")
+@onready var hplayer: HTTPAudioStreamPlayer = find_child("HTTPAudioStreamPlayer")
+@onready var aplayer := find_child("AudioStreamPlayer")
 
 
 func _ready():

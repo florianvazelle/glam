@@ -12,8 +12,8 @@ var sources := []
 
 @onready var source_panels := $VBoxContainer/SourcePanels
 @onready var source_select: OptionButton = $VBoxContainer/HBoxContainer/SourceSelect
-@onready var _query_bar := find_node("QueryBar")
-@onready var _menu_button := find_node("MenuButton")
+@onready var _query_bar := find_child("QueryBar")
+@onready var _menu_button := find_child("MenuButton")
 
 
 func _ready():

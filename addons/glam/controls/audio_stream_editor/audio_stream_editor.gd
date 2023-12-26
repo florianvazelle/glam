@@ -23,13 +23,13 @@ var _current := 0.0
 var _dragging := false
 var _pausing := false
 
-@onready var _player := find_node("HTTPAudioStreamPlayer")
-@onready var _preview := find_node("Preview")
-@onready var _indicator := find_node("Indicator")
-@onready var _current_label := find_node("CurrentLabel")
-@onready var _play_button := find_node("PlayButton")
-@onready var _stop_button := find_node("StopButton")
-@onready var _spinner := find_node("Spinner")
+@onready var _player := find_child("HTTPAudioStreamPlayer")
+@onready var _preview := find_child("Preview")
+@onready var _indicator := find_child("Indicator")
+@onready var _current_label := find_child("CurrentLabel")
+@onready var _play_button := find_child("PlayButton")
+@onready var _stop_button := find_child("StopButton")
+@onready var _spinner := find_child("Spinner")
 
 @onready var _glam = get_tree().get_meta("glam")
 @onready var _accent_color := get_color("accent_color", "Editor")

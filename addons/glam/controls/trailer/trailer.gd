@@ -28,8 +28,8 @@ func is_on_screen() -> bool:
 func set_status(value) -> void:
 	status = value
 
-	var spinner := find_node("Spinner")
-	var label := find_node("Label")
+	var spinner := find_child("Spinner")
+	var label := find_child("Label")
 
 	if spinner and label:
 		match status:

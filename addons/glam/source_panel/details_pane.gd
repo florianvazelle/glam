@@ -13,15 +13,15 @@ signal download_requested(asset)
 var asset: Asset: set = set_asset
 var _popup_just_closed := false
 
-@onready var _label := find_node("NoAssetLabel")
-@onready var _preview_image := find_node("PreviewImage")
-@onready var _display_name := find_node("DisplayName")
-@onready var _scroll_container := find_node("ScrollContainer")
-@onready var _details := find_node("Details")
-@onready var _tooltip := find_node("Tooltip")
-@onready var _spinner := find_node("Spinner")
-@onready var _preview_popup := find_node("PreviewPopup")
-@onready var _download_format_option_button := find_node("DownloadFormatOptionButton")
+@onready var _label := find_child("NoAssetLabel")
+@onready var _preview_image := find_child("PreviewImage")
+@onready var _display_name := find_child("DisplayName")
+@onready var _scroll_container := find_child("ScrollContainer")
+@onready var _details := find_child("Details")
+@onready var _tooltip := find_child("Tooltip")
+@onready var _spinner := find_child("Spinner")
+@onready var _preview_popup := find_child("PreviewPopup")
+@onready var _download_format_option_button := find_child("DownloadFormatOptionButton")
 
 
 func _ready():
@@ -46,7 +46,7 @@ func set_asset(value: Asset):
 	_scroll_container.show()
 	_preview_popup.hide()
 	_preview_image.cancel()
-	find_node("PreviewLarge").cancel()
+	find_child("PreviewLarge").cancel()
 
 	_display_name.text = asset.title
 
@@ -126,11 +126,11 @@ func _on_PreviewImage_image_loaded():
 
 func _on_PreviewImage_gui_input(event):
 	if event is InputEventMouseButton:
-		var popup = find_node("PreviewPopup")
+		var popup = find_child("PreviewPopup")
 		if event.button_index == BUTTON_LEFT:
 			if event.pressed and not _popup_just_closed:
-				find_node("PreviewLarge").load_image(asset.preview_image_url_hq)
-				yield(find_node("PreviewLarge"), "image_loaded")
+				find_child("PreviewLarge").load_image(asset.preview_image_url_hq)
+				yield(find_child("PreviewLarge"), "image_loaded")
 				popup.set_as_toplevel(true)
 				popup.popup_centered()
 

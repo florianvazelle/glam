@@ -7,8 +7,8 @@ const Asset := preload("../../assets/asset.gd")
 
 var asset: Asset
 
-@onready var _texture_rect := find_node("TextureRect")
-@onready var _label := find_node("Label")
+@onready var _texture_rect := find_child("TextureRect")
+@onready var _label := find_child("Label")
 
 
 func _ready():

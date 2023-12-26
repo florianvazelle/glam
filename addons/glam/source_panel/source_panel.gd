@@ -22,21 +22,21 @@ var selected_thumbnail: Thumbnail
 
 var _file := File.new()
 
-@onready var _account_button := find_node("AccountButton")
-@onready var account_menu := find_node("AccountMenu")
-@onready var user_label := find_node("UserLabel")
-@onready var source_link := find_node("SourceLink")
-@onready var thumbnail_grid := find_node("ThumbnailGrid")
-@onready var _details_pane := find_node("DetailsPane")
-@onready var _trailer := find_node("Trailer")
-@onready var _results_pane := find_node("ResultsPane")
-@onready var _status_bar := find_node("StatusBar")
-@onready var _results := find_node("Results")
+@onready var _account_button := find_child("AccountButton")
+@onready var account_menu := find_child("AccountMenu")
+@onready var user_label := find_child("UserLabel")
+@onready var source_link := find_child("SourceLink")
+@onready var thumbnail_grid := find_child("ThumbnailGrid")
+@onready var _details_pane := find_child("DetailsPane")
+@onready var _trailer := find_child("Trailer")
+@onready var _results_pane := find_child("ResultsPane")
+@onready var _status_bar := find_child("StatusBar")
+@onready var _results := find_child("Results")
 @onready var _glam = get_tree().get_meta("glam")
-@onready var _thumbnail_grid := find_node("ThumbnailGrid")
-@onready var _status_line := find_node("StatusLine")
-@onready var _audio_controls := find_node("AudioControls")
-@onready var _volume_slider := find_node("VolumeSlider")
+@onready var _thumbnail_grid := find_child("ThumbnailGrid")
+@onready var _status_line := find_child("StatusLine")
+@onready var _audio_controls := find_child("AudioControls")
+@onready var _volume_slider := find_child("VolumeSlider")
 @onready var _request_cache: RequestCache = get_tree().get_meta("glam").request_cache
 
 
@@ -79,7 +79,7 @@ func hide() -> void:
 
 
 func _on_cache_size_updated(size: int) -> void:
-	find_node("CacheLabel").text = "Cache Size: %dM" % (size / 1000000)
+	find_child("CacheLabel").text = "Cache Size: %dM" % (size / 1000000)
 
 
 func _on_search_entered(text: String) -> void:

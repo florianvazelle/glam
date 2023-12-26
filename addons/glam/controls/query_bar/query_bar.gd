@@ -9,13 +9,13 @@ var source: Source: set = set_source
 
 var _line_edit_clicked
 
-@onready var _line_edit := find_node("LineEdit")
-@onready var _search_bar := find_node("SearchBar")
-@onready var _sort_label := find_node("SortLabel")
-@onready var _sort_select := find_node("SortSelect")
-@onready var _timer := find_node("Timer")
-@onready var _filters_button := find_node("FiltersButton")
-@onready var _filters_panel := find_node("FiltersPanel")
+@onready var _line_edit := find_child("LineEdit")
+@onready var _search_bar := find_child("SearchBar")
+@onready var _sort_label := find_child("SortLabel")
+@onready var _sort_select := find_child("SortSelect")
+@onready var _timer := find_child("Timer")
+@onready var _filters_button := find_child("FiltersButton")
+@onready var _filters_panel := find_child("FiltersPanel")
 
 
 func set_source(value: Source) -> void:
