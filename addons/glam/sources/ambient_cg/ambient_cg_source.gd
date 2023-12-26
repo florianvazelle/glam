@@ -266,7 +266,7 @@ class SpatialMaterialAsset:
 		for download in downloads:
 			format_options.append(download.attribute)
 		asset.download_formats = format_options
-		asset.download_formats.sort_custom(SpatialMaterialAsset, "_sort_numeric")
+		asset.download_formats.sort_custom(SpatialMaterialAsset._sort_numeric)
 		asset.download_format = format_options[0]
 
 		# Get copyright year from release date if available.

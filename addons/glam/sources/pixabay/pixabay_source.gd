@@ -251,7 +251,7 @@ class StreamTextureAsset:
 			download_urls["Vector (Original)"] = data.vectorURL
 
 		asset.download_formats = download_urls.keys()
-		asset.download_formats.sort_custom(StreamTextureAsset, "_sort_numeric")
+		asset.download_formats.sort_custom(StreamTextureAsset._sort_numeric)
 		for format in asset.download_formats:
 			if format.begins_with("Vector"):
 				asset.download_format = format

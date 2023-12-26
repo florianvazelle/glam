@@ -78,7 +78,7 @@ func get_range_statuses(start, end) -> Array:
 		result.append({rangev = m, missing = true})
 	for p in present:
 		result.append({rangev = p, missing = false})
-	result.sort_custom(self, "_sort_range_statuses")
+	result.sort_custom(self._sort_range_statuses)
 	return result
 
 
