@@ -5,7 +5,7 @@ extends "../filter.gd"
 
 
 func init(filter: Dictionary, source_id := ""):
-	.init(filter, source_id)
+	super(filter, source_id)
 	assert(filter.type == "multi_choice", "Wrong filter type.")
 
 	for choice in filter.options:

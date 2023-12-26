@@ -6,7 +6,7 @@ extends "../filter.gd"
 
 func init(filter: Dictionary, source_id := "") -> void:
 	assert(filter.type == "select", "Wrong filter type.")
-	.init(filter, source_id)
+	super(filter, source_id)
 
 	for i in filter.options.size():
 		var option = filter.options[i]

@@ -185,7 +185,7 @@ func _on_query_changed():
 	_page = 1
 	_hits = 0
 	_hits_loaded = 0
-	._on_query_changed()
+	super()
 
 
 class StreamTextureAsset:

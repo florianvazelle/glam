@@ -34,7 +34,7 @@ var _end_received := false
 
 
 func _ready():
-	.connect("finished", self, "_on_finished")
+	super.connect("finished", self, "_on_finished")
 
 
 func is_open() -> bool:
@@ -105,7 +105,7 @@ func seek(to_position: float):
 
 
 func stop():
-	.stop()
+	super.stop()
 	_resume_position = .get_playback_position()
 	_playing = false
 
@@ -135,7 +135,7 @@ func _on_data_received(data: PoolByteArray, rangev: Vector2) -> void:
 	if is_buffering():
 		_stream.data = _data
 		stream = _stream
-		.play(_resume_position)
+		super.play(_resume_position)
 		call_deferred("emit_signal", "started")
 
 
@@ -172,7 +172,7 @@ func _on_finished():
 	if is_buffering() and _stream.data.size() < _data.size():
 		_stream.data = _data
 		stream = _stream
-		.play(_resume_position)
+		super.play(_resume_position)
 	else:
 		emit_signal("stopped")
 

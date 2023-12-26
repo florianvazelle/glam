@@ -37,7 +37,7 @@ func request(
 		)
 		return OK
 	else:
-		.connect("request_completed", self, "_on_request_completed", [request], CONNECT_ONESHOT)
+		super.connect("request_completed", self, "_on_request_completed", [request], CONNECT_ONESHOT)
 		return .request(url, custom_headers, ssl_validate_domain, method, request_data)
 
 

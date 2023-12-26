@@ -159,7 +159,7 @@ func _update_status_line():
 
 func _on_query_changed():
 	_next_page_url = null
-	._on_query_changed()
+	super()
 
 
 func get_asset_directory(asset: GLAMAsset) -> String:
