@@ -19,7 +19,7 @@ func _on_fetch_completed(p_results: Object) -> void:
 
 
 func test_download():
-	yield(wait_for_signal(ambient_cg, "fetch_completed", 60), YIELD)
+	await wait_for_signal(ambient_cg, "fetch_completed", 60)
 	assert_typeof(results, TYPE_OBJECT)
 	assert_typeof(results.assets, TYPE_ARRAY)
 	var assets: Array = results.assets
@@ -29,5 +29,5 @@ func test_download():
 	assert_file_does_not_exist(path)
 	assert_typeof(path, TYPE_STRING)
 	var f = ambient_cg.download(asset)
-	yield(wait_for_signal(f, "completed", 120), YIELD)
+	await wait_for_signal(f, "completed", 120)
 	assert_file_exists(path)

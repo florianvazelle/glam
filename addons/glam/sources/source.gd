@@ -165,15 +165,15 @@ func get_query_hash() -> int:
 
 
 func download(asset: GLAMAsset) -> void:
-	yield(get_tree(), "idle_frame")  # Ensure function can be 'yielded'.
+	await get_tree().idle_frame  # Ensure function can be 'yielded'.
 	asset.downloading = true
-	yield(_download(asset), "completed")
+	await _download(asset)
 	asset.downloading = false
 	asset.downloaded = true
 
 
 func _download(asset: GLAMAsset) -> void:
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	assert(false, "_download() not implemented.")
 
 
@@ -239,15 +239,15 @@ func import_files(files: Array):
 	fs.call_deferred("scan")
 
 	if needs_import:
-		yield(fs, "resources_reimported")
+		await fs.resources_reimported
 	while fs.is_scanning():
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 
 	# Wait a few frames for things to "settle down", otherwise we
 	# get "possible cyclic resource inclusion" errors.
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 
 
 func create_metadata_license_file(path: String) -> void:
@@ -259,7 +259,7 @@ func create_metadata_license_file(path: String) -> void:
 
 # Fetches and parses json data from the given url.
 func _fetch_json(url: String, headers := []) -> Dictionary:
-	yield(get_tree(), "idle_frame")  # Ensure function can be yielded.
+	await get_tree().idle_frame  # Ensure function can be yielded.
 
 	var http_request := CacheableHTTPRequest.new()
 	add_child(http_request)
@@ -274,7 +274,7 @@ func _fetch_json(url: String, headers := []) -> Dictionary:
 	if err != OK:
 		return {error = err}
 
-	var response = yield(http_request, "cacheable_request_completed")
+	var response = await http_request.cacheable_request_completed
 	http_request.queue_free()
 
 	var result: int = response[0]
@@ -312,10 +312,10 @@ func _download_file(url: String, dest: String, headers := PackedStringArray()) -
 
 	var err = http_request.request(url, headers)
 	if err != OK:
-		yield(get_tree(), "idle_frame")  # Ensure function can be 'yielded'.
+		await get_tree().idle_frame  # Ensure function can be 'yielded'.
 		return err
 
-	var result = yield(http_request, "request_completed")
+	var result = await http_request.request_completed
 	http_request.queue_free()
 
 	# Check err and response_code.

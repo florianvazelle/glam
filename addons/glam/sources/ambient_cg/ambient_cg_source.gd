@@ -99,7 +99,7 @@ func fetch() -> void:
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(_API_URL + query_string, result), "completed")
+	await _fetch(_API_URL + query_string, result) 
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -112,7 +112,7 @@ func can_fetch_more() -> bool:
 func fetch_more() -> void:
 	emit_signal("fetch_started")
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(_next_page_url, result), "completed")
+	await _fetch(_next_page_url, result) 
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -123,7 +123,7 @@ func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
 	_num_results = "?"
 	_num_loaded = 0
 
-	var json = yield(_fetch_json(url), "completed")
+	var json = await _fetch_json(url) 
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
 	if json.error != OK:
@@ -172,7 +172,7 @@ func _download(asset: GLAMAsset) -> void:
 	var url = SpatialMaterialAsset.get_download_url(asset)
 	assert(url and not url.is_empty(), "Could not determine download url")
 	var dest = "%s/%s_%s.zip" % [get_asset_directory(asset), get_slug(asset), asset.download_format]
-	var err = yield(_download_file(url, dest), "completed")
+	var err = await _download_file(url, dest) 
 
 	if err != OK:
 		return
@@ -184,7 +184,7 @@ func _download(asset: GLAMAsset) -> void:
 	# get all sorts of errors including segfaults.
 	var glam = get_tree().get_meta("glam")
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
 	var result = Unzipper.unzip(dest)
 	DirAccess.remove_absolute(dest)
@@ -192,7 +192,7 @@ func _download(asset: GLAMAsset) -> void:
 	for file in result.files:
 		if regex.search(file):
 			importable_files.append(file)
-	yield(import_files(importable_files), "completed")
+	await import_files(importable_files)
 	glam.locked = false
 
 	if result.error != OK:

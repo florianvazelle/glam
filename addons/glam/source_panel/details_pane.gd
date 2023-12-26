@@ -63,7 +63,7 @@ func set_asset(value: Asset):
 		_preview_image.call_deferred(
 			"load_image", asset.preview_image_url_lq
 		)
-		yield(_preview_image, "image_loaded")
+		await _preview_image.image_loaded
 		asset.preview_image_lq = _preview_image.texture
 
 	if asset.preview_image_url_hq:
@@ -130,14 +130,14 @@ func _on_PreviewImage_gui_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and not _popup_just_closed:
 				find_child("PreviewLarge").load_image(asset.preview_image_url_hq)
-				yield(find_child("PreviewLarge"), "image_loaded")
+				await find_child("PreviewLarge").image_loaded
 				popup.set_as_toplevel(true)
 				popup.popup_centered()
 
 
 func _on_PreviewPopup_popup_hide():
 	_popup_just_closed = true
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	_popup_just_closed = false
 
 

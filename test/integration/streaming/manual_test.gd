@@ -40,24 +40,24 @@ func _ready():
 	# Common functions.
 	print("|> play <|")
 	player.play()
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> skip to end <|")
 	player.seek(120)
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> play from start <|")
 	player.play()
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> stop <|")
 	player.stop()
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> resume <|")
 	player.play(player.get_playback_position())
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> stop <|")
 	player.stop()
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> play from end <|")
 	player.play(120)
-	yield(get_tree().create_timer(8), "timeout")
+	await get_tree().create_timer(8).timeout
 	print("|> stop <|")
 	player.stop()

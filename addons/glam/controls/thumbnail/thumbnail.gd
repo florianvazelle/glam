@@ -60,7 +60,7 @@ func set_asset(value: Asset) -> void:
 		else:
 			_spinner.visible = true
 			_preview_image.load_image(asset.preview_image_url_lq)
-			yield(_preview_image, "image_loaded")
+			await _preview_image.image_loaded
 			_spinner.visible = false
 
 	asset.download_started.connect(self._update_downloaded_status)

@@ -43,5 +43,5 @@ func request(
 
 func _on_request_completed(result, response_code, headers, body, request: Request):
 	_request_cache.store(request, result, response_code, headers, body)
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	emit_signal("cacheable_request_completed", result, response_code, headers, body)

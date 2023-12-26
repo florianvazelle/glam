@@ -41,12 +41,12 @@ func get_url() -> String:
 
 
 func get_auth_user():
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	return _api_key.split("-")[0]
 
 
 func get_authenticated() -> bool:
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 
 	if not _api_key.is_empty():
 		return true
@@ -69,7 +69,7 @@ func get_authenticated() -> bool:
 		http_request.queue_free()
 		return false
 
-	var res = yield(http_request, "request_completed")
+	var res = await http_request.request_completed
 	if res[0] != OK or res[1] != 200:
 		http_request.queue_free()
 		return false
@@ -112,7 +112,7 @@ func fetch() -> void:
 		)
 	)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(API_URL + query_string, result), "completed")
+	await _fetch(API_URL + query_string, result) 
 	if result.get_query_hash() == get_query_hash():
 		#_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -123,11 +123,11 @@ func can_fetch_more() -> bool:
 
 
 func fetch_more() -> void:
-	yield(fetch(), "completed")
+	await fetch() 
 
 
 func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
-	var json = yield(_fetch_json(url), "completed")
+	var json = await _fetch_json(url)
 
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
@@ -158,16 +158,16 @@ func _download(asset: GLAMAsset) -> void:
 	var format = "Vector" if extension == "svg" else asset.download_format.to_int()
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
-	var err = yield(_download_file(url, dest), "completed")
+	var err = await _download_file(url, dest) 
 
 	if err != OK:
 		return
 
 	var glam = get_tree().get_meta("glam") if get_tree().has_meta("glam") else null
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
-	yield(import_files([dest]), "completed")
+	await import_files([dest]) 
 	glam.locked = false
 
 	asset.create_license_file(dest)

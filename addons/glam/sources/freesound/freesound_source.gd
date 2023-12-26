@@ -68,7 +68,7 @@ func get_url() -> String:
 func get_authenticated() -> bool:
 	var http_request := HTTPRequest.new()
 	add_child(http_request)
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 
 	var config := ConfigFile.new()
 	config.load(config_file)
@@ -99,7 +99,7 @@ func get_authenticated() -> bool:
 			HTTPClient.METHOD_POST,
 			query
 		)
-		var res = yield(http_request, "request_completed")
+		var res = await http_request.request_completed
 		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
 		if res[0] == OK and res[1] == 200 and parsed.error == OK:
 			access_token = parsed.result.access_token
@@ -122,13 +122,13 @@ func get_auth_user() -> String:
 	var http_request := HTTPRequest.new()
 	http_request.use_threads = true
 	add_child(http_request)
-	if yield(get_authenticated(), "completed") and auth_user.is_empty():
+	if await get_authenticated() and auth_user.is_empty():
 		http_request.request("%s/me" % API_URL, ["Authorization: Bearer %s" % access_token])
-		var res = yield(http_request, "request_completed")
+		var res = await http_request.request_completed
 		var parsed: JSONParseResult = JSON.parse(res[3].get_string_from_utf8())
 		if res[0] == OK and res[1] == 200 and parsed.error == OK:
 			auth_user = parsed.result.username
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	return auth_user
 
 
@@ -156,7 +156,7 @@ func fetch() -> void:
 		query.filter = filter_str
 	var query_string: String = "/search/text/?" + HTTPClient.new().query_string_from_dict(query)
 	var result = FetchResult.new(get_query_hash())
-	yield(_fetch(API_URL + query_string, result), "completed")
+	await _fetch(API_URL + query_string, result)
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
@@ -169,14 +169,14 @@ func can_fetch_more() -> bool:
 func fetch_more() -> void:
 	emit_signal("fetch_started")
 	var result := FetchResult.new(get_query_hash())
-	yield(_fetch(_next, result), "completed")
+	await _fetch(_next, result)
 	if result.get_query_hash() == get_query_hash():
 		_update_status_line()
 		emit_signal("fetch_completed", result)
 
 
 func _fetch(url: String, fetch_result: FetchResult) -> GDScriptFunctionState:
-	var json = yield(_fetch_json(url, ["Authorization: Bearer %s" % access_token]), "completed")
+	var json = await _fetch_json(url, ["Authorization: Bearer %s" % access_token])
 	if fetch_result.get_query_hash() != get_query_hash():
 		return
 	if json.error != OK:
@@ -211,18 +211,16 @@ func _download(asset: GLAMAsset) -> void:
 	var extension = url.get_extension() if url.get_extension() else asset.get_meta("type")
 	var dest = "%s/%s_%s.%s" % [get_asset_directory(asset), get_slug(asset), format, extension]
 
-	var err = yield(
-		_download_file(url, dest, PackedStringArray(asset.get_meta("api_headers"))), "completed"
-	)
+	var err = await _download_file(url, dest, PackedStringArray(asset.get_meta("api_headers")))
 
 	if err != OK:
 		return
 
 	var glam = get_tree().get_meta("glam")
 	while glam.locked:
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 	glam.locked = true
-	yield(import_files([dest]), "completed")
+	await import_files([dest])
 	glam.locked = false
 
 	asset.create_license_file(dest)

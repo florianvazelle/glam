@@ -105,8 +105,8 @@ func _on_fetch_completed(result: Source.FetchResult):
 
 	# Ensure results are for the current query. Yield for some frames to ensure
 	# everything is up to date before checking.
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 	if result.get_query_hash() != source.get_query_hash():
 		return
 
@@ -130,7 +130,7 @@ func _on_fetch_completed(result: Source.FetchResult):
 				if is_instance_valid(source) and source.can_fetch_more():
 					_trailer.status = _trailer.Status.LOADING
 					for _i in range(2):
-						yield(get_tree(), "physics_frame")
+						await get_tree().physics_frame
 					_enusure_grid_full()
 				else:
 					_trailer.status = _trailer.Status.NO_MORE_RESULTS
@@ -174,7 +174,7 @@ func _on_query_changed():
 
 func _check_authentication():
 	if authentication:
-		var authenticated = yield(source.get_authenticated(), "completed")
+		var authenticated = await source.get_authenticated().completed
 		authentication.visible = not authenticated
 		_results_pane.visible = authenticated
 		_status_bar.visible = authenticated
@@ -185,7 +185,7 @@ func _check_authentication():
 			popup_menu.id_pressed.connect(self._on_account_menu_id_pressed)
 
 		if authenticated:
-			var user = yield(source.get_auth_user(), "completed")
+			var user = await source.get_auth_user().completed
 			_account_button.text = "Account"
 			popup_menu.clear()
 			popup_menu.add_item("User: %s" % user)
