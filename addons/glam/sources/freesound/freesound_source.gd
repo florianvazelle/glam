@@ -250,7 +250,7 @@ static func _get_filter_str(filters := []) -> String:
 				var licenses := PackedStringArray()
 				for license in filter.value:
 					licenses.append('"%s"' % license)
-				filter_str += "%s)%%20" % licenses.join(" OR ")
+				filter_str += "%s)%%20" % " OR ".join(licenses)
 
 	return filter_str
 

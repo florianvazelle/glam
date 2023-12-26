@@ -149,7 +149,7 @@ func set_Tags(value: String) -> void:
 
 
 func get_Tags() -> String:
-	return PackedStringArray(get_tags()).join(", ")
+	return ", ".join(PackedStringArray(get_tags()))
 
 
 func set_tags(value) -> void:

@@ -28,4 +28,4 @@ func get_file_copyright_text() -> String:
 		out.append(name)
 	if contact:
 		out.append(contact)
-	return out.join(" ")
+	return " ".join(out)

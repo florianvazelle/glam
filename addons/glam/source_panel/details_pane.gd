@@ -79,7 +79,7 @@ func set_asset(value: Asset):
 				authors.append("[url=%s]%s[/url]" % [author.url, author.name])
 			else:
 				authors.append(author.name)
-	_details.append_bbcode(authors.join(", "))
+	_details.append_bbcode(", ".join(authors))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("License: ")
 	var licenses := PackedStringArray()
@@ -87,13 +87,13 @@ func set_asset(value: Asset):
 		if license is Asset.License:
 			var details = LicenseDB.get_license(license.identifier)
 			_details.append_bbcode("[url=%s]%s[/url]" % [license.identifier, license.identifier])
-	_details.append_bbcode(licenses.join(", "))
+	_details.append_bbcode(", ".join(licenses))
 	_details.append_bbcode("\n\n")
 	_details.append_bbcode("Tags: ")
 	var tags := PackedStringArray()
 	for tag in asset.tags:
 		tags.append("[url=%s]%s[/url]" % [tag, tag])
-	_details.append_bbcode(tags.join(", "))
+	_details.append_bbcode(", ".join(tags))
 
 
 func _on_Download_pressed():

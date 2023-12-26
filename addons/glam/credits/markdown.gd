@@ -80,7 +80,7 @@ static func create_credit(asset: GLAMAsset, level := 0) -> String:
 			var credit = create_credit(source_asset, next_level)
 			strs.append("\n%s- %s" % ["  ".repeat(next_level), credit])
 
-	return strs.join(" ")
+	return " ".join(strs)
 
 
 static func _get_title(asset: GLAMAsset) -> String:
@@ -97,7 +97,7 @@ static func _get_authors(asset: GLAMAsset) -> String:
 		for author in asset.authors:
 			strs.append(_get_link(author.name, author.url, "Unknown"))
 
-	return strs.join(", ")
+	return ", ".join(strs)
 
 
 static func _get_licenses(asset: GLAMAsset) -> String:
@@ -115,7 +115,7 @@ static func _get_licenses(asset: GLAMAsset) -> String:
 			)
 			strs.append(_get_link(name, details.url, "Unknown License"))
 
-	return strs.join(", ")
+	return ", ".join(strs)
 
 
 static func _get_derivative_credits(asset: GLAMAsset, level := 1) -> String:
