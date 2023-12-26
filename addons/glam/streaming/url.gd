@@ -3,7 +3,7 @@
 #
 # Similar interface to Web API's URL.
 # See: https://developer.mozilla.org/en-US/docs/Web/API/URL
-extends Reference
+extends RefCounted
 
 var href: String
 var origin: String

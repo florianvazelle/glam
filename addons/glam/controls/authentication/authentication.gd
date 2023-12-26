@@ -18,7 +18,7 @@ var loading := false
 
 
 class Field:
-	extends Reference
+	extends RefCounted
 	var name: String
 	var value
 

@@ -41,7 +41,7 @@ func before_all():
 
 
 class MockEditorFileSystem:
-	extends Reference
+	extends RefCounted
 	signal resources_reimported
 
 	func scan():

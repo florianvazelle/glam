@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <glam@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
 @tool
-extends Reference
+extends RefCounted
 
 var url: String
 var custom_headers := PoolStringArray()

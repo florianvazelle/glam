@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Leroy Hopson <gdash@leroy.geek.nz>
 # SPDX-License-Identifier: MIT
 @tool
-extends Reference
+extends RefCounted
 
 
 static func list_files_rec(path: String, extension := ".glam") -> PoolStringArray:

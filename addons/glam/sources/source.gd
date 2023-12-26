@@ -336,7 +336,7 @@ func _save_glam_file(asset: GLAMAsset) -> int:
 
 
 class FetchResult:
-	extends Reference
+	extends RefCounted
 
 	var error := OK
 	var assets := []

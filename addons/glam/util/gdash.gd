@@ -73,7 +73,7 @@ static func find(collection, predicate, from_index = 0):
 
 
 class Chain:
-	extends Reference
+	extends RefCounted
 	var GDash = load(SCRIPT_PATH)
 
 	var _value

@@ -261,7 +261,7 @@ func get_slug(asset: GLAMAsset) -> String:
 
 class AudioStreamAsset:
 	tool
-	extends Reference
+	extends RefCounted
 
 	const Asset := preload("../../assets/asset.gd")
 	const GDash := preload("../../util/gdash.gd")
