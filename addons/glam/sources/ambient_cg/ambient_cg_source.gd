@@ -236,7 +236,6 @@ func _download(asset: GLAMAsset) -> void:
 
 
 class SpatialMaterialAsset:
-	tool
 	extends RefCounted
 
 	const GDash := preload("../../util/gdash.gd")

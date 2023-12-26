@@ -189,7 +189,6 @@ func _on_query_changed():
 
 
 class StreamTextureAsset:
-	tool
 	extends RefCounted
 
 	const Asset := preload("../../assets/asset.gd")
