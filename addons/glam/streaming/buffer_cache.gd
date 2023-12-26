@@ -4,12 +4,12 @@
 extends Resource
 
 var data := PackedByteArray()
-var ranges := PoolVector2Array()
+var ranges := PackedVector2Array()
 
 var _buffer := StreamPeerBuffer.new()
 
 
-func _init(p_data := PackedByteArray(), p_ranges := PoolVector2Array()):
+func _init(p_data := PackedByteArray(), p_ranges := PackedVector2Array()):
 	data = p_data
 	ranges = p_ranges
 
@@ -51,7 +51,7 @@ func put_data(p_data: PackedByteArray, rangev := Vector2(-1, -1)):
 		ranges.append(rangev)
 		return
 
-	var new_ranges := PoolVector2Array()
+	var new_ranges := PackedVector2Array()
 	var added := false
 	for r in ranges:
 		match _relpos(rangev, r):
@@ -82,11 +82,11 @@ func get_range_statuses(start, end) -> Array:
 	return result
 
 
-func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2Array:
+func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PackedVector2Array:
 	if p_ranges.is_empty():
-		return PoolVector2Array([Vector2(start, end)])
+		return PackedVector2Array([Vector2(start, end)])
 
-	var missing := PoolVector2Array()
+	var missing := PackedVector2Array()
 	var rangev := Vector2(start, end)
 	for r in p_ranges:
 		match _relpos(rangev, r):
@@ -110,7 +110,7 @@ func get_missing_ranges(start: int, end: int, p_ranges := ranges) -> PoolVector2
 
 func clear() -> void:
 	data = PackedByteArray()
-	ranges = PoolVector2Array()
+	ranges = PackedVector2Array()
 	_buffer = StreamPeerBuffer.new()
 	_buffer.data_array = data
 

@@ -38,7 +38,7 @@ func test_initial_state():
 	assert_eq(buffer.ranges.size(), 0)
 	assert_eq(buffer.data as Array, [])
 
-	var ranges := PoolVector2Array([Vector2(0, 0), Vector2(5, 8)])
+	var ranges := PackedVector2Array([Vector2(0, 0), Vector2(5, 8)])
 	var data := [57, 0, 0, 0, 0, 6, 76, 88, 214]
 	buffer = BufferCache.new(data, ranges)
 	assert_eq_deep(buffer.ranges as Array, ranges as Array)
