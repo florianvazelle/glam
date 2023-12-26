@@ -24,8 +24,8 @@ static func unzip(zip_path) -> Dictionary:
 			"--headless",
 			"--quit",
 		],
+		out,
 		true,
-		out
 	)
 	if exit_code != 0:
 		return {error = FAILED, files = []}
