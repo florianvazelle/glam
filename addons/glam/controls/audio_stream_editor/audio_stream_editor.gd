@@ -138,7 +138,7 @@ func _on_input_indicator(event: InputEventMouseButton):
 	if not thumbnail.pressed:
 		return
 
-	if event.button_index == BUTTON_LEFT and event.pressed:
+	if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		_current = clamp((event.position.x / _preview.get_rect().size.x) * duration, 0, duration)
 		_player.seek(_current)
 		_indicator.update()

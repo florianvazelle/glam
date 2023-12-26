@@ -98,7 +98,7 @@ func _on_SortSelect_item_selected(index: int) -> void:
 
 func _on_LineEdit_gui_input(event):
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == BUTTON_LEFT:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			_line_edit_clicked = true
 	elif event is InputEventKey:
 		_line_edit_clicked = false

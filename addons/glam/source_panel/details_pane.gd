@@ -127,7 +127,7 @@ func _on_PreviewImage_image_loaded():
 func _on_PreviewImage_gui_input(event):
 	if event is InputEventMouseButton:
 		var popup = find_child("PreviewPopup")
-		if event.button_index == BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and not _popup_just_closed:
 				find_child("PreviewLarge").load_image(asset.preview_image_url_hq)
 				yield(find_child("PreviewLarge"), "image_loaded")

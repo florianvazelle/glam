@@ -35,12 +35,12 @@ func _get_property_list():
 		},
 		{
 			name = "headers",
-			type = TYPE_STRING_ARRAY,
+			type = TYPE_PACKED_STRING_ARRAY,
 			usage = PROPERTY_USAGE_STORAGE,
 		},
 		{
 			name = "body",
-			type = TYPE_RAW_ARRAY,
+			type = TYPE_PACKED_BYTE_ARRAY,
 			usage = PROPERTY_USAGE_STORAGE,
 		}
 	]
