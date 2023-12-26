@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 extends RefCounted
 
-const licenses = preload("./custom_license_data.gd").data
+static var licenses = preload("./custom_license_data.gd").data
 const spdx_licenses = preload("./spdx_license_data.gd").data.licenses
 const GDash = preload("../util/gdash.gd")
 
